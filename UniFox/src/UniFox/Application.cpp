@@ -7,7 +7,6 @@ namespace UniFox {
 
     void Application::Run() {
         while(true) {
-
         }
     };
 }

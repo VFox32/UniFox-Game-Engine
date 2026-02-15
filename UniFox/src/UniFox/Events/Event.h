@@ -24,9 +24,9 @@ namespace UniFox {
         EventCategoryWindow = BIT(5)
     };
 
-#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() {return EventType::##type;}\
-                                virtual EventType GetEventType() const override {return GetStaticType();}\
-                                virtual const char* GetName() const override {return #type;}
+#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
+								virtual EventType GetEventType() const override { return GetStaticType(); }\
+								virtual const char* GetName() const override { return #type; }
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override {return category;}
 
@@ -65,7 +65,10 @@ namespace UniFox {
         Event& m_Event;
     };
 
-    inline std::ostream& operator<<(std::ostream& os, const Event& e) {
+    /*inline std::ostream& operator<<(std::ostream& os, const Event& e) {
         return os << e.ToString();
+    }*/
+    inline std::string format_as(const Event& e) {
+	    return e.ToString();
     }
 }
