@@ -6,7 +6,11 @@
     extern UniFox::Application* UniFox::CreateApplication();
 
     int main(int argc, char** arcv) {
-        auto app = UniFox::CreateApplication();
+        UniFox::Log::Init();
+        UF_CORE_WARN("Initialized Log!");
+        UF_CLIENT_INFO("Hello World!");
+
+        UniFox::Application* app = UniFox::CreateApplication();
         app->Run();
         delete app;
     }
