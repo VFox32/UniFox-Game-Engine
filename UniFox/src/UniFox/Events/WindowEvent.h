@@ -1,8 +1,7 @@
 #pragma once
+#include "ufpch.h"
 
 #include "Event.h"
-
-#include <sstream>
 
 namespace UniFox {
     class UF_API WindowResizeEvent : public Event {

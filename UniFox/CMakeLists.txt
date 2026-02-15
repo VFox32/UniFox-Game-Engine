@@ -5,6 +5,7 @@ add_subdirectory(vendor/spdlog)
 add_library(UniFox SHARED
     src/UniFox/Application.cpp
     src/UniFox/Log.cpp
+    src/ufpch.cpp
 )
 
 target_compile_definitions(UniFox PRIVATE
@@ -23,4 +24,9 @@ add_dependencies(${PROJECT_NAME} spdlog)
 target_link_libraries(UniFox
     PRIVATE
         spdlog::spdlog    
+)
+
+target_precompile_headers(UniFox
+    PRIVATE
+        src/ufpch.h
 )

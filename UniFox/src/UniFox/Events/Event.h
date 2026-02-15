@@ -1,9 +1,7 @@
 #pragma once
+#include "ufpch.h"
 
 #include "UniFox/Core.h"
-
-#include <string>
-#include <functional>
 
 namespace UniFox {
     enum class EventType {
