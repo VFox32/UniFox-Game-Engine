@@ -6,7 +6,7 @@
 namespace UniFox {
     enum class EventType {
         None = 0,
-        WindowClose, WindowResize, WindowFocus, WindowUnfocus, WindowMoved,
+        WindowClose, WindowResize, WindowFocus, WindowUnfocus, WindowMoved, WindowEntered, WindowLeft, WindowMaximize, WindowIconify, WindowRestore, WindowRefresh,
         AppTick, AppUpdate, AppRender,
         KeyPressed, KeyReleased,
         MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled

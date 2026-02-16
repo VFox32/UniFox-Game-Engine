@@ -85,4 +85,88 @@ namespace UniFox {
         EVENT_CLASS_TYPE(WindowUnfocus)
         EVENT_CLASS_CATEGORY(EventCategoryWindow)
     };
+
+    class UF_API WindowEnteredEvent : public Event {
+    public:
+        WindowEnteredEvent() {}
+
+        std::string ToString() const override {
+            std::stringstream ss;
+            ss << "WindowEnteredEvent";
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(WindowEntered)
+        EVENT_CLASS_CATEGORY(EventCategoryWindow)
+    };
+
+    class UF_API WindowLeftEvent : public Event {
+    public:
+        WindowLeftEvent() {}
+
+        std::string ToString() const override {
+            std::stringstream ss;
+            ss << "WindowLeftEvent";
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(WindowLeft)
+        EVENT_CLASS_CATEGORY(EventCategoryWindow)
+    };
+
+    class UF_API WindowMaximizeEvent : public Event {
+    public:
+        WindowMaximizeEvent() {}
+
+        std::string ToString() const override {
+            std::stringstream ss;
+            ss << "WindowMaximizeEvent";
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(WindowMaximize)
+        EVENT_CLASS_CATEGORY(EventCategoryWindow)
+    };
+
+    class UF_API WindowIconifyEvent : public Event {
+    public:
+        WindowIconifyEvent() {}
+
+        std::string ToString() const override {
+            std::stringstream ss;
+            ss << "WindowIconifyEvent";
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(WindowIconify)
+        EVENT_CLASS_CATEGORY(EventCategoryWindow)
+    };
+
+    class UF_API WindowRestoreEvent : public Event {
+    public:
+        WindowRestoreEvent() {}
+
+        std::string ToString() const override {
+            std::stringstream ss;
+            ss << "WindowRestoreEvent";
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(WindowRestore)
+        EVENT_CLASS_CATEGORY(EventCategoryWindow)
+    };
+
+    class UF_API WindowRefreshEvent : public Event {
+    public:
+        WindowRefreshEvent() {}
+
+        std::string ToString() const override {
+            std::stringstream ss;
+            ss << "WindowRefreshEvent";
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(WindowRefresh)
+        EVENT_CLASS_CATEGORY(EventCategoryWindow)
+    };
 }

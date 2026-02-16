@@ -8,7 +8,7 @@ public:
     }
 
     void OnUpdate() {
-        UF_INFO("ExampleLayer::Update");
+        //UF_INFO("ExampleLayer::Update");
     }
 
     void OnEvent(UniFox::Event& event) override {

@@ -76,13 +76,59 @@ namespace UniFox {
             }
         });
 
-        //glfwSetCursorEnterCallback
-        //glfwSetWindowIconifyCallback
-        //glfwSetWindowMaximizeCallback
-        //glfwSetCharCallback
-        //glfwSetCharModsCallback
-        //glfwSetJoystickCallback
-        //glfwSetWindowRefreshCallback
+        glfwSetCursorEnterCallback(m_Window, [](GLFWwindow* window, int entered) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            switch (entered) {
+                case 1: {
+                    WindowEnteredEvent event = WindowEnteredEvent();
+                    data.EventCallback(event);
+                    break;
+                }
+                case 0: {
+                    WindowLeftEvent event = WindowLeftEvent();
+                    data.EventCallback(event);
+                    break;
+                }
+            }
+        });
+
+        glfwSetWindowIconifyCallback(m_Window, [](GLFWwindow* window, int iconified) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            switch (iconified) {
+                case 1: {
+                    WindowIconifyEvent event = WindowIconifyEvent();
+                    data.EventCallback(event);
+                    break;
+                }
+                case 0: {
+                    WindowRestoreEvent event = WindowRestoreEvent();
+                    data.EventCallback(event);
+                    break;
+                }
+            }
+        });
+
+        glfwSetWindowMaximizeCallback(m_Window, [](GLFWwindow* window, int iconified) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            switch (iconified) {
+                case 1: {
+                    WindowMaximizeEvent event = WindowMaximizeEvent();
+                    data.EventCallback(event);
+                    break;
+                }
+                case 0: {
+                    WindowRestoreEvent event = WindowRestoreEvent();
+                    data.EventCallback(event);
+                    break;
+                }
+            }
+        });
+
+        glfwSetWindowRefreshCallback(m_Window, [](GLFWwindow* window) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            WindowRefreshEvent event = WindowRefreshEvent();
+            data.EventCallback(event);
+        });
 
         glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
@@ -143,6 +189,11 @@ namespace UniFox {
             MouseMovedEvent event((float)xPos, (float)yPos);
             data.EventCallback(event);
         });
+
+        /*glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int codepoint) {
+        });
+        glfwSetCharModsCallback(m_Window, [](GLFWwindow* window, unsigned int codepoint, int mods) {
+        });*/
     }
 
     void WindowsWindow::ShutDown() {
