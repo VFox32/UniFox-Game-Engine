@@ -12,7 +12,7 @@ namespace UniFox {
         inline float GetX() {return m_MouseX;}
         inline float GetY() {return m_MouseY;}
 
-        std::string ToString() {
+        std::string ToString() const override {
             std::stringstream ss;
             ss << "MouseMovedEvent: " << m_MouseX << ", " << m_MouseY;
             return ss.str();
@@ -32,7 +32,7 @@ namespace UniFox {
         inline float GetXOffset() {return m_XOffset;}
         inline float GetYOffset() {return m_YOffset;}
 
-        std::string ToString() {
+        std::string ToString() const override {
             std::stringstream ss;
             ss << "MouseScrolledEvent: " << m_XOffset << ", " << m_YOffset;
             return ss.str();
@@ -63,7 +63,7 @@ namespace UniFox {
 
         inline int GetRepeatCount() const {return m_RepeatCount;}
 
-        std::string ToString() {
+        std::string ToString() const override {
             std::stringstream ss;
             ss << "MouseButtonPressedEvent: " << m_Button << " (" << m_RepeatCount << ")";
             return ss.str();
@@ -74,12 +74,12 @@ namespace UniFox {
         int m_RepeatCount;
     };
 
-    class UF_API KeyReleasedEvent : public MouseButtonEvent {
+    class UF_API MouseBUttonReleasedEvent : public MouseButtonEvent {
     public:
-        KeyReleasedEvent(int button)
+        MouseBUttonReleasedEvent(int button)
             : MouseButtonEvent(button) {}
 
-        std::string ToString() {
+        std::string ToString() const override {
             std::stringstream ss;
             ss << "MouseButtonReleasedEvent: " << m_Button;
             return ss.str();

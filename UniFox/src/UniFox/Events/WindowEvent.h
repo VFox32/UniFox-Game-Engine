@@ -12,7 +12,7 @@ namespace UniFox {
         inline unsigned int GetWidth() {return m_Width;}
         inline unsigned int GetHeight() {return m_Height;}
 
-        std::string ToString() {
+        std::string ToString() const override {
             std::stringstream ss;
             ss << "WindowResizeEvent: " << m_Width << ", " << m_Height;
             return ss.str();
@@ -32,7 +32,7 @@ namespace UniFox {
         inline unsigned int GetX() {return m_WindowX;}
         inline unsigned int GetY() {return m_WindowY;}
 
-        std::string ToString() {
+        std::string ToString() const override {
             std::stringstream ss;
             ss << "WindowMovedEvent: " << m_WindowX << ", " << m_WindowY;
             return ss.str();
@@ -48,7 +48,7 @@ namespace UniFox {
     public:
         WindowCloseEvent() {}
 
-        std::string ToString() {
+        std::string ToString() const override {
             std::stringstream ss;
             ss << "WindowCloseEvent";
             return ss.str();
@@ -62,7 +62,7 @@ namespace UniFox {
     public:
         WindowFocusEvent() {}
 
-        std::string ToString() {
+        std::string ToString() const override {
             std::stringstream ss;
             ss << "WindowFocusEvent";
             return ss.str();
@@ -76,7 +76,7 @@ namespace UniFox {
     public:
         WindowUnfocusEvent() {}
 
-        std::string ToString() {
+        std::string ToString() const override {
             std::stringstream ss;
             ss << "WindowUnfocusEvent";
             return ss.str();

@@ -1,6 +1,6 @@
 [submodule "UniFox/vendor/spdlog"]
 	path = UniFox/vendor/spdlog
 	url = https://github.com/gabime/spdlog
-[submodule "UniFox/vendor/glfw"]
-	path = UniFox/vendor/glfw
+[submodule "UniFox/vendor/GLFW"]
+	path = UniFox/vendor/GLFW
 	url = https://github.com/glfw/glfw
