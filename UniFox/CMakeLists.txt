@@ -4,6 +4,7 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/glfw)
+add_subdirectory(vendor/glad)
 
 add_library(UniFox SHARED
     src/UniFox/Application.cpp
@@ -17,6 +18,7 @@ add_library(UniFox SHARED
 target_compile_definitions(UniFox PRIVATE
     UF_BUILD_DLL
     UF_PLATFORM_WINDOWS
+    GLFW_INCLUDE_NONE
 )
 
 target_include_directories(UniFox
@@ -24,15 +26,18 @@ target_include_directories(UniFox
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog/include
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Glad/include
 )
 
 add_dependencies(${PROJECT_NAME} spdlog)
+add_dependencies(${PROJECT_NAME} glad)
 
 target_link_libraries(UniFox
     PRIVATE
         spdlog::spdlog
         glfw
         opengl32.lib
+        glad
 )
 
 target_precompile_headers(UniFox
