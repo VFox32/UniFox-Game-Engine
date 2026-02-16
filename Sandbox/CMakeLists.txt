@@ -1,5 +1,7 @@
 project(Sandbox)
 
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+
 add_executable(Sandbox
     src/Sandbox.cpp
 )

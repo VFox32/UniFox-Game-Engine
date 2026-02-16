@@ -1,5 +1,7 @@
 project(UniFox)
 
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/glfw)
 
@@ -8,6 +10,8 @@ add_library(UniFox SHARED
     src/UniFox/Log.cpp
     src/ufpch.cpp
     src/UniFox/Platform/Windows/WindowsWindow.cpp
+    src/UniFox/Layer.cpp
+    src/UniFox/LayerStack.cpp
 )
 
 target_compile_definitions(UniFox PRIVATE

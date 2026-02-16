@@ -9,7 +9,6 @@
     int main(int argc, char** arcv) {
         UniFox::Log::Init();
         UF_CORE_WARN("Initialized Log!");
-        UF_CLIENT_INFO("Hello World!");
 
         UniFox::Application* app = UniFox::CreateApplication();
         app->Run();

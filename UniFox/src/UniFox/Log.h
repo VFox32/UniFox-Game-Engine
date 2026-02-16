@@ -25,8 +25,8 @@ namespace UniFox {
 #define UF_CORE_ERROR(...)   ::UniFox::Log::GetCoreLogger()->error(__VA_ARGS__)
 #define UF_CORE_FATAL(...)   ::UniFox::Log::GetCoreLogger()->fatal(__VA_ARGS__)
 
-#define UF_CLIENT_TRACE(...) ::UniFox::Log::GetClientLogger()->trace(__VA_ARGS__)
-#define UF_CLIENT_INFO(...)  ::UniFox::Log::GetClientLogger()->info(__VA_ARGS__)
-#define UF_CLIENT_WARN(...)  ::UniFox::Log::GetClientLogger()->warn(__VA_ARGS__)
-#define UF_CLIENT_ERROR(...) ::UniFox::Log::GetClientLogger()->error(__VA_ARGS__)
-#define UF_CLIENT_FATAL(...) ::UniFox::Log::GetClientLogger()->fatal(__VA_ARGS__)
+#define UF_TRACE(...) ::UniFox::Log::GetClientLogger()->trace(__VA_ARGS__)
+#define UF_INFO(...)  ::UniFox::Log::GetClientLogger()->info(__VA_ARGS__)
+#define UF_WARN(...)  ::UniFox::Log::GetClientLogger()->warn(__VA_ARGS__)
+#define UF_ERROR(...) ::UniFox::Log::GetClientLogger()->error(__VA_ARGS__)
+#define UF_FATAL(...) ::UniFox::Log::GetClientLogger()->fatal(__VA_ARGS__)
