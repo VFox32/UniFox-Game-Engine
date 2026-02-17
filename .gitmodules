@@ -4,3 +4,6 @@
 [submodule "UniFox/vendor/GLFW"]
 	path = UniFox/vendor/GLFW
 	url = https://github.com/glfw/glfw
+[submodule "UniFox/vendor/ImGui"]
+	path = UniFox/vendor/ImGui
+	url = https://github.com/ocornut/imgui
