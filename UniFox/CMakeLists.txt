@@ -5,6 +5,7 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glad)
+add_subdirectory(vendor/imgui)
 
 add_library(UniFox SHARED
     src/UniFox/Application.cpp
@@ -13,6 +14,8 @@ add_library(UniFox SHARED
     src/UniFox/Platform/Windows/WindowsWindow.cpp
     src/UniFox/Layer.cpp
     src/UniFox/LayerStack.cpp
+    src/UniFox/ImGui/ImGuiLayer.cpp
+    src/UniFox/Platform/OpenGL/ImGuiOpenGLRenderer.cpp
 )
 
 target_compile_definitions(UniFox PRIVATE
@@ -27,10 +30,12 @@ target_include_directories(UniFox
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog/include
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/include
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Glad/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/ImGui
 )
 
 add_dependencies(${PROJECT_NAME} spdlog)
 add_dependencies(${PROJECT_NAME} glad)
+add_dependencies(${PROJECT_NAME} imgui)
 
 target_link_libraries(UniFox
     PRIVATE
@@ -38,6 +43,7 @@ target_link_libraries(UniFox
         glfw
         opengl32.lib
         glad
+        imgui
 )
 
 target_precompile_headers(UniFox

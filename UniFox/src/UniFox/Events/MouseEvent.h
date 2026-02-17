@@ -74,9 +74,9 @@ namespace UniFox {
         int m_RepeatCount;
     };
 
-    class UF_API MouseBUttonReleasedEvent : public MouseButtonEvent {
+    class UF_API MouseButtonReleasedEvent : public MouseButtonEvent {
     public:
-        MouseBUttonReleasedEvent(int button)
+        MouseButtonReleasedEvent(int button)
             : MouseButtonEvent(button) {}
 
         std::string ToString() const override {

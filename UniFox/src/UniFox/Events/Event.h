@@ -8,7 +8,7 @@ namespace UniFox {
         None = 0,
         WindowClose, WindowResize, WindowFocus, WindowUnfocus, WindowMoved, WindowEntered, WindowLeft, WindowMaximize, WindowIconify, WindowRestore, WindowRefresh,
         AppTick, AppUpdate, AppRender,
-        KeyPressed, KeyReleased,
+        KeyPressed, KeyReleased, KeyTyped,
         MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
     };
 

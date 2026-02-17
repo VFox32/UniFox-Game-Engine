@@ -20,6 +20,7 @@ class Sandbox : public UniFox::Application {
 public:
     Sandbox() {
         PushLayer(new ExampleLayer());
+        PushOverlay(new UniFox::ImGuiLayer());
     }
     ~Sandbox() {
 

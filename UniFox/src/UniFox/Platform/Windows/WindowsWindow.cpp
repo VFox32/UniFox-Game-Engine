@@ -161,6 +161,12 @@ namespace UniFox {
             }
         });
 
+        glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode) {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            KeyTypedEvent event(keycode);
+            data.EventCallback(event);
+        });
+
         glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             switch (action) {
@@ -170,7 +176,7 @@ namespace UniFox {
                     break;
                 }
                 case GLFW_RELEASE: {
-                    MouseBUttonReleasedEvent event(button);
+                    MouseButtonReleasedEvent event(button);
                     data.EventCallback(event);
                     break;
                 }
