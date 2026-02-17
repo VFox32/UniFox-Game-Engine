@@ -8,11 +8,16 @@ public:
     }
 
     void OnUpdate() {
-        //UF_INFO("ExampleLayer::Update");
+        if(UniFox::Input::IsKeyPressed(UF_KEY_TAB)) {
+            UF_TRACE("Tab key is pressed!");
+        }
     }
 
     void OnEvent(UniFox::Event& event) override {
-        UF_TRACE("{0}", event);
+        if(event.GetEventType() == UniFox::EventType::KeyPressed) {
+            UniFox::KeyPressedEvent& e = (UniFox::KeyPressedEvent&)event;
+            UF_INFO("{0}", (char)e.GetKeyCode());
+        }
     }
 };
 
