@@ -7,3 +7,6 @@
 [submodule "UniFox/vendor/ImGui"]
 	path = UniFox/vendor/ImGui
 	url = https://github.com/ocornut/imgui
+[submodule "UniFox/vendor/glm"]
+	path = UniFox/vendor/glm
+	url = https://github.com/g-truc/glm

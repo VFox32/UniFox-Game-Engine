@@ -6,6 +6,7 @@ add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glad)
 add_subdirectory(vendor/imgui)
+add_subdirectory(vendor/glm)
 
 add_library(UniFox SHARED
     src/UniFox/Application.cpp
@@ -32,11 +33,13 @@ target_include_directories(UniFox
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/include
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Glad/include
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/ImGui
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
 )
 
 add_dependencies(${PROJECT_NAME} spdlog)
 add_dependencies(${PROJECT_NAME} glad)
 add_dependencies(${PROJECT_NAME} imgui)
+add_dependencies(${PROJECT_NAME} glm)
 
 target_link_libraries(UniFox
     PRIVATE
@@ -45,6 +48,7 @@ target_link_libraries(UniFox
         opengl32.lib
         glad
         imgui
+        glm
 )
 
 target_precompile_headers(UniFox
