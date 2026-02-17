@@ -16,7 +16,6 @@ add_library(UniFox SHARED
     src/UniFox/Layer.cpp
     src/UniFox/LayerStack.cpp
     src/UniFox/ImGui/ImGuiLayer.cpp
-    src/UniFox/Platform/OpenGL/ImGuiOpenGLRenderer.cpp
     src/UniFox/Platform/Windows/WindowsInput.cpp
 )
 
@@ -42,12 +41,13 @@ add_dependencies(${PROJECT_NAME} imgui)
 add_dependencies(${PROJECT_NAME} glm)
 
 target_link_libraries(UniFox
+    PUBLIC
+        imgui
     PRIVATE
         spdlog::spdlog
         glfw
         opengl32.lib
         glad
-        imgui
         glm
 )
 

@@ -6,6 +6,8 @@
 #include "Events/Event.h"
 #include "Events/WindowEvent.h"
 
+#include "ImGui/ImGuiLayer.h"
+
 namespace UniFox {
 
     class UF_API Application {
@@ -26,6 +28,7 @@ namespace UniFox {
         bool OnWindowClose(WindowCloseEvent& e);
 
         std::unique_ptr<Window> m_Window;
+        ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
         LayerStack m_LayerStack;
     private:

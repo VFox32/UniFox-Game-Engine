@@ -1,16 +1,24 @@
 
 #include <UniFox.h>
 
+#include "imgui.h"
+
 class ExampleLayer : public UniFox::Layer {
 public:
     ExampleLayer() 
         : Layer("Example") {
     }
 
-    void OnUpdate() {
+    void OnUpdate() override {
         if(UniFox::Input::IsKeyPressed(UF_KEY_TAB)) {
             UF_TRACE("Tab key is pressed!");
         }
+    }
+
+    virtual void OnImGuiRender() override {
+        ImGui::Begin("Test");
+        ImGui::Text("Hello World!");
+        ImGui::End();
     }
 
     void OnEvent(UniFox::Event& event) override {
@@ -25,7 +33,6 @@ class Sandbox : public UniFox::Application {
 public:
     Sandbox() {
         PushLayer(new ExampleLayer());
-        PushOverlay(new UniFox::ImGuiLayer());
     }
     ~Sandbox() {
 

@@ -12,22 +12,12 @@ namespace UniFox {
         ImGuiLayer();
         ~ImGuiLayer() = default;
         
-        virtual void OnAttach();
-        virtual void OnDetach();
-        virtual void OnUpdate();
-        virtual void OnEvent(Event& event);
-    private:
-        bool OnKeyPressedEvent(KeyPressedEvent& e);
-        bool OnKeyReleasedEvent(KeyReleasedEvent& e);
-        bool OnKeyTypedEvent(KeyTypedEvent& e);
+        virtual void OnAttach() override;
+        virtual void OnDetach() override;
+        virtual void OnImGuiRender() override;
 
-        bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& e);
-        bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e);
-        bool OnMouseMovedEvent(MouseMovedEvent& e);
-        bool OnMouseScrolledEvent(MouseScrolledEvent& e);
-
-        bool OnWindowResizeEvent(WindowResizeEvent& e);
-        bool OnWindowMovedEvent(WindowMovedEvent& e);
+        void Begin();
+        void End();
     private:
         float m_Time = 0.0;
     };
