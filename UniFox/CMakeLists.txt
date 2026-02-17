@@ -16,6 +16,7 @@ add_library(UniFox SHARED
     src/UniFox/LayerStack.cpp
     src/UniFox/ImGui/ImGuiLayer.cpp
     src/UniFox/Platform/OpenGL/ImGuiOpenGLRenderer.cpp
+    src/UniFox/Platform/Windows/WindowsInput.cpp
 )
 
 target_compile_definitions(UniFox PRIVATE
