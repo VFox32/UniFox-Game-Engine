@@ -2,13 +2,15 @@ project(UniFox)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
+set(GLFW_BUILD_SHARED_LIBS OFF CACHE BOOL "Build GLFW as a shared library" FORCE)
+
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glad)
 add_subdirectory(vendor/imgui)
 add_subdirectory(vendor/glm)
 
-add_library(UniFox SHARED
+add_library(UniFox STATIC
     src/UniFox/Application.cpp
     src/UniFox/Log.cpp
     src/ufpch.cpp
@@ -44,7 +46,7 @@ target_link_libraries(UniFox
     PUBLIC
         imgui
     PRIVATE
-        spdlog::spdlog
+        spdlog::spdlog_header_only
         glfw
         opengl32.lib
         glad
