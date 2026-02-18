@@ -1,7 +1,7 @@
 #pragma once
 
-#include "UniFox/Core.h"
-#include "UniFox/Input.h"
+#include "UniFox/Core/Core.h"
+#include "UniFox/Core/Input.h"
 
 namespace UniFox {
     class WindowsInput : public Input {

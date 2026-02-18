@@ -7,13 +7,14 @@
 #include <functional>
 #include <sstream>
 
+#include <cstdint>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
 
-#include "UniFox/Log.h"
-#include "UniFox/Core.h"
+#include "UniFox/Core/Core.h"
+#include "UniFox/Core/Log.h"
 
 #ifdef UF_PLATFORM_WINDOWS
     #include <Windows.h>

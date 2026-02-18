@@ -1,8 +1,6 @@
 #pragma once
-#include "ufpch.h"
 
-#include "Core.h"
-#include "Events/Event.h"
+#include "UniFox/Events/Event.h"
 
 namespace UniFox {
     struct WindowProps {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "UniFox/Window.h"
+#include "UniFox/Core/Window.h"
 #include "UniFox/Renderer/GraphicsContext.h"
 #include "UniFox/Platform/OpenGL/OpenGLContext.h"
 

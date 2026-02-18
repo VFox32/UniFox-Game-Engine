@@ -1,3 +1,4 @@
+#include "ufpch.h"
 #include "LayerStack.h"
 
 namespace UniFox {

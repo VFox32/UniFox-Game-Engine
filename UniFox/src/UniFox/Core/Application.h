@@ -3,13 +3,13 @@
 
 #include "Window.h"
 #include "LayerStack.h"
-#include "Events/Event.h"
-#include "Events/WindowEvent.h"
+#include "UniFox/Events/Event.h"
+#include "UniFox/Events/WindowEvent.h"
 
-#include "ImGui/ImGuiLayer.h"
+#include "UniFox/ImGui/ImGuiLayer.h"
 
-#include "Renderer/Shader.h"
-#include "Renderer/Buffer.h"
+#include "UniFox/Renderer/Shader.h"
+#include "UniFox/Renderer/Buffer.h"
 
 namespace UniFox {
 

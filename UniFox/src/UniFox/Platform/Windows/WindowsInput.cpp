@@ -1,8 +1,9 @@
-#include "WindowsInput.h"
 #include "ufpch.h"
+#include "WindowsInput.h"
+
+#include "UniFox/Core/Application.h"
 
 #include "GLFW/glfw3.h"
-#include "UniFox/Application.h"
 
 namespace UniFox {
 

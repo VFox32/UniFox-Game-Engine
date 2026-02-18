@@ -11,17 +11,22 @@ add_subdirectory(vendor/imgui)
 add_subdirectory(vendor/glm)
 
 add_library(UniFox STATIC
-    src/UniFox/Application.cpp
-    src/UniFox/Log.cpp
     src/ufpch.cpp
-    src/UniFox/Platform/Windows/WindowsWindow.cpp
-    src/UniFox/Layer.cpp
-    src/UniFox/LayerStack.cpp
+
+    src/UniFox/Core/Application.cpp
+    src/UniFox/Core/Log.cpp
+    src/UniFox/Core/Layer.cpp
+    src/UniFox/Core/LayerStack.cpp
+
     src/UniFox/ImGui/ImGuiLayer.cpp
+
     src/UniFox/Platform/Windows/WindowsInput.cpp
+    src/UniFox/Platform/Windows/WindowsWindow.cpp
+
     src/UniFox/Platform/OpenGL/OpenGLContext.cpp
     src/UniFox/Platform/OpenGL/OpenGLBuffer.cpp
     src/UniFox/Platform/OpenGL/OpenGLShader.cpp
+
     src/UniFox/Renderer/Shader.cpp
     src/UniFox/Renderer/Buffer.cpp
     src/UniFox/Renderer/Renderer.cpp

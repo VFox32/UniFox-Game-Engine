@@ -1,8 +1,5 @@
 #pragma once
 
-#include "UniFox/Core.h"
-#include "ufpch.h"
-
 namespace UniFox {
     class UF_API Input {
     public:
