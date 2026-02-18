@@ -20,8 +20,8 @@ namespace UniFox {
         m_ImGuiLayer = new ImGuiLayer();
         PushOverlay(m_ImGuiLayer);
 
-        glGenVertexArrays(1, &m_VertexArray);
-        glBindVertexArray(m_VertexArray); 
+        //glGenVertexArrays(1, &m_VertexArray);
+        //glBindVertexArray(m_VertexArray); 
 
         float vertecies[3 * 3] = {
             -0.5f, -0.5f,  0.0f,
@@ -29,7 +29,6 @@ namespace UniFox {
              0.0f,  0.5f,  0.0f
         };
         m_VertexBuffer.reset(VertexBuffer::Create(vertecies, sizeof(vertecies)));
-        //m_VertexBuffer->Bind();
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
@@ -38,7 +37,6 @@ namespace UniFox {
             0, 1, 2
         };
         m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
-        //m_IndexBuffer->Bind();
 
         std::string vertexSrc = R"(
             #version 330 core
@@ -64,7 +62,7 @@ namespace UniFox {
             }
         )";
 
-        m_Shader.reset(new Shader(vertexSrc, fragmentSrc));
+        m_Shader.reset(Shader::Create(vertexSrc, fragmentSrc));
     }
     Application::~Application() {
 
