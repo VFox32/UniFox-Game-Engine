@@ -2,7 +2,7 @@ project(UniFox)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
-set(GLFW_BUILD_SHARED_LIBS OFF CACHE BOOL "Build GLFW as a shared library" FORCE)
+option(GLFW_BUILD_SHARED_LIBS "Build GLFW shared" OFF)
 
 add_subdirectory(vendor/spdlog)
 add_subdirectory(vendor/glfw)
@@ -20,6 +20,7 @@ add_library(UniFox STATIC
     src/UniFox/ImGui/ImGuiLayer.cpp
     src/UniFox/Platform/Windows/WindowsInput.cpp
     src/UniFox/Platform/OpenGL/OpenGLContext.cpp
+    src/UniFox/Renderer/Shader.cpp
 )
 
 target_compile_definitions(UniFox PRIVATE
