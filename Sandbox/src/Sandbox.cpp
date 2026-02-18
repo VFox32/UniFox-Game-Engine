@@ -24,7 +24,7 @@ public:
     void OnEvent(UniFox::Event& event) override {
         if(event.GetEventType() == UniFox::EventType::KeyPressed) {
             UniFox::KeyPressedEvent& e = (UniFox::KeyPressedEvent&)event;
-            UF_INFO("{0}", (char)e.GetKeyCode());
+            UF_TRACE("{0}", (char)e.GetKeyCode());
         }
     }
 };

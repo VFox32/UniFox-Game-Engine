@@ -14,12 +14,11 @@ namespace UniFox {
         glfwMakeContextCurrent(m_WindowHandle);
         int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
         UF_CORE_ASSERT(status, "Failed to initialize Glad!");
+
+        UF_CORE_INFO("OpenGLRenderer: {0} {1} {1}", (const char*)glGetString(GL_VENDOR), (const char*)glGetString(GL_RENDERER), (const char*)glGetString(GL_VERSION));
     }
 
     void OpenGLContext::SwapBuffers() {
-        glBegin(GL_TRIANGLES);
-        glEnd();
-
         glfwSwapBuffers(m_WindowHandle);
     }
 }
