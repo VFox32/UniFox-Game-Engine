@@ -1,6 +1,8 @@
 #pragma once
 
 #include "UniFox/Window.h"
+#include "UniFox/Renderer/GraphicsContext.h"
+#include "UniFox/Platform/OpenGL/OpenGLContext.h"
 
 #include "GLFW/glfw3.h"
 
@@ -25,6 +27,7 @@ namespace UniFox {
         virtual void ShutDown();
     private:
         GLFWwindow* m_Window;
+        GraphicsContext* m_Context;
 
         struct WindowData {
             std::string Title;
