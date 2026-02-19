@@ -26,10 +26,12 @@ add_library(UniFox STATIC
     src/UniFox/Platform/OpenGL/OpenGLContext.cpp
     src/UniFox/Platform/OpenGL/OpenGLBuffer.cpp
     src/UniFox/Platform/OpenGL/OpenGLShader.cpp
+    src/UniFox/Platform/OpenGL/OpenGLVertexArray.cpp
 
     src/UniFox/Renderer/Shader.cpp
     src/UniFox/Renderer/Buffer.cpp
     src/UniFox/Renderer/Renderer.cpp
+    src/UniFox/Renderer/VertexArray.cpp
 )
 
 target_compile_definitions(UniFox PRIVATE
