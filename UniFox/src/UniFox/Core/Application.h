@@ -1,17 +1,15 @@
 #pragma once
 #include "ufpch.h"
 
+#include "UniFox/Core/Core.h"
+#include "UniFox/Core/Log.h"
+
 #include "Window.h"
 #include "LayerStack.h"
 #include "UniFox/Events/Event.h"
 #include "UniFox/Events/WindowEvent.h"
 
 #include "UniFox/ImGui/ImGuiLayer.h"
-
-#include "UniFox/Renderer/Shader.h"
-#include "UniFox/Renderer/Buffer.h"
-#include "UniFox/Renderer/VertexArray.h"
-#include "UniFox/Renderer/OrthographicCamera.h"
 
 namespace UniFox {
 
@@ -31,18 +29,11 @@ namespace UniFox {
         inline Window& GetWindow() {return *m_Window;}
     private:
         bool OnWindowClose(WindowCloseEvent& e);
-        bool OnKeyPressed(KeyPressedEvent& e);
-        bool OnMouseScroll(MouseScrolledEvent& e);
 
         std::unique_ptr<Window> m_Window;
         ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
         LayerStack m_LayerStack;
-
-        std::shared_ptr<Shader> m_Shader;
-        std::shared_ptr<VertexArray> m_VertexArray;
-
-        OrthographicCamera m_Camera;
     private:
         static Application* s_Instance;
     };

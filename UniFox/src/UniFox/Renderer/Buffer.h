@@ -1,5 +1,7 @@
 #pragma once
 
+#include "UniFox/Core/Core.h"
+
 #include <cstdint>
 #include <vector>
 

@@ -13,9 +13,6 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "UniFox/Core/Core.h"
-#include "UniFox/Core/Log.h"
-
 #ifdef UF_PLATFORM_WINDOWS
     #include <Windows.h>
 #endif

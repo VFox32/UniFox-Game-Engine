@@ -1,6 +1,8 @@
 #include "ufpch.h"
 #include "WindowsWindow.h"
 
+#include "UniFox/Core/Log.h"
+
 #include "UniFox/Events/KeyEvent.h"
 #include "UniFox/Events/MouseEvent.h"
 #include "UniFox/Events/WindowEvent.h"

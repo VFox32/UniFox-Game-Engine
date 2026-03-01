@@ -1,7 +1,8 @@
 #include "ufpch.h"
 #include "OpenGLShader.h"
 
-#include "OpenGLShader.h"
+#include "UniFox/Core/Core.h"
+#include "UniFox/Core/Log.h"
 
 #include "glad/glad.h"
 #include "glm/gtc/type_ptr.hpp"

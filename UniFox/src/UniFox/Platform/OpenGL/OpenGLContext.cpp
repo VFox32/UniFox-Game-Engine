@@ -1,6 +1,9 @@
 #include "ufpch.h"
 #include "OpenGLContext.h"
 
+#include "UniFox/Core/Core.h"
+#include "UniFox/Core/Log.h"
+
 #include "GLFW/glfw3.h"
 #include <glad/glad.h>
 
