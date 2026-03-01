@@ -1,6 +1,9 @@
 #include "ufpch.h"
 #include "OpenGLVertexArray.h"
 
+#include "UniFox/Core/Core.h"
+#include "UniFox/Core/Log.h"
+
 #include "glad/glad.h"
 
 namespace UniFox {
