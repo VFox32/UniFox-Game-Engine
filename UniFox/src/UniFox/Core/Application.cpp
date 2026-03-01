@@ -4,12 +4,15 @@
 #include "Input.h"
 #include "UniFox/Renderer/Renderer.h"
 
+#include "KeyCodes.h"
+
 namespace UniFox {
     #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
     Application* Application::s_Instance = nullptr;
 
-    Application::Application(){
+    Application::Application() 
+        : m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) {
         UF_CORE_ASSERT(!s_Instance, "Application already exists!");
         s_Instance = this;
 
@@ -49,13 +52,15 @@ namespace UniFox {
             layout(location = 0) in vec3 a_Position;
             layout(location = 1) in vec4 a_Color;
 
+            uniform mat4 u_ViewProjection;
+
             out vec3 v_Position;
             out vec4 v_Color;
 
             void main() {
                 v_Position = a_Position;
                 v_Color = a_Color;
-                gl_Position = vec4(a_Position, 1.0);
+                gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
             }
         )";
         std::string fragmentSrc = R"(
@@ -92,6 +97,10 @@ namespace UniFox {
     void Application::OnEvent(Event& e) {
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+        dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_FN(OnKeyPressed));
+        dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT_FN(OnMouseScroll));
+
+        //UF_CORE_INFO("{0}", e.ToString());
 
         for(auto it = m_LayerStack.end(); it != m_LayerStack.begin(); ) {
             (*--it)->OnEvent(e);
@@ -100,15 +109,39 @@ namespace UniFox {
         }
     }
 
+    bool Application::OnKeyPressed(KeyPressedEvent& e) {
+        glm::vec3 offset = glm::vec3(0);
+        switch (e.GetKeyCode()) {
+            case UF_KEY_W:
+                offset.y += 0.01;
+                break;
+            case UF_KEY_S:
+                offset.y -= 0.01;
+                break;
+            case UF_KEY_D:
+                offset.x += 0.01;
+                break;
+            case UF_KEY_A:
+                offset.x -= 0.01;
+                break;
+        }
+        m_Camera.SetPosition(m_Camera.GetPosition() + offset);
+        return true;
+    }
+
+    bool Application::OnMouseScroll(MouseScrolledEvent& e) {
+        m_Camera.SetRotation(m_Camera.GetRotation() + e.GetYOffset()*10.0f);
+        return true;
+    }
+
     void Application::Run() {
         while(m_Running) {
             RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
             RenderCommand::Clear();
 
-            Renderer::BeginScene();
+            Renderer::BeginScene(m_Camera);
 
-            m_Shader->Bind();
-            Renderer::Submit(m_VertexArray);
+            Renderer::Submit(m_Shader, m_VertexArray);
 
             Renderer::EndScene();
 

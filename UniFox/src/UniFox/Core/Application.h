@@ -11,6 +11,7 @@
 #include "UniFox/Renderer/Shader.h"
 #include "UniFox/Renderer/Buffer.h"
 #include "UniFox/Renderer/VertexArray.h"
+#include "UniFox/Renderer/OrthographicCamera.h"
 
 namespace UniFox {
 
@@ -30,6 +31,8 @@ namespace UniFox {
         inline Window& GetWindow() {return *m_Window;}
     private:
         bool OnWindowClose(WindowCloseEvent& e);
+        bool OnKeyPressed(KeyPressedEvent& e);
+        bool OnMouseScroll(MouseScrolledEvent& e);
 
         std::unique_ptr<Window> m_Window;
         ImGuiLayer* m_ImGuiLayer;
@@ -38,6 +41,8 @@ namespace UniFox {
 
         std::shared_ptr<Shader> m_Shader;
         std::shared_ptr<VertexArray> m_VertexArray;
+
+        OrthographicCamera m_Camera;
     private:
         static Application* s_Instance;
     };

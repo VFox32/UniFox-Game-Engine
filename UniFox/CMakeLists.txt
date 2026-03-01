@@ -35,6 +35,7 @@ add_library(UniFox STATIC
     src/UniFox/Renderer/VertexArray.cpp
     src/UniFox/Renderer/RendererAPI.cpp
     src/UniFox/Renderer/RenderCommand.cpp
+    src/UniFox/Renderer/OrthographicCamera.cpp
 )
 
 target_compile_definitions(UniFox PRIVATE
