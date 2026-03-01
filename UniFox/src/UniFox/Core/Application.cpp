@@ -14,6 +14,7 @@ namespace UniFox {
 
         m_Window = std::unique_ptr<Window>(Window::Create());
         m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+        m_Window->SetVSync(true);
 
         m_ImGuiLayer = new ImGuiLayer();
         PushOverlay(m_ImGuiLayer);
@@ -48,8 +49,12 @@ namespace UniFox {
 
     void Application::Run() {
         while(m_Running) {
+            TimePoint now = Clock::Now();
+            Duration deltaTime = now - m_LastTime;
+            m_LastTime = now;
+
             for(Layer* layer : m_LayerStack)
-                layer->OnUpdate();
+                layer->OnUpdate(deltaTime);
 
             m_ImGuiLayer->Begin();
             for(Layer* layer : m_LayerStack)

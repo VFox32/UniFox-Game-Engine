@@ -5,6 +5,9 @@
 #include "UniFox/Core/Layer.h"
 #include "UniFox/Core/Log.h"
 
+#include "UniFox/Core/Time.h"
+#include "UniFox/Core/Timer.h"
+
 #include "UniFox/Core/Input.h"
 #include "UniFox/Core/KeyCodes.h"
 #include "UniFox/Core/MouseButtonCodes.h"

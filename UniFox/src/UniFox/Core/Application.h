@@ -9,6 +9,8 @@
 #include "UniFox/Events/Event.h"
 #include "UniFox/Events/WindowEvent.h"
 
+#include "UniFox/Core/Time.h"
+
 #include "UniFox/ImGui/ImGuiLayer.h"
 
 namespace UniFox {
@@ -29,11 +31,12 @@ namespace UniFox {
         inline Window& GetWindow() {return *m_Window;}
     private:
         bool OnWindowClose(WindowCloseEvent& e);
-
+    private:
         std::unique_ptr<Window> m_Window;
         ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
         LayerStack m_LayerStack;
+        TimePoint m_LastTime = Clock::Now();
     private:
         static Application* s_Instance;
     };

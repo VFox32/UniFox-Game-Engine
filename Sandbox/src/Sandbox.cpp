@@ -66,13 +66,19 @@ public:
         m_Shader.reset(UniFox::Shader::Create(vertexSrc, fragmentSrc));
     }
 
-    void OnUpdate() override {
-        if(UniFox::Input::IsKeyPressed(UF_KEY_W)) m_CameraPosition.y += 0.001;
-        if(UniFox::Input::IsKeyPressed(UF_KEY_S)) m_CameraPosition.y -= 0.001;
-        if(UniFox::Input::IsKeyPressed(UF_KEY_A)) m_CameraPosition.x -= 0.001;
-        if(UniFox::Input::IsKeyPressed(UF_KEY_D)) m_CameraPosition.x += 0.001;
-        if(UniFox::Input::IsKeyPressed(UF_KEY_Q)) m_CameraRotation += 0.01;
-        if(UniFox::Input::IsKeyPressed(UF_KEY_E)) m_CameraRotation -= 0.01;
+    void OnUpdate(UniFox::Duration dt) override {
+        UF_INFO("UPS: {0}", 1.0f/dt.s());
+
+        float movementSpeed = 1.0f * dt;
+        float rotationSpeed = 40.0f * dt;
+
+        if(UniFox::Input::IsKeyPressed(UF_KEY_W)) m_CameraPosition.y += movementSpeed;
+        if(UniFox::Input::IsKeyPressed(UF_KEY_S)) m_CameraPosition.y -= movementSpeed;
+        if(UniFox::Input::IsKeyPressed(UF_KEY_A)) m_CameraPosition.x -= movementSpeed;
+        if(UniFox::Input::IsKeyPressed(UF_KEY_D)) m_CameraPosition.x += movementSpeed;
+
+        if(UniFox::Input::IsKeyPressed(UF_KEY_Q)) m_CameraRotation += rotationSpeed;
+        if(UniFox::Input::IsKeyPressed(UF_KEY_E)) m_CameraRotation -= rotationSpeed;
 
         UniFox::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
         UniFox::RenderCommand::Clear();

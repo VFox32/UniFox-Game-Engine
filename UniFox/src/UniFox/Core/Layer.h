@@ -3,6 +3,8 @@
 #include "Core.h"
 #include "UniFox/Events/Event.h"
 
+#include "UniFox/Core/Time.h"
+
 namespace UniFox {
     class UF_API Layer {
     public:
@@ -11,7 +13,7 @@ namespace UniFox {
 
         virtual void OnAttach() {}
         virtual void OnDetach() {}
-        virtual void OnUpdate() {}
+        virtual void OnUpdate(Duration deltaTime) {}
         virtual void OnImGuiRender() {}
         virtual void OnEvent(Event& event) {}
 
