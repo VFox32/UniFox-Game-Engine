@@ -3,17 +3,20 @@
 
 #include "imgui.h"
 
+#include "glm/gtc/matrix_transform.hpp"
+
 class ExampleLayer : public UniFox::Layer {
 public:
     ExampleLayer() 
         : Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) {
 
+        // TRIANGLE
         m_VertexArray.reset(UniFox::VertexArray::Create());
 
         float vertecies[3 * 7] = {
-            -0.5f, -0.5f,  0.0f, 0.8f, 0.2f, 0.1f, 1.0f,
-             0.5f, -0.5f,  0.0f, 0.1f, 0.8f, 0.2f, 1.0f,
-             0.0f,  0.5f,  0.0f, 0.2f, 0.1f, 0.8f, 1.0f
+            -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+             0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+             0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 1.0f
         };
         std::shared_ptr<UniFox::VertexBuffer> vertexBuffer;
         vertexBuffer.reset(UniFox::VertexBuffer::Create(vertecies, sizeof(vertecies)));
@@ -31,7 +34,31 @@ public:
         std::shared_ptr<UniFox::IndexBuffer> indexBuffer;
         indexBuffer.reset(UniFox::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
         m_VertexArray->SetIndexBuffer(indexBuffer);
+        
+        // SQUARE
+        m_SquareVertexArray.reset(UniFox::VertexArray::Create());
 
+        float SquareVertecies[4*7] = {
+            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f
+        };
+        std::shared_ptr<UniFox::VertexBuffer> squareVertexBuffer;
+        squareVertexBuffer.reset(UniFox::VertexBuffer::Create(SquareVertecies, sizeof(SquareVertecies)));
+
+        squareVertexBuffer->SetLayout(layout);
+        m_SquareVertexArray->AddVertexBuffer(squareVertexBuffer);
+        
+        uint32_t squareIndices[6] {
+            0, 1, 2,
+            2, 1, 3
+        };
+        std::shared_ptr<UniFox::IndexBuffer> squareIndexBuffer;
+        squareIndexBuffer.reset(UniFox::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+        m_SquareVertexArray->SetIndexBuffer(squareIndexBuffer);
+
+        // SHADER
         std::string vertexSrc = R"(
             #version 330 core
 
@@ -39,6 +66,7 @@ public:
             layout(location = 1) in vec4 a_Color;
 
             uniform mat4 u_ViewProjection;
+            uniform mat4 u_Transform;
 
             out vec3 v_Position;
             out vec4 v_Color;
@@ -46,7 +74,7 @@ public:
             void main() {
                 v_Position = a_Position;
                 v_Color = a_Color;
-                gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
             }
         )";
         std::string fragmentSrc = R"(
@@ -88,6 +116,13 @@ public:
 
         UniFox::Renderer::BeginScene(m_Camera);
 
+        glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
+
+        for(int x = 0; x < 5; x++)
+        for(int y = 0; y < 5; y++) {
+            glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3((float)x * 0.2f, (float)y * 0.2f, 0.0f)) * scale;
+            UniFox::Renderer::Submit(m_Shader, m_SquareVertexArray, transform);
+        }
         UniFox::Renderer::Submit(m_Shader, m_VertexArray);
 
         UniFox::Renderer::EndScene();
@@ -99,15 +134,12 @@ public:
     void OnEvent(UniFox::Event& event) override {
         UniFox::EventDispatcher dispatcher(event);
 
-        dispatcher.Dispatch<UniFox::MouseScrolledEvent>(UF_BIND_EVENT_FN(OnMouseScroll));
-    }
-
-    bool OnMouseScroll(UniFox::MouseScrolledEvent& e) {
-        return false;
+        //dispatcher.Dispatch<UniFox::WindowResizeEvent>(UF_BIND_EVENT_FN(OnWindowResize));
     }
 private:
     std::shared_ptr<UniFox::Shader> m_Shader;
     std::shared_ptr<UniFox::VertexArray> m_VertexArray;
+    std::shared_ptr<UniFox::VertexArray> m_SquareVertexArray;
 
     UniFox::OrthographicCamera m_Camera;
     glm::vec3 m_CameraPosition;
