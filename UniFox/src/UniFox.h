@@ -18,10 +18,12 @@
 #include "UniFox/Renderer/Renderer.h"
 #include "UniFox/Renderer/RenderCommand.h"
 
-#include "UniFox/Renderer/Shader.h"
 #include "UniFox/Renderer/Buffer.h"
+#include "UniFox/Renderer/Shader.h"
+#include "UniFox/Renderer/Texture.h"
 #include "UniFox/Renderer/VertexArray.h"
 
 #include "UniFox/Renderer/OrthographicCamera.h"
 
+// Entry Point
 #include "UniFox/Core/EntryPoint.h"

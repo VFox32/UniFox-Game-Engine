@@ -12,96 +12,101 @@ class ExampleLayer : public UniFox::Layer {
 public:
     ExampleLayer() 
         : Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) {
-
-        // TRIANGLE
+        
         m_VertexArray.reset(UniFox::VertexArray::Create());
 
-        float vertecies[3 * 7] = {
-            -0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-             0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-             0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 1.0f
+        float vertecies[4*5] = {
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
         };
         UniFox::Ref<UniFox::VertexBuffer> vertexBuffer;
         vertexBuffer.reset(UniFox::VertexBuffer::Create(vertecies, sizeof(vertecies)));
-
+        
         UniFox::BufferLayout layout = {
             {UniFox::ShaderDataType::Float3, "a_Position"},
-            {UniFox::ShaderDataType::Float4, "a_Color"}
+            {UniFox::ShaderDataType::Float2, "a_TexCoord"}
         };
+
         vertexBuffer->SetLayout(layout);
         m_VertexArray->AddVertexBuffer(vertexBuffer);
-
-        uint32_t indices[3] {
-            0, 1, 2
+        
+        uint32_t indices[6] {
+            0, 1, 2,
+            2, 3, 0
         };
         UniFox::Ref<UniFox::IndexBuffer> indexBuffer;
         indexBuffer.reset(UniFox::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
         m_VertexArray->SetIndexBuffer(indexBuffer);
-        
-        // SQUARE
-        m_SquareVertexArray.reset(UniFox::VertexArray::Create());
-
-        float SquareVertecies[4*7] = {
-            -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
-             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f
-        };
-        UniFox::Ref<UniFox::VertexBuffer> squareVertexBuffer;
-        squareVertexBuffer.reset(UniFox::VertexBuffer::Create(SquareVertecies, sizeof(SquareVertecies)));
-
-        squareVertexBuffer->SetLayout(layout);
-        m_SquareVertexArray->AddVertexBuffer(squareVertexBuffer);
-        
-        uint32_t squareIndices[6] {
-            0, 1, 2,
-            2, 1, 3
-        };
-        UniFox::Ref<UniFox::IndexBuffer> squareIndexBuffer;
-        squareIndexBuffer.reset(UniFox::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
-        m_SquareVertexArray->SetIndexBuffer(squareIndexBuffer);
 
         // SHADER
-        std::string vertexSrc = R"(
+        std::string flatColorVertexSrc = R"(
             #version 330 core
 
             layout(location = 0) in vec3 a_Position;
-            layout(location = 1) in vec4 a_Color;
 
             uniform mat4 u_ViewProjection;
             uniform mat4 u_Transform;
 
             out vec3 v_Position;
-            out vec4 v_Color;
 
             void main() {
-                v_Position = a_Position;
-                v_Color = a_Color;
                 gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
             }
         )";
-        std::string fragmentSrc = R"(
+        std::string flatColorFragmentSrc = R"(
             #version 330 core
 
             layout(location = 0) out vec4 color;
 
             uniform vec4 u_Color;
 
-            in vec3 v_Position;
-            in vec4 v_Color;
-
             void main() {
                 color = u_Color;
-                //color = v_Color;
-                //color = vec4(v_Position*0.5+0.5, 1);
             }
         )";
+        m_FlatColorShader.reset(UniFox::Shader::Create(flatColorVertexSrc, flatColorFragmentSrc));
 
-        m_Shader.reset(UniFox::Shader::Create(vertexSrc, fragmentSrc));
+        std::string textureVertexSrc = R"(
+            #version 330 core
+
+            layout(location = 0) in vec3 a_Position;
+            layout(location = 1) in vec2 a_TexCoord;
+
+            uniform mat4 u_ViewProjection;
+            uniform mat4 u_Transform;
+
+            out vec2 v_TexCoord;
+
+            void main() {
+                v_TexCoord = a_TexCoord;
+
+                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+            }
+        )";
+        std::string textureFragmentSrc = R"(
+            #version 330 core
+
+            layout(location = 0) out vec4 color;
+
+            uniform sampler2D u_Texture;
+
+            in vec2 v_TexCoord;
+
+            void main() {
+                color = texture(u_Texture , v_TexCoord);
+            }
+        )";
+        m_TextureShader.reset(UniFox::Shader::Create(textureVertexSrc, textureFragmentSrc));
+        
+        m_Texture = UniFox::Texture2D::Create("assets/textures/54p_.png");
+        std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_TextureShader)->Bind();
+        std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
     }
 
     void OnUpdate(UniFox::Duration dt) override {
-        UF_INFO("UPS: {0}", 1.0f/dt.s());
+        //UF_INFO("UPS: {0}", 1.0f/dt.s());
 
         float movementSpeed = 1.0f * dt;
         float rotationSpeed = 40.0f * dt;
@@ -122,17 +127,19 @@ public:
 
         UniFox::Renderer::BeginScene(m_Camera);
 
-        glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
+        glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.19f));
 
-        std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_Shader)->Bind();
-        std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_Shader)->UploadUniformFloat4("u_Color", m_Color);
+        std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_FlatColorShader)->Bind();
+        std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat4("u_Color", m_Color);
 
         for(int x = 0; x < 5; x++)
         for(int y = 0; y < 5; y++) {
             glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3((float)x * 0.2f, (float)y * 0.2f, 0.0f)) * scale;
-            UniFox::Renderer::Submit(m_Shader, m_SquareVertexArray, transform);
+            UniFox::Renderer::Submit(m_FlatColorShader, m_VertexArray, transform);
         }
-        UniFox::Renderer::Submit(m_Shader, m_VertexArray);
+
+        m_Texture->Bind();
+        UniFox::Renderer::Submit(m_TextureShader, m_VertexArray);
 
         UniFox::Renderer::EndScene();
     }
@@ -149,9 +156,10 @@ public:
         //dispatcher.Dispatch<UniFox::WindowResizeEvent>(UF_BIND_EVENT_FN(OnWindowResize));
     }
 private:
-    UniFox::Ref<UniFox::Shader> m_Shader;
+    UniFox::Ref<UniFox::Shader> m_FlatColorShader, m_TextureShader;
     UniFox::Ref<UniFox::VertexArray> m_VertexArray;
-    UniFox::Ref<UniFox::VertexArray> m_SquareVertexArray;
+
+    UniFox::Ref<UniFox::Texture2D> m_Texture;
 
     UniFox::OrthographicCamera m_Camera;
     glm::vec3 m_CameraPosition;

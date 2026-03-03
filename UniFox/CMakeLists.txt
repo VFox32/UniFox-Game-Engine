@@ -13,6 +13,8 @@ add_subdirectory(vendor/glm)
 add_library(UniFox STATIC
     src/ufpch.cpp
 
+    vendor/stb_image/stb_image.cpp
+
     src/UniFox/Core/Application.cpp
     src/UniFox/Core/Log.cpp
     src/UniFox/Core/Layer.cpp
@@ -23,12 +25,6 @@ add_library(UniFox STATIC
     src/UniFox/Platform/Windows/WindowsInput.cpp
     src/UniFox/Platform/Windows/WindowsWindow.cpp
 
-    src/UniFox/Platform/OpenGL/OpenGLContext.cpp
-    src/UniFox/Platform/OpenGL/OpenGLBuffer.cpp
-    src/UniFox/Platform/OpenGL/OpenGLShader.cpp
-    src/UniFox/Platform/OpenGL/OpenGLVertexArray.cpp
-    src/UniFox/Platform/OpenGL/OpenGLRendererAPI.cpp
-
     src/UniFox/Renderer/Shader.cpp
     src/UniFox/Renderer/Buffer.cpp
     src/UniFox/Renderer/Renderer.cpp
@@ -36,6 +32,14 @@ add_library(UniFox STATIC
     src/UniFox/Renderer/RendererAPI.cpp
     src/UniFox/Renderer/RenderCommand.cpp
     src/UniFox/Renderer/OrthographicCamera.cpp
+    src/UniFox/Renderer/Texture.cpp
+
+    src/UniFox/Platform/OpenGL/OpenGLContext.cpp
+    src/UniFox/Platform/OpenGL/OpenGLBuffer.cpp
+    src/UniFox/Platform/OpenGL/OpenGLShader.cpp
+    src/UniFox/Platform/OpenGL/OpenGLVertexArray.cpp
+    src/UniFox/Platform/OpenGL/OpenGLRendererAPI.cpp
+    src/UniFox/Platform/OpenGL/OpenGLTexture.cpp
 )
 
 target_compile_definitions(UniFox PRIVATE
@@ -52,6 +56,7 @@ target_include_directories(UniFox
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Glad/include
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/ImGui
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image
 )
 
 add_dependencies(${PROJECT_NAME} spdlog)
