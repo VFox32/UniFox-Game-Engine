@@ -1,6 +1,8 @@
 #include "ufpch.h"
 #include "Shader.h"
 
+#include "UniFox/Core/Core.h"
+
 #include "Renderer.h"
 
 #include "UniFox/Platform/OpenGL/OpenGLShader.h"
