@@ -1,9 +1,12 @@
 
 #include <UniFox.h>
 
+#include "UniFox/Platform/OpenGL/OpenGLShader.h"
+
 #include "imgui.h"
 
 #include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 class ExampleLayer : public UniFox::Layer {
 public:
@@ -121,13 +124,12 @@ public:
 
         glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.2f));
 
+        std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_Shader)->Bind();
+        std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_Shader)->UploadUniformFloat4("u_Color", m_Color);
+
         for(int x = 0; x < 5; x++)
         for(int y = 0; y < 5; y++) {
             glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3((float)x * 0.2f, (float)y * 0.2f, 0.0f)) * scale;
-            if((x+y) % 2 == 0)
-                m_Shader->UploadUniformFloat4("u_Color", m_Color1);
-            else
-                m_Shader->UploadUniformFloat4("u_Color", m_Color2);
             UniFox::Renderer::Submit(m_Shader, m_SquareVertexArray, transform);
         }
         UniFox::Renderer::Submit(m_Shader, m_VertexArray);
@@ -137,10 +139,7 @@ public:
 
     virtual void OnImGuiRender() override {
         ImGui::Begin("Colors");
-            float* colors[3] = {&m_Color1.x, &m_Color1.y, &m_Color1.z};
-            ImGui::ColorPicker3("Color 1", *colors);
-            float* colors2[3] = {&m_Color2.x, &m_Color2.y, &m_Color2.z};
-            ImGui::ColorPicker3("Color 2", *colors2);
+            ImGui::ColorEdit3("Color", glm::value_ptr(m_Color));
         ImGui::End();
     }
 
@@ -158,8 +157,7 @@ private:
     glm::vec3 m_CameraPosition;
     float m_CameraRotation;
     
-    glm::vec4 m_Color1 = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-    glm::vec4 m_Color2 = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+    glm::vec4 m_Color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 };
 
 class Sandbox : public UniFox::Application {
