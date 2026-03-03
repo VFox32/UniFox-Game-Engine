@@ -101,6 +101,7 @@ public:
         m_TextureShader.reset(UniFox::Shader::Create(textureVertexSrc, textureFragmentSrc));
         
         m_Texture = UniFox::Texture2D::Create("assets/textures/54p_.png");
+        m_CheckerTexture = UniFox::Texture2D::Create("assets/textures/Checker.png");
         std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_TextureShader)->Bind();
         std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
     }
@@ -140,6 +141,8 @@ public:
 
         m_Texture->Bind();
         UniFox::Renderer::Submit(m_TextureShader, m_VertexArray);
+        m_CheckerTexture->Bind();
+        UniFox::Renderer::Submit(m_TextureShader, m_VertexArray);
 
         UniFox::Renderer::EndScene();
     }
@@ -159,7 +162,7 @@ private:
     UniFox::Ref<UniFox::Shader> m_FlatColorShader, m_TextureShader;
     UniFox::Ref<UniFox::VertexArray> m_VertexArray;
 
-    UniFox::Ref<UniFox::Texture2D> m_Texture;
+    UniFox::Ref<UniFox::Texture2D> m_Texture, m_CheckerTexture;
 
     UniFox::OrthographicCamera m_Camera;
     glm::vec3 m_CameraPosition;
