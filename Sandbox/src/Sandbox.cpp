@@ -21,7 +21,7 @@ public:
              0.5f, -0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
              0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 1.0f
         };
-        std::shared_ptr<UniFox::VertexBuffer> vertexBuffer;
+        UniFox::Ref<UniFox::VertexBuffer> vertexBuffer;
         vertexBuffer.reset(UniFox::VertexBuffer::Create(vertecies, sizeof(vertecies)));
 
         UniFox::BufferLayout layout = {
@@ -34,7 +34,7 @@ public:
         uint32_t indices[3] {
             0, 1, 2
         };
-        std::shared_ptr<UniFox::IndexBuffer> indexBuffer;
+        UniFox::Ref<UniFox::IndexBuffer> indexBuffer;
         indexBuffer.reset(UniFox::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
         m_VertexArray->SetIndexBuffer(indexBuffer);
         
@@ -47,7 +47,7 @@ public:
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f
         };
-        std::shared_ptr<UniFox::VertexBuffer> squareVertexBuffer;
+        UniFox::Ref<UniFox::VertexBuffer> squareVertexBuffer;
         squareVertexBuffer.reset(UniFox::VertexBuffer::Create(SquareVertecies, sizeof(SquareVertecies)));
 
         squareVertexBuffer->SetLayout(layout);
@@ -57,7 +57,7 @@ public:
             0, 1, 2,
             2, 1, 3
         };
-        std::shared_ptr<UniFox::IndexBuffer> squareIndexBuffer;
+        UniFox::Ref<UniFox::IndexBuffer> squareIndexBuffer;
         squareIndexBuffer.reset(UniFox::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
         m_SquareVertexArray->SetIndexBuffer(squareIndexBuffer);
 
@@ -149,9 +149,9 @@ public:
         //dispatcher.Dispatch<UniFox::WindowResizeEvent>(UF_BIND_EVENT_FN(OnWindowResize));
     }
 private:
-    std::shared_ptr<UniFox::Shader> m_Shader;
-    std::shared_ptr<UniFox::VertexArray> m_VertexArray;
-    std::shared_ptr<UniFox::VertexArray> m_SquareVertexArray;
+    UniFox::Ref<UniFox::Shader> m_Shader;
+    UniFox::Ref<UniFox::VertexArray> m_VertexArray;
+    UniFox::Ref<UniFox::VertexArray> m_SquareVertexArray;
 
     UniFox::OrthographicCamera m_Camera;
     glm::vec3 m_CameraPosition;
