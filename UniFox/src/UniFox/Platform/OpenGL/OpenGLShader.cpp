@@ -42,9 +42,16 @@ namespace UniFox {
         std::string source = ReadFile(filepath);
         std::unordered_map<GLenum, std::string> shaderSources = PreProcess(source);
         Compile(shaderSources);
+
+        std::size_t lastSlash = filepath.find_last_of("/\\");
+        lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+        std::size_t lastDot = filepath.rfind(".");
+        std::size_t count = lastDot == std::string::npos ? filepath.size() - lastSlash : lastDot - lastSlash;
+        m_Name = filepath.substr(lastSlash, count);
     }
 
-    OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc) {
+    OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) 
+        : m_Name(name) {
         std::unordered_map<GLenum, std::string> shaderSources;
 
         shaderSources[GL_VERTEX_SHADER] = vertexSrc;
@@ -75,9 +82,10 @@ namespace UniFox {
     }
 
     void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources) {
+        UF_CORE_ASSERT(shaderSources.size() <= 4, "Too many Shaders!");
         GLuint program = glCreateProgram();
-        std::vector<GLuint> glShaderIDs;
-        glShaderIDs.reserve(shaderSources.size());
+        std::array<GLuint, 4> glShaderIDs;
+        int glShaderIDsIndex = 0;
 
         for(auto& kv : shaderSources) {
             GLenum type = kv.first;
@@ -107,7 +115,7 @@ namespace UniFox {
             }
 
             glAttachShader(program, shader);
-            glShaderIDs.push_back(shader);
+            glShaderIDs[glShaderIDsIndex++] = shader;
         }
 
         glLinkProgram(program);

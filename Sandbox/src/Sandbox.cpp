@@ -40,14 +40,14 @@ public:
         indexBuffer.reset(UniFox::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
         m_VertexArray->SetIndexBuffer(indexBuffer);
 
-        m_FlatColorShader.reset(UniFox::Shader::Create("assets/shaders/FlatColor.glsl"));
-        m_TextureShader.reset(UniFox::Shader::Create("assets/shaders/Texture.glsl"));
+        m_FlatColorShader = UniFox::Shader::Create("assets/shaders/FlatColor.glsl");
         
         m_Texture = UniFox::Texture2D::Create("assets/textures/54p_.png");
         m_CheckerTexture = UniFox::Texture2D::Create("assets/textures/Checker.png");
 
-        std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_TextureShader)->Bind();
-        std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
+        auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
+        std::dynamic_pointer_cast<UniFox::OpenGLShader>(textureShader)->Bind();
+        std::dynamic_pointer_cast<UniFox::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
     }
 
     void OnUpdate(UniFox::Duration dt) override {
@@ -83,10 +83,11 @@ public:
             UniFox::Renderer::Submit(m_FlatColorShader, m_VertexArray, transform);
         }
         
+        auto textureShader = m_ShaderLibrary.Get("Texture");
         m_Texture->Bind();
-        UniFox::Renderer::Submit(m_TextureShader, m_VertexArray);
+        UniFox::Renderer::Submit(textureShader, m_VertexArray);
         m_CheckerTexture->Bind();
-        UniFox::Renderer::Submit(m_TextureShader, m_VertexArray);
+        UniFox::Renderer::Submit(textureShader, m_VertexArray);
 
         UniFox::Renderer::EndScene();
     }
@@ -103,7 +104,8 @@ public:
         //dispatcher.Dispatch<UniFox::WindowResizeEvent>(UF_BIND_EVENT_FN(OnWindowResize));
     }
 private:
-    UniFox::Ref<UniFox::Shader> m_FlatColorShader, m_TextureShader;
+    UniFox::ShaderLibrary m_ShaderLibrary;
+    UniFox::Ref<UniFox::Shader> m_FlatColorShader;
     UniFox::Ref<UniFox::VertexArray> m_VertexArray;
 
     UniFox::Ref<UniFox::Texture2D> m_Texture, m_CheckerTexture;
