@@ -40,68 +40,12 @@ public:
         indexBuffer.reset(UniFox::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
         m_VertexArray->SetIndexBuffer(indexBuffer);
 
-        // SHADER
-        std::string flatColorVertexSrc = R"(
-            #version 330 core
-
-            layout(location = 0) in vec3 a_Position;
-
-            uniform mat4 u_ViewProjection;
-            uniform mat4 u_Transform;
-
-            out vec3 v_Position;
-
-            void main() {
-                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-            }
-        )";
-        std::string flatColorFragmentSrc = R"(
-            #version 330 core
-
-            layout(location = 0) out vec4 color;
-
-            uniform vec4 u_Color;
-
-            void main() {
-                color = u_Color;
-            }
-        )";
-        m_FlatColorShader.reset(UniFox::Shader::Create(flatColorVertexSrc, flatColorFragmentSrc));
-
-        std::string textureVertexSrc = R"(
-            #version 330 core
-
-            layout(location = 0) in vec3 a_Position;
-            layout(location = 1) in vec2 a_TexCoord;
-
-            uniform mat4 u_ViewProjection;
-            uniform mat4 u_Transform;
-
-            out vec2 v_TexCoord;
-
-            void main() {
-                v_TexCoord = a_TexCoord;
-
-                gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-            }
-        )";
-        std::string textureFragmentSrc = R"(
-            #version 330 core
-
-            layout(location = 0) out vec4 color;
-
-            uniform sampler2D u_Texture;
-
-            in vec2 v_TexCoord;
-
-            void main() {
-                color = texture(u_Texture , v_TexCoord);
-            }
-        )";
-        m_TextureShader.reset(UniFox::Shader::Create(textureVertexSrc, textureFragmentSrc));
+        m_FlatColorShader.reset(UniFox::Shader::Create("assets/shaders/FlatColor.glsl"));
+        m_TextureShader.reset(UniFox::Shader::Create("assets/shaders/Texture.glsl"));
         
         m_Texture = UniFox::Texture2D::Create("assets/textures/54p_.png");
         m_CheckerTexture = UniFox::Texture2D::Create("assets/textures/Checker.png");
+
         std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_TextureShader)->Bind();
         std::dynamic_pointer_cast<UniFox::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
     }
@@ -138,7 +82,7 @@ public:
             glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3((float)x * 0.2f, (float)y * 0.2f, 0.0f)) * scale;
             UniFox::Renderer::Submit(m_FlatColorShader, m_VertexArray, transform);
         }
-
+        
         m_Texture->Bind();
         UniFox::Renderer::Submit(m_TextureShader, m_VertexArray);
         m_CheckerTexture->Bind();
