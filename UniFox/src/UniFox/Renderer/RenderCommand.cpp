@@ -4,5 +4,5 @@
 #include "UniFox/Platform/OpenGL/OpenGLRendererAPI.h"
 
 namespace UniFox {
-    RendererAPI* RenderCommand::s_RendererAPI = new OpenGLRendererAPI;
+    Ref<RendererAPI> RenderCommand::s_RendererAPI = MakeRef<OpenGLRendererAPI>();
 }

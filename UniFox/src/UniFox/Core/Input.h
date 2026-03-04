@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core.h"
+
 namespace UniFox {
     class UF_API Input {
     public:
@@ -17,6 +19,6 @@ namespace UniFox {
         virtual float GetMouseXImpl() = 0;
         virtual float GetMouseYImpl() = 0;
     private:
-        static Input* s_Instance;
+        static Ref<Input> s_Instance;
     };
 }

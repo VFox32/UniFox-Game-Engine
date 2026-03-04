@@ -13,7 +13,7 @@ public:
     ExampleLayer() 
         : Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) {
         
-        m_VertexArray.reset(UniFox::VertexArray::Create());
+        m_VertexArray = UniFox::VertexArray::Create();
 
         float vertecies[4*5] = {
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
@@ -22,7 +22,7 @@ public:
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
         };
         UniFox::Ref<UniFox::VertexBuffer> vertexBuffer;
-        vertexBuffer.reset(UniFox::VertexBuffer::Create(vertecies, sizeof(vertecies)));
+        vertexBuffer = UniFox::VertexBuffer::Create(vertecies, sizeof(vertecies));
         
         UniFox::BufferLayout layout = {
             {UniFox::ShaderDataType::Float3, "a_Position"},
@@ -37,7 +37,7 @@ public:
             2, 3, 0
         };
         UniFox::Ref<UniFox::IndexBuffer> indexBuffer;
-        indexBuffer.reset(UniFox::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+        indexBuffer = UniFox::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
         m_VertexArray->SetIndexBuffer(indexBuffer);
 
         m_FlatColorShader = UniFox::Shader::Create("assets/shaders/FlatColor.glsl");
@@ -120,7 +120,7 @@ private:
 class Sandbox : public UniFox::Application {
 public:
     Sandbox() {
-        PushLayer(new ExampleLayer());
+        PushLayer(UniFox::MakeRef<ExampleLayer>());
     }
     ~Sandbox() {
 

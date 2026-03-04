@@ -2,6 +2,7 @@
 #include "Application.h"
 
 #include "UniFox/Renderer/Renderer.h"
+#include "Core.h"
 
 namespace UniFox {
     #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
@@ -12,13 +13,13 @@ namespace UniFox {
         UF_CORE_ASSERT(!s_Instance, "Application already exists!");
         s_Instance = this;
 
-        m_Window = std::unique_ptr<Window>(Window::Create());
+        m_Window = Ref<Window>(Window::Create());
         m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
         m_Window->SetVSync(true);
 
         Renderer::Init();
 
-        m_ImGuiLayer = new ImGuiLayer();
+        m_ImGuiLayer = MakeRef<ImGuiLayer>();
         PushOverlay(m_ImGuiLayer);
     }
 
@@ -26,12 +27,12 @@ namespace UniFox {
 
     }
 
-    void Application::PushLayer(Layer* layer) {
+    void Application::PushLayer(Ref<Layer> layer) {
         m_LayerStack.PushLayer(layer);
         layer->OnAttach();
     }
 
-    void Application::PushOverlay(Layer* overlay) {
+    void Application::PushOverlay(Ref<Layer> overlay) {
         m_LayerStack.PushOverlay(overlay);
         overlay->OnAttach();
     }
@@ -55,11 +56,11 @@ namespace UniFox {
             Duration deltaTime = now - m_LastTime;
             m_LastTime = now;
 
-            for(Layer* layer : m_LayerStack)
+            for(Ref<Layer> layer : m_LayerStack)
                 layer->OnUpdate(deltaTime);
 
             m_ImGuiLayer->Begin();
-            for(Layer* layer : m_LayerStack)
+            for(Ref<Layer> layer : m_LayerStack)
                 layer->OnImGuiRender();
             m_ImGuiLayer->End();
 

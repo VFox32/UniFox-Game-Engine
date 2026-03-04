@@ -4,7 +4,7 @@
 #include "UniFox/Platform/OpenGL/OpenGLShader.h"
 
 namespace UniFox {
-    Renderer::SceneData* Renderer::m_SceneData = new Renderer::SceneData;
+    Ref<Renderer::SceneData> Renderer::m_SceneData = MakeRef<Renderer::SceneData>();
 
     void Renderer::Init() {
         RenderCommand::Init();

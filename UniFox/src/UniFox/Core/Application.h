@@ -14,7 +14,6 @@
 #include "UniFox/ImGui/ImGuiLayer.h"
 
 namespace UniFox {
-
     class UF_API Application {
     public:
         Application();
@@ -24,16 +23,16 @@ namespace UniFox {
 
         void OnEvent(Event& e);
 
-        void PushLayer(Layer* layer);
-        void PushOverlay(Layer* overlay);
+        void PushLayer(Ref<Layer> layer);
+        void PushOverlay(Ref<Layer> overlay);
 
         inline static Application& Get() {return *s_Instance;}
         inline Window& GetWindow() {return *m_Window;}
     private:
         bool OnWindowClose(WindowCloseEvent& e);
     private:
-        std::unique_ptr<Window> m_Window;
-        ImGuiLayer* m_ImGuiLayer;
+        Ref<Window> m_Window;
+        Ref<ImGuiLayer> m_ImGuiLayer;
         bool m_Running = true;
         LayerStack m_LayerStack;
         TimePoint m_LastTime = Clock::Now();
@@ -42,5 +41,4 @@ namespace UniFox {
     };
 
     Application* CreateApplication();
-
 }
