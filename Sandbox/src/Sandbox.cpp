@@ -109,6 +109,6 @@ public:
     }
 };
 
-UniFox::Application* UniFox::CreateApplication() {
-    return new Sandbox();
+UniFox::Ref<UniFox::Application> UniFox::CreateApplication() {
+    return UniFox::MakeRef<Sandbox>();
 }

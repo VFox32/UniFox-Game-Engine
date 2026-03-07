@@ -37,7 +37,7 @@ namespace UniFox {
             return ss.str();
         }
 
-        EVENT_CLASS_TYPE(WindowResize)
+        EVENT_CLASS_TYPE(WindowMoved)
         EVENT_CLASS_CATEGORY(EventCategoryWindow)
     private:
         unsigned int m_WindowX, m_WindowY;

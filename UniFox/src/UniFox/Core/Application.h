@@ -42,5 +42,5 @@ namespace UniFox {
         static Application* s_Instance;
     };
 
-    Application* CreateApplication();
+    Ref<Application> CreateApplication();
 }

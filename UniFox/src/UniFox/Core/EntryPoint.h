@@ -3,14 +3,13 @@
 #include "UniFox/Core/Application.h"
 
 #ifdef UF_PLATFORM_WINDOWS
-    extern UniFox::Application* UniFox::CreateApplication();
+    extern UniFox::Ref<UniFox::Application> UniFox::CreateApplication();
 
     int main(int argc, char** arcv) {
         UniFox::Log::Init();
         UF_CORE_WARN("Initialized Log!");
 
-        UniFox::Application* app = UniFox::CreateApplication();
+        UniFox::Ref<UniFox::Application> app = UniFox::CreateApplication();
         app->Run();
-        delete app;
     }
 #endif
