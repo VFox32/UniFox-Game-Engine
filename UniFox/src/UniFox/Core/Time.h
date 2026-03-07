@@ -4,6 +4,11 @@
 #include <format>
 
 namespace UniFox {
+    class Clock;
+    class Time;
+    class TimePoint;
+    class Duration;
+
     class Duration {
     public:
         Duration() : m_ns(std::chrono::nanoseconds(0)) {}
@@ -129,8 +134,7 @@ namespace UniFox {
         TimePoint() : m_tp(std::chrono::steady_clock::now()) {}
         TimePoint(std::chrono::time_point<std::chrono::steady_clock> timepoint) : m_tp(timepoint) {}
 
-        //std::string ToString(const std::string& format = "%m/%d/%Y %H:%M:%S") const {return std::format("{:" + format + "}", m_tp);}
-        //std::string ToString(const char* format = "%m/%d/%Y %H:%M:%S") const {return std::format("{:" + std::string(format) + "}", m_tp);}
+        std::string ToString(const std::string& format = "%d/%m/%Y %H:%M:%S") const;
     public:
         operator std::chrono::time_point<std::chrono::steady_clock>() {return m_tp;}
 
@@ -148,7 +152,7 @@ namespace UniFox {
         bool operator>=(const TimePoint& other) const {return m_tp >= other.m_tp;}
         bool operator<=(const TimePoint& other) const {return m_tp <= other.m_tp;}
     private:
-        std::chrono::time_point<std::chrono::steady_clock> m_tp;
+        std::chrono::steady_clock::time_point m_tp;
     };
 
     class Time {
@@ -182,13 +186,48 @@ namespace UniFox {
         static Duration Weeks       () {return Weeks       (1);}
     };
 
-    /*class Clock {
+    class Clock {
     public:
-        
+        friend class Time;
+        friend class TimePoint;
+        friend class Duration;
     private:
-        std::chrono::time_point<std::chrono::system_clock> a; 
-        std::chrono::clock_cast<std::chrono::tai_clock>(std::chrono::time_point<std::chrono::steady_clock>) a;
-    };*/
+        using Steady = std::chrono::steady_clock;
+        using System = std::chrono::system_clock;
+        using Tai = std::chrono::tai_clock;
+    private:
+        static Steady::time_point ToSteady(TimePoint tp) {
+            return (Steady::time_point)tp;
+        }
+
+        static Tai::time_point ToTai(TimePoint tp) {
+            Steady::duration delta = (Steady::time_point)tp - GLOBAL_TIME_ANCHOR.m_steady;
+            return GLOBAL_TIME_ANCHOR.m_tai + delta;
+        }
+        static Tai::time_point ToTai(Steady::time_point tp) {
+            Steady::duration delta = tp - GLOBAL_TIME_ANCHOR.m_steady;
+            return GLOBAL_TIME_ANCHOR.m_tai + delta;
+        }
+        static Tai::time_point ToTai(System::time_point tp) {
+            return std::chrono::clock_cast<Tai>(tp);
+        }
+
+        static System::time_point ToSystem(TimePoint tp) {
+            return std::chrono::clock_cast<System>(ToTai(tp));
+        }
+    private:
+        struct TimeAnchor {
+            static TimeAnchor Create() {
+                return {
+                    Tai::now(),
+                    Steady::now()
+                };
+            }
+            Tai::time_point m_tai;
+            Steady::time_point m_steady;
+        };
+        inline static const TimeAnchor GLOBAL_TIME_ANCHOR = TimeAnchor::Create();
+    };
 
     //inline Duration operator"" _ns(long double ns) { return Clock::Nanoseconds(ns); }
     //inline Duration operator"" _us(long double us) { return Clock::Microseconds(us); }

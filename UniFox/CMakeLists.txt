@@ -41,7 +41,11 @@ add_library(UniFox STATIC
     src/UniFox/Platform/OpenGL/OpenGLVertexArray.cpp
     src/UniFox/Platform/OpenGL/OpenGLRendererAPI.cpp
     src/UniFox/Platform/OpenGL/OpenGLTexture.cpp
+
+    src/UniFox/Core/Time.cpp
 )
+
+target_compile_features(UniFox PUBLIC cxx_std_23)
 
 target_compile_definitions(UniFox PRIVATE
     UF_BUILD_DLL

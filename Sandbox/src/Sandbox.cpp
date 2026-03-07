@@ -12,6 +12,9 @@ class ExampleLayer : public UniFox::Layer {
 public:
     ExampleLayer() 
         : Layer("Example"), m_CameraController(16.0f/9.0f, true) {
+
+        UniFox::TimePoint tp;
+        UF_INFO(tp.ToString());
         
         m_VertexArray = UniFox::VertexArray::Create();
 
