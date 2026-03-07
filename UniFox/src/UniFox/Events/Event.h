@@ -42,6 +42,10 @@ namespace UniFox {
         inline bool IsInCategory(EventCategory category) {
             return GetCategoryFlags() & category;
         }
+
+        friend std::ostream& operator<<(std::ostream& os, const Event& e) {
+            return os << e.ToString();
+        }
     };
 
     class EventDispatcher {
@@ -64,9 +68,6 @@ namespace UniFox {
         Event& m_Event;
     };
 
-    /*inline std::ostream& operator<<(std::ostream& os, const Event& e) {
-        return os << e.ToString();
-    }*/
     inline std::string format_as(const Event& e) {
 	    return e.ToString();
     }

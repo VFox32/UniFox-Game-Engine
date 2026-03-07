@@ -138,6 +138,10 @@ namespace UniFox {
     public:
         operator std::chrono::time_point<std::chrono::steady_clock>() {return m_tp;}
 
+        inline std::string format_as(const TimePoint& tp) {return tp.ToString();}
+        operator std::string() {return ToString();}
+        friend std::ostream& operator<<(std::ostream& os, const TimePoint& tp) {return os << tp.ToString();}
+
         TimePoint operator+(const Duration& duration) const {return TimePoint(m_tp + (std::chrono::nanoseconds)duration);}
         TimePoint operator-(const Duration& duration) const {return TimePoint(m_tp - (std::chrono::nanoseconds)duration);}
         TimePoint& operator+=(const Duration& duration) {m_tp += (std::chrono::nanoseconds)duration; return *this;}
