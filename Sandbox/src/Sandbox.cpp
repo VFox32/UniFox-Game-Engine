@@ -11,7 +11,7 @@
 class ExampleLayer : public UniFox::Layer {
 public:
     ExampleLayer() 
-        : Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f) {
+        : Layer("Example"), m_CameraController(16.0f/9.0f, true) {
         
         m_VertexArray = UniFox::VertexArray::Create();
 
@@ -51,26 +51,12 @@ public:
     }
 
     void OnUpdate(UniFox::Duration dt) override {
-        //UF_INFO("UPS: {0}", 1.0f/dt.s());
-
-        float movementSpeed = 1.0f * dt;
-        float rotationSpeed = 40.0f * dt;
-
-        if(UniFox::Input::IsKeyPressed(UF_KEY_W)) m_CameraPosition.y += movementSpeed;
-        if(UniFox::Input::IsKeyPressed(UF_KEY_S)) m_CameraPosition.y -= movementSpeed;
-        if(UniFox::Input::IsKeyPressed(UF_KEY_A)) m_CameraPosition.x -= movementSpeed;
-        if(UniFox::Input::IsKeyPressed(UF_KEY_D)) m_CameraPosition.x += movementSpeed;
-
-        if(UniFox::Input::IsKeyPressed(UF_KEY_Q)) m_CameraRotation += rotationSpeed;
-        if(UniFox::Input::IsKeyPressed(UF_KEY_E)) m_CameraRotation -= rotationSpeed;
+        m_CameraController.OnUpdate(dt);
 
         UniFox::RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
         UniFox::RenderCommand::Clear();
 
-        m_Camera.SetPosition(m_CameraPosition);
-        m_Camera.SetRotation(m_CameraRotation);
-
-        UniFox::Renderer::BeginScene(m_Camera);
+        UniFox::Renderer::BeginScene(m_CameraController.GetCamera());
 
         glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.19f));
 
@@ -98,10 +84,8 @@ public:
         ImGui::End();
     }
 
-    void OnEvent(UniFox::Event& event) override {
-        UniFox::EventDispatcher dispatcher(event);
-
-        //dispatcher.Dispatch<UniFox::WindowResizeEvent>(UF_BIND_EVENT_FN(OnWindowResize));
+    void OnEvent(UniFox::Event& e) override {
+        m_CameraController.OnEvent(e);
     }
 private:
     UniFox::ShaderLibrary m_ShaderLibrary;
@@ -110,9 +94,7 @@ private:
 
     UniFox::Ref<UniFox::Texture2D> m_Texture, m_CheckerTexture;
 
-    UniFox::OrthographicCamera m_Camera;
-    glm::vec3 m_CameraPosition;
-    float m_CameraRotation;
+    UniFox::OrthographicCameraController m_CameraController;
     
     glm::vec4 m_Color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 };

@@ -19,11 +19,9 @@ add_library(UniFox STATIC
     src/UniFox/Core/Log.cpp
     src/UniFox/Core/Layer.cpp
     src/UniFox/Core/LayerStack.cpp
+    src/UniFox/Core/OrthographicCameraController.cpp
 
     src/UniFox/ImGui/ImGuiLayer.cpp
-
-    src/UniFox/Platform/Windows/WindowsInput.cpp
-    src/UniFox/Platform/Windows/WindowsWindow.cpp
 
     src/UniFox/Renderer/Shader.cpp
     src/UniFox/Renderer/Buffer.cpp
@@ -33,6 +31,9 @@ add_library(UniFox STATIC
     src/UniFox/Renderer/RenderCommand.cpp
     src/UniFox/Renderer/OrthographicCamera.cpp
     src/UniFox/Renderer/Texture.cpp
+
+    src/UniFox/Platform/Windows/WindowsInput.cpp
+    src/UniFox/Platform/Windows/WindowsWindow.cpp
 
     src/UniFox/Platform/OpenGL/OpenGLContext.cpp
     src/UniFox/Platform/OpenGL/OpenGLBuffer.cpp
