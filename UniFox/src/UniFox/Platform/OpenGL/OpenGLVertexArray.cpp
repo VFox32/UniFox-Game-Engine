@@ -1,5 +1,5 @@
 #include "ufpch.h"
-#include "OpenGLVertexArray.h"
+#include "UniFox/Platform/OpenGL/OpenGLVertexArray.h"
 
 #include "UniFox/Core/Core.h"
 #include "UniFox/Core/Log.h"
@@ -57,7 +57,7 @@ namespace UniFox {
                 ShaderDataTypeToOpenGLBaseType(element.Type),
                 element.Normalized ? GL_TRUE : GL_FALSE,
                 vertexBuffer->GetLayout().GetStride(),
-                (const void*)element.Offset
+                (const void*)(uintptr_t)element.Offset
             );
             index++;
         }

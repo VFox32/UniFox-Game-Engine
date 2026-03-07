@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core.h"
-#include "Layer.h"
+#include "UniFox/Core/Core.h"
+#include "UniFox/Core/Layer.h"
 
 #include <vector>
 

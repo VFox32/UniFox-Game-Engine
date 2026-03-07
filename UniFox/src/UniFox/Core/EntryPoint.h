@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Application.h"
+#include "UniFox/Core/Application.h"
 
 #ifdef UF_PLATFORM_WINDOWS
     extern UniFox::Application* UniFox::CreateApplication();

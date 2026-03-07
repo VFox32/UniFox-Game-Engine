@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "Buffer.h"
+#include "UniFox/Renderer/Buffer.h"
 
 namespace UniFox {
     class VertexArray {

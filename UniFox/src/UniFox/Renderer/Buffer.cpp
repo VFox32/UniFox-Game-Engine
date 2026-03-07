@@ -1,7 +1,7 @@
 #include "ufpch.h"
 #include "Buffer.h"
 
-#include "Renderer.h"
+#include "UniFox/Renderer/Renderer.h"
 
 #include "UniFox/Platform/OpenGL/OpenGLBuffer.h"
 

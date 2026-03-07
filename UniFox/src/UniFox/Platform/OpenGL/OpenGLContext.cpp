@@ -1,5 +1,5 @@
 #include "ufpch.h"
-#include "OpenGLContext.h"
+#include "UniFox/Platform/OpenGL/OpenGLContext.h"
 
 #include "UniFox/Core/Core.h"
 #include "UniFox/Core/Log.h"

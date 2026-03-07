@@ -1,8 +1,8 @@
 #include "ufpch.h"
-#include "Application.h"
+#include "UniFox/Core/Application.h"
 
 #include "UniFox/Renderer/Renderer.h"
-#include "Core.h"
+#include "UniFox/Core/Core.h"
 
 namespace UniFox {
     #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)

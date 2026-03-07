@@ -23,7 +23,7 @@
 #include "UniFox/Renderer/Texture.h"
 #include "UniFox/Renderer/VertexArray.h"
 
-#include "UniFox/Core/OrthographicCameraController.h"
+#include "UniFox/Renderer/OrthographicCameraController.h"
 
 // Entry Point
 #include "UniFox/Core/EntryPoint.h"

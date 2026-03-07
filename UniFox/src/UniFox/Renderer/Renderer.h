@@ -1,9 +1,9 @@
 #pragma once
 
-#include "RenderCommand.h"
+#include "UniFox/Renderer/RenderCommand.h"
 
-#include "OrthographicCamera.h"
-#include "Shader.h"
+#include "UniFox/Renderer/OrthographicCamera.h"
+#include "UniFox/Renderer/Shader.h"
 
 namespace UniFox {
     class Renderer {

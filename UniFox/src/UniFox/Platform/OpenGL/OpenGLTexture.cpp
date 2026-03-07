@@ -1,5 +1,5 @@
 #include "ufpch.h"
-#include "OpenGLTexture.h"
+#include "UniFox/Platform/OpenGL/OpenGLTexture.h"
 
 #include "stb_image.h"
 

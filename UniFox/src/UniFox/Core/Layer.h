@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "UniFox/Core/Core.h"
 #include "UniFox/Events/Event.h"
 
 #include "UniFox/Core/Time.h"

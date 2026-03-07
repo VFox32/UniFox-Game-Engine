@@ -3,7 +3,7 @@
 
 #include "UniFox/Core/Core.h"
 
-#include "Renderer.h"
+#include "UniFox/Renderer/Renderer.h"
 #include "UniFox/Platform/OpenGL/OpenGLShader.h"
 
 namespace UniFox {

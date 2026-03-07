@@ -1,5 +1,5 @@
 #include "ufpch.h"
-#include "OpenGLBuffer.h"
+#include "UniFox/Platform/OpenGL/OpenGLBuffer.h"
 
 #include "glad/glad.h"
 
