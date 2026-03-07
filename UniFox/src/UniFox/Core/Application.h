@@ -30,10 +30,12 @@ namespace UniFox {
         inline Window& GetWindow() {return *m_Window;}
     private:
         bool OnWindowClose(WindowCloseEvent& e);
+        bool OnWindowResize(WindowResizeEvent& e);
     private:
         Ref<Window> m_Window;
         Ref<ImGuiLayer> m_ImGuiLayer;
         bool m_Running = true;
+        bool m_Minimized = false;
         LayerStack m_LayerStack;
         TimePoint m_LastTime = Clock::Now();
     private:

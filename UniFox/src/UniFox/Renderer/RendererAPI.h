@@ -12,6 +12,8 @@ namespace UniFox {
         };
     public:
         virtual void Init() = 0;
+        virtual void SetViewport(uint32_t xMin, uint32_t yMin, uint32_t xMax, uint32_t yMax) = 0;
+
         virtual void SetClearColor(const glm::vec4& color) = 0;
         virtual void Clear() = 0;
 
