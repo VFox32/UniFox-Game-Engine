@@ -37,7 +37,7 @@ namespace UniFox {
         bool m_Running = true;
         bool m_Minimized = false;
         LayerStack m_LayerStack;
-        TimePoint m_LastTime = Clock::Now();
+        TimePoint m_LastTime = Time::Now();
     private:
         static Application* s_Instance;
     };

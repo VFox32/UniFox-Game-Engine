@@ -51,7 +51,7 @@ namespace UniFox {
 
     void Application::Run() {
         while(m_Running) {
-            TimePoint now = Clock::Now();
+            TimePoint now = Time::Now();
             Duration deltaTime = now - m_LastTime;
             m_LastTime = now;
 

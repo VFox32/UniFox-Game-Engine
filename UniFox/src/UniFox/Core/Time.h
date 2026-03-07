@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <format>
 
 namespace UniFox {
     class Duration {
@@ -9,22 +10,31 @@ namespace UniFox {
         Duration(const int& seconds) : m_ns(std::chrono::seconds(seconds)) {}
 
         Duration(const std::chrono::nanoseconds ns)  : m_ns(ns) {}
-        Duration(const std::chrono::microseconds us) : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(us)) {}
-        Duration(const std::chrono::milliseconds ms) : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(ms)) {}
-        Duration(const std::chrono::seconds s)       : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(s )) {}
-        Duration(const std::chrono::minutes m)       : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(m )) {}
-        Duration(const std::chrono::hours h)         : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(h )) {}
+        Duration(const std::chrono::microseconds us) : m_ns(std::chrono::nanoseconds(us)) {}
+        Duration(const std::chrono::milliseconds ms) : m_ns(std::chrono::nanoseconds(ms)) {}
+        Duration(const std::chrono::seconds s)       : m_ns(std::chrono::nanoseconds(s )) {}
+        Duration(const std::chrono::minutes m)       : m_ns(std::chrono::nanoseconds(m )) {}
+        Duration(const std::chrono::hours h)         : m_ns(std::chrono::nanoseconds(h )) {}
         //Duration(const std::chrono::days d)          : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(d )) {}
         //Duration(const std::chrono::weeks w)         : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(w )) {}
 
+        Duration(const std::chrono::duration<double, std::nano>          duration) : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(duration)) {}
+        Duration(const std::chrono::duration<double, std::micro>         duration) : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(duration)) {}
+        Duration(const std::chrono::duration<double, std::milli>         duration) : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(duration)) {}
+        Duration(const std::chrono::duration<double>                     duration) : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(duration)) {}
+        Duration(const std::chrono::duration<double, std::ratio<60>>     duration) : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(duration)) {}
+        Duration(const std::chrono::duration<double, std::ratio<3600>>   duration) : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(duration)) {}
+        Duration(const std::chrono::duration<double, std::ratio<86400>>  duration) : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(duration)) {}
+        Duration(const std::chrono::duration<double, std::ratio<604800>> duration) : m_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(duration)) {}
+
         double ns() const {return m_ns.count();}
-        double us() const {return std::chrono::duration_cast<std::chrono::duration<double, std::micro>>        (m_ns).count();}
-        double ms() const {return std::chrono::duration_cast<std::chrono::duration<double, std::milli>>        (m_ns).count();}
-        double s () const {return std::chrono::duration_cast<std::chrono::duration<double>>                    (m_ns).count();}
-        double m () const {return std::chrono::duration_cast<std::chrono::duration<double, std::ratio<60>>>    (m_ns).count();}
-        double h () const {return std::chrono::duration_cast<std::chrono::duration<double, std::ratio<3600>>>  (m_ns).count();}
-        //double d () const {return std::chrono::duration_cast<std::chrono::duration<double, std::ratio<86400>>> (m_ns).count();}
-        //double w () const {return std::chrono::duration_cast<std::chrono::duration<double, std::ratio<604800>>>(m_ns).count();}
+        double us() const {return std::chrono::duration<double, std::micro>        (m_ns).count();}
+        double ms() const {return std::chrono::duration<double, std::milli>        (m_ns).count();}
+        double s () const {return std::chrono::duration<double>                    (m_ns).count();}
+        double m () const {return std::chrono::duration<double, std::ratio<60>>    (m_ns).count();}
+        double h () const {return std::chrono::duration<double, std::ratio<3600>>  (m_ns).count();}
+        double d () const {return std::chrono::duration<double, std::ratio<86400>> (m_ns).count();}
+        double w () const {return std::chrono::duration<double, std::ratio<604800>>(m_ns).count();}
 
         double Nanoseconds () const {return ns();}
         double Microseconds() const {return us();}
@@ -32,26 +42,42 @@ namespace UniFox {
         double Seconds     () const {return s ();}
         double Minutes     () const {return m ();}
         double Hours       () const {return h ();}
-        //double Days        () const {return d ();}
-        //double Weeks       () const {return w ();}
+        double Days        () const {return d ();}
+        double Weeks       () const {return w ();}
 
-        void ns(const int ns) {m_ns = std::chrono::nanoseconds (ns);}
-        void us(const int us) {m_ns = std::chrono::microseconds(us);}
-        void ms(const int ms) {m_ns = std::chrono::milliseconds(ms);}
-        void s (const int s ) {m_ns = std::chrono::seconds     (s );}
-        void m (const int m ) {m_ns = std::chrono::minutes     (m );}
-        void h (const int h ) {m_ns = std::chrono::hours       (h );}
-        //void d (const int d ) {m_ns = std::chrono::days        (d );}
-        //void w (const int w ) {m_ns = std::chrono::weeks       (w );}
+        template<typename T>
+        void ns(const T ns) {m_ns = std::chrono::nanoseconds (ns);}
+        template<typename T>
+        void us(const T us) {m_ns = std::chrono::microseconds(us);}
+        template<typename T>
+        void ms(const T ms) {m_ns = std::chrono::milliseconds(ms);}
+        template<typename T>
+        void s (const T s ) {m_ns = std::chrono::seconds     (s );}
+        template<typename T>
+        void m (const T m ) {m_ns = std::chrono::minutes     (m );}
+        template<typename T>
+        void h (const T h ) {m_ns = std::chrono::hours       (h );}
+        template<typename T>
+        void d (const T d ) {m_ns = std::chrono::duration<double, std::ratio<86400>>(d);}
+        template<typename T>
+        void w (const T w ) {m_ns = std::chrono::duration<double, std::ratio<604800>>(w);}
 
-        void Nanoseconds (const int ns) {Duration::ns(ns);}
-        void Microseconds(const int us) {Duration::us(us);}
-        void Milliseconds(const int ms) {Duration::ms(ms);}
-        void Seconds     (const int s ) {Duration::s (s );}
-        void Minutes     (const int m ) {Duration::m (m );}
-        void Hours       (const int h ) {Duration::h (h );}
-        //void Days        (const int d ) {Duration::d (d );}
-        //void Weeks       (const int w ) {Duration::w (w );}
+        template<typename T>
+        void Nanoseconds (const T ns) {Duration::ns(ns);}
+        template<typename T>
+        void Microseconds(const T us) {Duration::us(us);}
+        template<typename T>
+        void Milliseconds(const T ms) {Duration::ms(ms);}
+        template<typename T>
+        void Seconds     (const T s ) {Duration::s (s );}
+        template<typename T>
+        void Minutes     (const T m ) {Duration::m (m );}
+        template<typename T>
+        void Hours       (const T h ) {Duration::h (h );}
+        template<typename T>
+        void Days        (const T d ) {Duration::d (d );}
+        template<typename T>
+        void Weeks       (const T w ) {Duration::w (w );}
     public:
         operator std::chrono::nanoseconds () const {return m_ns;}
         operator std::chrono::microseconds() const {return std::chrono::duration_cast<std::chrono::microseconds>(m_ns);}
@@ -61,6 +87,15 @@ namespace UniFox {
         operator std::chrono::hours       () const {return std::chrono::duration_cast<std::chrono::hours>       (m_ns);}
         //operator std::chrono::days        () const {return std::chrono::duration_cast<std::chrono::days>        (m_ns);}
         //operator std::chrono::weeks       () const {return std::chrono::duration_cast<std::chrono::weeks>       (m_ns);}
+
+        operator std::chrono::duration<double, std::nano>          () const {return std::chrono::duration<double, std::nano>          (m_ns);}
+        operator std::chrono::duration<double, std::micro>         () const {return std::chrono::duration<double, std::micro>         (m_ns);}
+        operator std::chrono::duration<double, std::milli>         () const {return std::chrono::duration<double, std::milli>         (m_ns);}
+        operator std::chrono::duration<double>                     () const {return std::chrono::duration<double>                     (m_ns);}
+        operator std::chrono::duration<double, std::ratio<60>>     () const {return std::chrono::duration<double, std::ratio<60>>     (m_ns);}
+        operator std::chrono::duration<double, std::ratio<3600>>   () const {return std::chrono::duration<double, std::ratio<3600>>   (m_ns);}
+        operator std::chrono::duration<double, std::ratio<86400>>  () const {return std::chrono::duration<double, std::ratio<86400>>  (m_ns);}
+        operator std::chrono::duration<double, std::ratio<604800>> () const {return std::chrono::duration<double, std::ratio<604800>> (m_ns);}
 
         operator double() const {return s();}
 
@@ -91,10 +126,13 @@ namespace UniFox {
     
     class TimePoint {
     public:
-        TimePoint() : m_tp(std::chrono::high_resolution_clock::now()) {}
-        TimePoint(std::chrono::time_point<std::chrono::high_resolution_clock> timepoint) : m_tp(timepoint) {}
+        TimePoint() : m_tp(std::chrono::steady_clock::now()) {}
+        TimePoint(std::chrono::time_point<std::chrono::steady_clock> timepoint) : m_tp(timepoint) {}
+
+        //std::string ToString(const std::string& format = "%m/%d/%Y %H:%M:%S") const {return std::format("{:" + format + "}", m_tp);}
+        //std::string ToString(const char* format = "%m/%d/%Y %H:%M:%S") const {return std::format("{:" + std::string(format) + "}", m_tp);}
     public:
-        operator std::chrono::time_point<std::chrono::high_resolution_clock>() {return m_tp;}
+        operator std::chrono::time_point<std::chrono::steady_clock>() {return m_tp;}
 
         TimePoint operator+(const Duration& duration) const {return TimePoint(m_tp + (std::chrono::nanoseconds)duration);}
         TimePoint operator-(const Duration& duration) const {return TimePoint(m_tp - (std::chrono::nanoseconds)duration);}
@@ -110,22 +148,47 @@ namespace UniFox {
         bool operator>=(const TimePoint& other) const {return m_tp >= other.m_tp;}
         bool operator<=(const TimePoint& other) const {return m_tp <= other.m_tp;}
     private:
-        std::chrono::time_point<std::chrono::high_resolution_clock> m_tp;
+        std::chrono::time_point<std::chrono::steady_clock> m_tp;
     };
 
-    class Clock {
+    class Time {
     public:
-        static TimePoint Now() {return std::chrono::high_resolution_clock::now();}
+        static TimePoint Now() {return (TimePoint)std::chrono::steady_clock::now();}
 
-        static Duration Nanoseconds (const double ns) {return Duration(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double, std::nano>         (ns)));}
-        static Duration Microseconds(const double us) {return Duration(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double, std::micro>        (us)));}
-        static Duration Milliseconds(const double ms) {return Duration(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double, std::milli>        (ms)));}
-        static Duration Seconds     (const double s ) {return Duration(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>                    (s )));}
-        static Duration Minutes     (const double m ) {return Duration(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double, std::ratio<60>>    (m )));}
-        static Duration Hours       (const double h ) {return Duration(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double, std::ratio<3600>>  (h )));}
-        static Duration Days        (const double d ) {return Duration(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double, std::ratio<86400>> (d )));}
-        static Duration Weeks       (const double w ) {return Duration(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double, std::ratio<604800>>(w )));}
+        template<typename T>
+        static Duration Nanoseconds (const T ns) {return Duration(std::chrono::nanoseconds                         (ns));}
+        template<typename T>
+        static Duration Microseconds(const T us) {return Duration(std::chrono::microseconds                        (us));}
+        template<typename T>
+        static Duration Milliseconds(const T ms) {return Duration(std::chrono::milliseconds                        (ms));}
+        template<typename T>
+        static Duration Seconds     (const T s ) {return Duration(std::chrono::seconds                             (s ));}
+        template<typename T>
+        static Duration Minutes     (const T m ) {return Duration(std::chrono::minutes                             (m ));}
+        template<typename T>
+        static Duration Hours       (const T h ) {return Duration(std::chrono::hours                               (h ));}
+        template<typename T>
+        static Duration Days        (const T d ) {return Duration(std::chrono::duration<double, std::ratio<86400>> (d ));}
+        template<typename T>
+        static Duration Weeks       (const T w ) {return Duration(std::chrono::duration<double, std::ratio<604800>>(w ));}
+
+        static Duration Nanoseconds () {return Nanoseconds (1);}
+        static Duration Microseconds() {return Microseconds(1);}
+        static Duration Milliseconds() {return Milliseconds(1);}
+        static Duration Seconds     () {return Seconds     (1);}
+        static Duration Minutes     () {return Minutes     (1);}
+        static Duration Hours       () {return Hours       (1);}
+        static Duration Days        () {return Days        (1);}
+        static Duration Weeks       () {return Weeks       (1);}
     };
+
+    /*class Clock {
+    public:
+        
+    private:
+        std::chrono::time_point<std::chrono::system_clock> a; 
+        std::chrono::clock_cast<std::chrono::tai_clock>(std::chrono::time_point<std::chrono::steady_clock>) a;
+    };*/
 
     //inline Duration operator"" _ns(long double ns) { return Clock::Nanoseconds(ns); }
     //inline Duration operator"" _us(long double us) { return Clock::Microseconds(us); }

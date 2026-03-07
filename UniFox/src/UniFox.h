@@ -1,12 +1,15 @@
 #pragma once
 
+// Entry Point
+#include "UniFox/Core/EntryPoint.h"
+
+// Core
 #include "UniFox/Core/Core.h"
 #include "UniFox/Core/Application.h"
 #include "UniFox/Core/Layer.h"
 #include "UniFox/Core/Log.h"
 
 #include "UniFox/Core/Time.h"
-#include "UniFox/Core/Timer.h"
 
 #include "UniFox/Core/Input.h"
 #include "UniFox/Core/KeyCodes.h"
@@ -25,5 +28,5 @@
 
 #include "UniFox/Renderer/OrthographicCameraController.h"
 
-// Entry Point
-#include "UniFox/Core/EntryPoint.h"
+// Util
+#include "UniFox/Util/Timing.h"
