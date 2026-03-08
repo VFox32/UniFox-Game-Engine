@@ -3,7 +3,7 @@
 #include "UniFox/Events/Event.h"
 
 namespace UniFox {
-    class UF_API WindowResizeEvent : public Event {
+    class  WindowResizeEvent : public Event {
     public:
         WindowResizeEvent(unsigned int width, unsigned int height)
             : m_Width(width), m_Height(height) {}
@@ -23,7 +23,7 @@ namespace UniFox {
         unsigned int m_Width, m_Height;
     };
 
-    class UF_API WindowMovedEvent : public Event {
+    class  WindowMovedEvent : public Event {
     public:
         WindowMovedEvent(unsigned int x, unsigned int y)
             : m_WindowX(x), m_WindowY(y) {}
@@ -43,7 +43,7 @@ namespace UniFox {
         unsigned int m_WindowX, m_WindowY;
     };
 
-    class UF_API WindowCloseEvent : public Event {
+    class  WindowCloseEvent : public Event {
     public:
         WindowCloseEvent() {}
 
@@ -57,7 +57,7 @@ namespace UniFox {
         EVENT_CLASS_CATEGORY(EventCategoryWindow)
     };
 
-    class UF_API WindowFocusEvent : public Event {
+    class  WindowFocusEvent : public Event {
     public:
         WindowFocusEvent() {}
 
@@ -71,7 +71,7 @@ namespace UniFox {
         EVENT_CLASS_CATEGORY(EventCategoryWindow)
     };
 
-    class UF_API WindowUnfocusEvent : public Event {
+    class  WindowUnfocusEvent : public Event {
     public:
         WindowUnfocusEvent() {}
 
@@ -85,7 +85,7 @@ namespace UniFox {
         EVENT_CLASS_CATEGORY(EventCategoryWindow)
     };
 
-    class UF_API WindowEnteredEvent : public Event {
+    class  WindowEnteredEvent : public Event {
     public:
         WindowEnteredEvent() {}
 
@@ -99,7 +99,7 @@ namespace UniFox {
         EVENT_CLASS_CATEGORY(EventCategoryWindow)
     };
 
-    class UF_API WindowLeftEvent : public Event {
+    class  WindowLeftEvent : public Event {
     public:
         WindowLeftEvent() {}
 
@@ -113,7 +113,7 @@ namespace UniFox {
         EVENT_CLASS_CATEGORY(EventCategoryWindow)
     };
 
-    class UF_API WindowMaximizeEvent : public Event {
+    class  WindowMaximizeEvent : public Event {
     public:
         WindowMaximizeEvent() {}
 
@@ -127,7 +127,7 @@ namespace UniFox {
         EVENT_CLASS_CATEGORY(EventCategoryWindow)
     };
 
-    class UF_API WindowIconifyEvent : public Event {
+    class  WindowIconifyEvent : public Event {
     public:
         WindowIconifyEvent() {}
 
@@ -141,7 +141,7 @@ namespace UniFox {
         EVENT_CLASS_CATEGORY(EventCategoryWindow)
     };
 
-    class UF_API WindowRestoreEvent : public Event {
+    class  WindowRestoreEvent : public Event {
     public:
         WindowRestoreEvent() {}
 
@@ -155,7 +155,7 @@ namespace UniFox {
         EVENT_CLASS_CATEGORY(EventCategoryWindow)
     };
 
-    class UF_API WindowRefreshEvent : public Event {
+    class  WindowRefreshEvent : public Event {
     public:
         WindowRefreshEvent() {}
 

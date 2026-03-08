@@ -14,7 +14,7 @@
 #include "UniFox/ImGui/ImGuiLayer.h"
 
 namespace UniFox {
-    class UF_API Application {
+    class  Application {
     public:
         Application();
         virtual ~Application();

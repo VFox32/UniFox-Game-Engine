@@ -3,7 +3,7 @@
 #include "UniFox/Events/Event.h"
 
 namespace UniFox {
-    class UF_API AppTickEvent : public Event {
+    class  AppTickEvent : public Event {
     public:
         AppTickEvent() {}
 
@@ -11,7 +11,7 @@ namespace UniFox {
         EVENT_CLASS_CATEGORY(EventCategoryApplication)
     };
 
-    class UF_API AppUpdateEvent : public Event {
+    class  AppUpdateEvent : public Event {
     public:
         AppUpdateEvent() {}
 
@@ -19,7 +19,7 @@ namespace UniFox {
         EVENT_CLASS_CATEGORY(EventCategoryApplication)
     };
 
-    class UF_API AppRenderEvent : public Event {
+    class  AppRenderEvent : public Event {
     public:
         AppRenderEvent() {}
 

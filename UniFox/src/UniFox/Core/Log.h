@@ -1,12 +1,10 @@
 #pragma once
 
-#include "UniFox/Core/Core.h"
-
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 namespace UniFox {
-    class UF_API Log {
+    class  Log {
     public:
         static void Init();
 

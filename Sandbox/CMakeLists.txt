@@ -2,8 +2,11 @@ project(Sandbox)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
-add_executable(Sandbox
+add_executable(Sandbox)
+
+target_sources(Sandbox PRIVATE
     src/Sandbox.cpp
+    src/Sandbox2D.cpp
 )
 
 target_compile_definitions(
@@ -18,7 +21,7 @@ add_custom_command(
     TARGET Sandbox POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
             ${CMAKE_CURRENT_SOURCE_DIR}/assets
-            $<TARGET_FILE_DIR:Sandbox>/assets
+            $<TARGET_FILE_DIR:Sandbox>
 )
 
 #add_custom_command(TARGET Sandbox POST_BUILD

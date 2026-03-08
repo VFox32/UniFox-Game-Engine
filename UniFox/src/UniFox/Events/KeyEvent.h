@@ -3,7 +3,7 @@
 #include "UniFox/Events/Event.h"
 
 namespace UniFox {
-    class UF_API KeyEvent : public Event {
+    class  KeyEvent : public Event {
     public:
         int GetKeyCode() const {return m_KeyCode;}
 
@@ -15,7 +15,7 @@ namespace UniFox {
         int m_KeyCode;
     };
 
-    class UF_API KeyPressedEvent : public KeyEvent {
+    class  KeyPressedEvent : public KeyEvent {
     public:
         KeyPressedEvent(int keycode, int repeatCount)
             : KeyEvent(keycode), m_RepeatCount(repeatCount) {}
@@ -33,7 +33,7 @@ namespace UniFox {
         int m_RepeatCount;
     };
 
-    class UF_API KeyReleasedEvent : public KeyEvent {
+    class  KeyReleasedEvent : public KeyEvent {
     public:
         KeyReleasedEvent(int keycode)
             : KeyEvent(keycode) {}
@@ -47,7 +47,7 @@ namespace UniFox {
         EVENT_CLASS_TYPE(KeyReleased)
     };
 
-    class UF_API KeyTypedEvent : public KeyEvent {
+    class  KeyTypedEvent : public KeyEvent {
     public:
         KeyTypedEvent(int keycode)
             : KeyEvent(keycode) {}

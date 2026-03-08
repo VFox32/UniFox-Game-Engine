@@ -1,17 +1,23 @@
 #pragma once
 
 #include <memory>
+#include "UniFox/Core/Log.h"
 
 #ifdef UF_PLATFORM_WINDOWS
-    #define UF_API
     /*#ifdef UF_BUILD_DLL
-        #define UF_API __declspec(dllexport)
+        #define  __declspec(dllexport)
     #else
-        #define UF_API __declspec(dllimport)
+        #define  __declspec(dllimport)
     #endif*/
 #else
     #error UniFox only supports Windows
 #endif
+
+/*#ifdef UF_BUILD_DLL
+    #define  __declspec(dllexport)
+#else
+    #define  __declspec(dllimport)
+#endif*/
 
 #ifdef UF_ENABLE_ASSERTS
     #define UF_ASSERT(x, ...) if(!(x)) {UF_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}

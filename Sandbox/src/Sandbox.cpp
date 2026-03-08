@@ -1,5 +1,5 @@
-
 #include <UniFox.h>
+#include <UniFox/Core/EntryPoint.h>
 
 #include "UniFox/Platform/OpenGL/OpenGLShader.h" ///////////////////
 
@@ -7,6 +7,8 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+
+#include "Sandbox2D.h"
 
 class ExampleLayer : public UniFox::Layer {
 public:
@@ -101,7 +103,8 @@ private:
 class Sandbox : public UniFox::Application {
 public:
     Sandbox() {
-        PushLayer(UniFox::MakeRef<ExampleLayer>());
+        //PushLayer(UniFox::MakeRef<ExampleLayer>());
+        PushLayer(UniFox::MakeRef<Sandbox2D>());
     }
     ~Sandbox() {
 

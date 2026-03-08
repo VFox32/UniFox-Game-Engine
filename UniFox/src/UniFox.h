@@ -1,8 +1,5 @@
 #pragma once
 
-// Entry Point
-#include "UniFox/Core/EntryPoint.h"
-
 // Core
 #include "UniFox/Core/Core.h"
 #include "UniFox/Core/Application.h"

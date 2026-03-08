@@ -48,9 +48,9 @@ add_library(UniFox STATIC
 target_compile_features(UniFox PUBLIC cxx_std_23)
 
 target_compile_definitions(UniFox PRIVATE
-    UF_BUILD_DLL
-    UF_PLATFORM_WINDOWS
     GLFW_INCLUDE_NONE
+    UF_ENABLE_ASSERTS
+    UF_PLATFORM_WINDOWS
 )
 
 target_include_directories(UniFox
