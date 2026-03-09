@@ -16,7 +16,5 @@ private:
     UniFox::OrthographicCameraController m_CameraController;
     glm::vec4 m_Color;
 
-    // temp
-    UniFox::Ref<UniFox::VertexArray> m_VertexArray;
-    UniFox::Ref<UniFox::Shader> m_Shader;
+    UniFox::Ref<UniFox::Texture2D> m_Texture54, m_TextureChecker;
 };

@@ -155,12 +155,28 @@ namespace UniFox {
         glUseProgram(0);
     }
 
+    void OpenGLShader::SetInt(const std::string& name, const int& value) {
+        UploadUniformInt(name, value);
+    }
+
+    void OpenGLShader::SetFloat(const std::string& name, const float& value) {
+        UploadUniformFloat(name, value);
+    }
+
+    void OpenGLShader::SetFloat2(const std::string& name, const glm::vec2& vector) {
+        UploadUniformFloat2(name, vector);
+    }
+
     void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& vector) {
         UploadUniformFloat3(name, vector);
     }
 
     void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& vector) {
         UploadUniformFloat4(name, vector);
+    }
+
+    void OpenGLShader::SetMat3(const std::string& name, const glm::mat3& matrix) {
+        UploadUniformMat3(name, matrix);
     }
 
     void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& matrix) {

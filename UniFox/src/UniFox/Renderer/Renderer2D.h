@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UniFox/Renderer/OrthographicCamera.h"
+#include "UniFox/Renderer/Texture.h"
 
 namespace UniFox {
     class Renderer2D {
@@ -13,5 +14,7 @@ namespace UniFox {
 
         static void DrawQuad(const glm::vec4& color, const glm::vec2& position, const glm::vec2& scale = glm::vec2(1.0f), const float angle = 0.0f);
         static void DrawQuad(const glm::vec4& color, const glm::vec3& position, const glm::vec2& scale = glm::vec2(1.0f), const float angle = 0.0f);
+        static void DrawQuad(const Ref<Texture2D> texture, const glm::vec2& position, const glm::vec2& scale = glm::vec2(1.0f), const float angle = 0.0f);
+        static void DrawQuad(const Ref<Texture2D> texture, const glm::vec3& position, const glm::vec2& scale = glm::vec2(1.0f), const float angle = 0.0f);
     };
 }

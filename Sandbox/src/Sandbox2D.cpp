@@ -12,7 +12,8 @@ Sandbox2D::Sandbox2D()
 }
 
 void Sandbox2D::OnAttach() {
-    
+    m_Texture54 = UniFox::Texture2D::Create("assets/textures/54p_.png");
+    m_TextureChecker = UniFox::Texture2D::Create("assets/textures/Checker.png");
 }
 
 void Sandbox2D::OnDetach() {
@@ -26,7 +27,8 @@ void Sandbox2D::OnUpdate(UniFox::Duration dt) {
     UniFox::RenderCommand::Clear();
 
     UniFox::Renderer2D::BeginScene(m_CameraController.GetCamera());
-    UniFox::Renderer2D::DrawQuad({1.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f});
+    UniFox::Renderer2D::DrawQuad(m_Texture54, {0.0f, 0.0f});
+    UniFox::Renderer2D::DrawQuad(m_TextureChecker, {0.0f, 0.5f, -0.1f}, {1.0f, 1.0f}, 1.2);
     UniFox::Renderer2D::DrawQuad({0.0f, 1.0f, 0.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.5f});
     UniFox::Renderer2D::DrawQuad({0.0f, 0.0f, 1.0f, 1.0f}, {1.0f, 0.0f}, {0.5f, 0.5f}, 0.4);
     UniFox::Renderer2D::EndScene();
