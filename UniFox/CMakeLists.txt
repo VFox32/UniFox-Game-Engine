@@ -25,6 +25,7 @@ add_library(UniFox STATIC
     src/UniFox/Renderer/Shader.cpp
     src/UniFox/Renderer/Buffer.cpp
     src/UniFox/Renderer/Renderer.cpp
+    src/UniFox/Renderer/Renderer2D.cpp
     src/UniFox/Renderer/VertexArray.cpp
     src/UniFox/Renderer/RendererAPI.cpp
     src/UniFox/Renderer/RenderCommand.cpp

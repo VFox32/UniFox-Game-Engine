@@ -16,6 +16,7 @@
 
 // Renderer
 #include "UniFox/Renderer/Renderer.h"
+#include "UniFox/Renderer/Renderer2D.h"
 #include "UniFox/Renderer/RenderCommand.h"
 
 #include "UniFox/Renderer/Buffer.h"
