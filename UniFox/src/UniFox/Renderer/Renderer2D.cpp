@@ -5,7 +5,7 @@
 #include "UniFox/Renderer/VertexArray.h"
 #include "UniFox/Renderer/Shader.h"
 
-#include "UniFox/Platform/OpenGL/OpenGLShader.h" ///////////////////
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace UniFox {
     struct Renderer2DStorage {
@@ -52,22 +52,26 @@ namespace UniFox {
     }
 
     void Renderer2D::BeginScene(const OrthographicCamera& camera) {
-        std::dynamic_pointer_cast<UniFox::OpenGLShader>(s_Data->flatColorShader)->Bind();
-        std::dynamic_pointer_cast<UniFox::OpenGLShader>(s_Data->flatColorShader)->UploadUniformMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
-        std::dynamic_pointer_cast<UniFox::OpenGLShader>(s_Data->flatColorShader)->UploadUniformMat4("u_Transform", glm::mat4(1.0f));
+        s_Data->flatColorShader->Bind();
+        s_Data->flatColorShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
     }
 
     void Renderer2D::EndScene() {
 
     }
 
-    void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color) {
-        DrawQuad({position.x, position.y, 0.0f}, size, color);
+    void Renderer2D::DrawQuad(const glm::vec4& color, const glm::vec2& position, const glm::vec2& scale, const float angle) {
+        DrawQuad(color, {position.x, position.y, 0.0f}, scale, angle);
     }
 
-    void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color) {
-        //std::dynamic_pointer_cast<UniFox::OpenGLShader>(s_Data->flatColorShader)->Bind();
-        std::dynamic_pointer_cast<UniFox::OpenGLShader>(s_Data->flatColorShader)->UploadUniformFloat4("u_Color", color);
+    void Renderer2D::DrawQuad(const glm::vec4& color, const glm::vec3& position, const glm::vec2& scale, const float angle) {
+        s_Data->flatColorShader->Bind();
+        s_Data->flatColorShader->SetFloat4("u_Color", color);
+
+        glm::mat4 transform = glm::translate(glm::mat4(1.0f), position);
+        transform = glm::rotate(transform, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+        transform = glm::scale(transform, {scale.x, scale.y, 0.0f});
+        s_Data->flatColorShader->SetMat4("u_Transform", transform);
 
         s_Data->quadVertexArray->Bind();
         RenderCommand::DrawIndexed(s_Data->quadVertexArray);

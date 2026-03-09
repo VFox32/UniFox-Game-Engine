@@ -26,7 +26,9 @@ void Sandbox2D::OnUpdate(UniFox::Duration dt) {
     UniFox::RenderCommand::Clear();
 
     UniFox::Renderer2D::BeginScene(m_CameraController.GetCamera());
-    UniFox::Renderer2D::DrawQuad({0.0f, 0.0f}, {1.0f, 1.0f}, {1.0f, 0.0f, 0.0f, 1.0f});
+    UniFox::Renderer2D::DrawQuad({1.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.0f});
+    UniFox::Renderer2D::DrawQuad({0.0f, 1.0f, 0.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.5f});
+    UniFox::Renderer2D::DrawQuad({0.0f, 0.0f, 1.0f, 1.0f}, {1.0f, 0.0f}, {0.5f, 0.5f}, 0.4);
     UniFox::Renderer2D::EndScene();
 }
 

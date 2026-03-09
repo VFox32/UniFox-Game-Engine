@@ -4,6 +4,8 @@
 #include "UniFox/Renderer/Renderer.h"
 #include "UniFox/Core/Core.h"
 
+#include "imgui.h"
+
 namespace UniFox {
     #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
@@ -52,17 +54,26 @@ namespace UniFox {
     void Application::Run() {
         while(m_Running) {
             TimePoint now = Time::Now();
-            Duration deltaTime = now - m_LastTime;
+            Duration dt = now - m_LastTime;
+            if(dt.s() < 1.0f/165.0f) continue;
             m_LastTime = now;
 
             if(!m_Minimized) {
                 for(Ref<Layer> layer : m_LayerStack)
-                    layer->OnUpdate(deltaTime);
+                    layer->OnUpdate(dt);
             }
 
             m_ImGuiLayer->Begin();
             for(Ref<Layer> layer : m_LayerStack)
                 layer->OnImGuiRender();
+
+            ImGui::Begin("Stats");
+                ImGui::Text("Resolution: %d:%d", m_Window->GetWidth(), m_Window->GetHeight());
+                ImGui::Text("VSync: %d", m_Window->IsVSync());
+                ImGui::Text("FPS: %.2f", 1.0f/dt);
+                ImGui::Text("Delta Time: %.2fms", dt.ms());
+            ImGui::End();
+
             m_ImGuiLayer->End();
 
             m_Window->OnUpdate();
