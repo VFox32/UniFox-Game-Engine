@@ -135,11 +135,29 @@ namespace UniFox {
         TimePoint(std::chrono::time_point<std::chrono::steady_clock> timepoint) : m_tp(timepoint) {}
 
         std::string ToString(const std::string& format = "%d/%m/%Y %H:%M:%S") const;
-    public:
-        operator std::chrono::time_point<std::chrono::steady_clock>() {return m_tp;}
 
-        inline std::string format_as(const TimePoint& tp) {return tp.ToString();}
+        int Second    () const {return int(     hms().seconds().count());}
+        int Minute    () const {return int(     hms().minutes().count());}
+        int Hour      () const {return int(     hms().hours  ().count());}
+        unsigned Day  () const {return unsigned(ymd().day  ());}
+        unsigned Month() const {return unsigned(ymd().month());}
+        int Year      () const {return int(     ymd().year ());}
+
+        int64_t Nanoseconds () const;
+        int64_t Microseconds() const;
+        int64_t Milliseconds() const;
+        int64_t Seconds     () const;
+        int64_t Minutes     () const;
+        int64_t Hours       () const;
+        int64_t Days        () const;
+        int64_t Weeks       () const;
+    public:
+        operator std::chrono::steady_clock::time_point();
+        operator std::chrono::system_clock::time_point();
+        operator std::chrono::tai_clock::time_point();
+
         operator std::string() {return ToString();}
+        inline std::string format_as(const TimePoint& tp) {return tp.ToString();}
         friend std::ostream& operator<<(std::ostream& os, const TimePoint& tp) {return os << tp.ToString();}
 
         TimePoint operator+(const Duration& duration) const {return TimePoint(m_tp + (std::chrono::nanoseconds)duration);}
@@ -157,6 +175,9 @@ namespace UniFox {
         bool operator<=(const TimePoint& other) const {return m_tp <= other.m_tp;}
     private:
         std::chrono::steady_clock::time_point m_tp;
+
+        std::chrono::year_month_day ymd() const;
+        std::chrono::hh_mm_ss<std::chrono::seconds> hms() const;
     };
 
     class Time {
