@@ -17,11 +17,4 @@ private:
 
     glm::vec4 m_Color;
     UniFox::Ref<UniFox::Texture2D> m_Texture54, m_TextureChecker;
-
-    struct ProfileResult {
-        const char* name;
-        float time;
-    };
-
-    std::vector<ProfileResult> m_ProfileResults;
 };

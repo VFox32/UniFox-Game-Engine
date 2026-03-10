@@ -182,8 +182,6 @@ namespace UniFox {
 
     class Time {
     public:
-        static TimePoint Now() {return (TimePoint)std::chrono::steady_clock::now();}
-
         template<typename T>
         static Duration Nanoseconds (const T ns) {return Duration(std::chrono::nanoseconds                         (ns));}
         template<typename T>
@@ -212,6 +210,8 @@ namespace UniFox {
     };
 
     class Clock {
+    public:
+        static TimePoint Now() {return (TimePoint)std::chrono::steady_clock::now();}
     public:
         friend class Time;
         friend class TimePoint;

@@ -53,7 +53,7 @@ namespace UniFox {
 
     void Application::Run() {
         while(m_Running) {
-            TimePoint now = Time::Now();
+            TimePoint now = Clock::Now();
             Duration dt = now - m_LastTime;
             if(dt.s() < 1.0f/165.0f) continue;
             m_LastTime = now;
@@ -70,7 +70,7 @@ namespace UniFox {
             ImGui::Begin("Stats");
                 ImGui::Text("Resolution: %d:%d", m_Window->GetWidth(), m_Window->GetHeight());
                 ImGui::Text("VSync: %d", m_Window->IsVSync());
-                ImGui::Text("Time: %s", Time::Now().ToString().c_str());
+                ImGui::Text("Time: %s", Clock::Now().ToString().c_str());
                 ImGui::Text("FPS: %.2f", 1.0f/dt);
                 ImGui::Text("Delta Time: %.2fms", dt.ms());
             ImGui::End();

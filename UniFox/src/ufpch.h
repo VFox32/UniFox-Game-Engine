@@ -14,6 +14,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "UniFox/Core/Log.h"
+#include "UniFox/Debug/Instrumentor.h"
+
 #ifdef UF_PLATFORM_WINDOWS
     #include <Windows.h>
 #endif

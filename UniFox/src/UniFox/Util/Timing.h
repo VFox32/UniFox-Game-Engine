@@ -12,29 +12,29 @@ namespace UniFox {
         void Start() {
             elapsed = Duration(0);
             running = true;
-            m_Last = Time::Now();
+            m_Last = Clock::Now();
         }
 
         Duration Stop() {
-            elapsed += Time::Now() - m_Last;
+            elapsed += Clock::Now() - m_Last;
             return elapsed;
         }
 
         void Pause() {
             if(!running) return;
-            elapsed += Time::Now() - m_Last;
+            elapsed += Clock::Now() - m_Last;
             running = false;
         }
 
         void Resume() {
             if(running) return;
             running = true;
-            m_Last = Time::Now();
+            m_Last = Clock::Now();
         }
 
         Duration Elapsed() {
             if(!running) return elapsed;
-            return elapsed + (Time::Now() - m_Last);
+            return elapsed + (Clock::Now() - m_Last);
         }
 
         bool Running() {
