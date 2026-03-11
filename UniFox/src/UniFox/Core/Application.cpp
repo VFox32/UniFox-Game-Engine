@@ -12,6 +12,8 @@ namespace UniFox {
     Application* Application::s_Instance = nullptr;
 
     Application::Application() {
+        UF_PROFILE_FUNCTION();
+
         UF_CORE_ASSERT(!s_Instance, "Application already exists!");
         s_Instance = this;
 
@@ -26,20 +28,26 @@ namespace UniFox {
     }
 
     Application::~Application() {
-
+        UF_PROFILE_FUNCTION();
     }
 
     void Application::PushLayer(Ref<Layer> layer) {
+        UF_PROFILE_FUNCTION();
+        
         m_LayerStack.PushLayer(layer);
         layer->OnAttach();
     }
 
     void Application::PushOverlay(Ref<Layer> overlay) {
+        UF_PROFILE_FUNCTION();
+        
         m_LayerStack.PushOverlay(overlay);
         overlay->OnAttach();
     }
     
     void Application::OnEvent(Event& e) {
+        UF_PROFILE_FUNCTION();
+        
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
         dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
@@ -52,29 +60,49 @@ namespace UniFox {
     }
 
     void Application::Run() {
+        UF_PROFILE_FUNCTION();
+        
         while(m_Running) {
+            UF_PROFILE_SCOPE("RunLoop");
+        
             TimePoint now = Clock::Now();
             Duration dt = now - m_LastTime;
-            if(dt.s() < 1.0f/165.0f) continue;
+            while(dt.s() < 1.0f/165.0f) {
+                now = Clock::Now();
+                dt = now - m_LastTime;
+            };
             m_LastTime = now;
 
             if(!m_Minimized) {
+                UF_PROFILE_SCOPE("LayerStack OnUpdate");
+        
                 for(Ref<Layer> layer : m_LayerStack)
                     layer->OnUpdate(dt);
             }
 
             m_ImGuiLayer->Begin();
-            for(Ref<Layer> layer : m_LayerStack)
-                layer->OnImGuiRender();
+            {
+                UF_PROFILE_SCOPE("ImGui Render");
 
-            ImGui::Begin("Stats");
-                ImGui::Text("Resolution: %d:%d", m_Window->GetWidth(), m_Window->GetHeight());
-                ImGui::Text("VSync: %d", m_Window->IsVSync());
-                ImGui::Text("Time: %s", Clock::Now().ToString().c_str());
-                ImGui::Text("FPS: %.2f", 1.0f/dt);
-                ImGui::Text("Delta Time: %.2fms", dt.ms());
-            ImGui::End();
+                {
+                    UF_PROFILE_SCOPE("LayerStack OnImGuiRender");
+            
+                    for(Ref<Layer> layer : m_LayerStack)
+                        layer->OnImGuiRender();
+                }
 
+                {
+                    UF_PROFILE_SCOPE("ImGui Stats");
+            
+                    ImGui::Begin("Stats");
+                        ImGui::Text("Resolution: %d:%d", m_Window->GetWidth(), m_Window->GetHeight());
+                        ImGui::Text("VSync: %d", m_Window->IsVSync());
+                        ImGui::Text("Time: %s", Clock::Now().ToString().c_str());
+                        ImGui::Text("FPS: %.2f", 1.0f/dt);
+                        ImGui::Text("Delta Time: %.2fms", dt.ms());
+                    ImGui::End();
+                }
+            }
             m_ImGuiLayer->End();
 
             m_Window->OnUpdate();
@@ -87,6 +115,8 @@ namespace UniFox {
     }
 
     bool Application::OnWindowResize(WindowResizeEvent& e) {
+        UF_PROFILE_FUNCTION();
+        
         if(e.GetWidth() == 0 || e.GetHeight() == 0) {
             m_Minimized = true;
             return false;

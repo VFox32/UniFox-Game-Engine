@@ -22,14 +22,20 @@ namespace UniFox {
     }
 
     WindowsWindow::WindowsWindow(const WindowProps& props) {
+        UF_PROFILE_FUNCTION();
+
         Init(props);
     }
 
     WindowsWindow::~WindowsWindow() {
+        UF_PROFILE_FUNCTION();
+        
         ShutDown();
     }
 
     void WindowsWindow::Init(const WindowProps& props) {
+        UF_PROFILE_FUNCTION();
+
         m_Data.Title = props.Title;
         m_Data.Width = props.Width;
         m_Data.Height = props.Height;
@@ -37,14 +43,21 @@ namespace UniFox {
         UF_CORE_INFO("Creating Window \"{0}\" ({1}, {2})", props.Title, props.Width, props.Height);
 
         if(!s_GLFWInitialized) {
-            int success = glfwInit();
+            int success = 0;
+            {
+                UF_PROFILE_SCOPE("glfwInit");
+                success = glfwInit();
+            }
 
             UF_CORE_ASSERT(success, "Could not initialize GLFW!");
             glfwSetErrorCallback(GLFWErrorCallback);
             s_GLFWInitialized = true;
         }
 
-        m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+        {
+            UF_PROFILE_SCOPE("glfwCreateWindow");
+            m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+        }
 
         m_Context = MakeRef<OpenGLContext>(m_Window);
         m_Context->Init();
@@ -210,15 +223,21 @@ namespace UniFox {
     }
 
     void WindowsWindow::ShutDown() {
+        UF_PROFILE_FUNCTION();
+        
         glfwDestroyWindow(m_Window);
     }
 
     void WindowsWindow::OnUpdate() {
+        UF_PROFILE_FUNCTION();
+        
         glfwPollEvents();
         m_Context->SwapBuffers();
     }
 
     void WindowsWindow::SetVSync(bool enabled) {
+        UF_PROFILE_FUNCTION();
+        
         if(enabled) {
             glfwSwapInterval(1);
         } else {

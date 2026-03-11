@@ -17,6 +17,8 @@ namespace UniFox {
     }
 
     std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source) {
+        UF_PROFILE_FUNCTION();
+        
         std::unordered_map<GLenum, std::string> shaderSources;
 
         const char* typeToken = "#type";
@@ -39,6 +41,8 @@ namespace UniFox {
     }
 
     OpenGLShader::OpenGLShader(const std::string& filepath) {
+        UF_PROFILE_FUNCTION();
+        
         std::string source = ReadFile(filepath);
         std::unordered_map<GLenum, std::string> shaderSources = PreProcess(source);
         Compile(shaderSources);
@@ -52,6 +56,8 @@ namespace UniFox {
 
     OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc) 
         : m_Name(name) {
+        UF_PROFILE_FUNCTION();
+        
         std::unordered_map<GLenum, std::string> shaderSources;
 
         shaderSources[GL_VERTEX_SHADER] = vertexSrc;
@@ -61,10 +67,14 @@ namespace UniFox {
     }
 
     OpenGLShader::~OpenGLShader() {
+        UF_PROFILE_FUNCTION();
+        
         glDeleteProgram(m_RendererID);
     }
 
     std::string OpenGLShader::ReadFile(const std::string& filepath) {
+        UF_PROFILE_FUNCTION();
+        
         std::string result;
         std::ifstream in(filepath, std::ios::in | std::ios::binary);
 
@@ -82,6 +92,8 @@ namespace UniFox {
     }
 
     void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources) {
+        UF_PROFILE_FUNCTION();
+        
         UF_CORE_ASSERT(shaderSources.size() <= 4, "Too many Shaders!");
         GLuint program = glCreateProgram();
         std::array<GLuint, 4> glShaderIDs;
@@ -148,38 +160,56 @@ namespace UniFox {
     }
 
     void OpenGLShader::Bind() const {
+        UF_PROFILE_FUNCTION();
+        
         glUseProgram(m_RendererID);
     }
 
     void OpenGLShader::Unbind() const {
+        UF_PROFILE_FUNCTION();
+        
         glUseProgram(0);
     }
 
     void OpenGLShader::SetInt(const std::string& name, const int& value) {
+        UF_PROFILE_FUNCTION();
+        
         UploadUniformInt(name, value);
     }
 
     void OpenGLShader::SetFloat(const std::string& name, const float& value) {
+        UF_PROFILE_FUNCTION();
+        
         UploadUniformFloat(name, value);
     }
 
     void OpenGLShader::SetFloat2(const std::string& name, const glm::vec2& vector) {
+        UF_PROFILE_FUNCTION();
+        
         UploadUniformFloat2(name, vector);
     }
 
     void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& vector) {
+        UF_PROFILE_FUNCTION();
+        
         UploadUniformFloat3(name, vector);
     }
 
     void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& vector) {
+        UF_PROFILE_FUNCTION();
+        
         UploadUniformFloat4(name, vector);
     }
 
     void OpenGLShader::SetMat3(const std::string& name, const glm::mat3& matrix) {
+        UF_PROFILE_FUNCTION();
+        
         UploadUniformMat3(name, matrix);
     }
 
     void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& matrix) {
+        UF_PROFILE_FUNCTION();
+        
         UploadUniformMat4(name, matrix);
     }
     

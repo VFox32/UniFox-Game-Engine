@@ -180,40 +180,36 @@ namespace UniFox {
         std::chrono::hh_mm_ss<std::chrono::seconds> hms() const;
     };
 
-    class Time {
-    public:
-        template<typename T>
-        static Duration Nanoseconds (const T ns) {return Duration(std::chrono::nanoseconds                         (ns));}
-        template<typename T>
-        static Duration Microseconds(const T us) {return Duration(std::chrono::microseconds                        (us));}
-        template<typename T>
-        static Duration Milliseconds(const T ms) {return Duration(std::chrono::milliseconds                        (ms));}
-        template<typename T>
-        static Duration Seconds     (const T s ) {return Duration(std::chrono::seconds                             (s ));}
-        template<typename T>
-        static Duration Minutes     (const T m ) {return Duration(std::chrono::minutes                             (m ));}
-        template<typename T>
-        static Duration Hours       (const T h ) {return Duration(std::chrono::hours                               (h ));}
-        template<typename T>
-        static Duration Days        (const T d ) {return Duration(std::chrono::duration<double, std::ratio<86400>> (d ));}
-        template<typename T>
-        static Duration Weeks       (const T w ) {return Duration(std::chrono::duration<double, std::ratio<604800>>(w ));}
+    template<typename T>
+    static Duration Nanoseconds (const T ns) {return Duration(std::chrono::nanoseconds                         (ns));}
+    template<typename T>
+    static Duration Microseconds(const T us) {return Duration(std::chrono::microseconds                        (us));}
+    template<typename T>
+    static Duration Milliseconds(const T ms) {return Duration(std::chrono::milliseconds                        (ms));}
+    template<typename T>
+    static Duration Seconds     (const T s ) {return Duration(std::chrono::seconds                             (s ));}
+    template<typename T>
+    static Duration Minutes     (const T m ) {return Duration(std::chrono::minutes                             (m ));}
+    template<typename T>
+    static Duration Hours       (const T h ) {return Duration(std::chrono::hours                               (h ));}
+    template<typename T>
+    static Duration Days        (const T d ) {return Duration(std::chrono::duration<double, std::ratio<86400>> (d ));}
+    template<typename T>
+    static Duration Weeks       (const T w ) {return Duration(std::chrono::duration<double, std::ratio<604800>>(w ));}
 
-        static Duration Nanoseconds () {return Nanoseconds (1);}
-        static Duration Microseconds() {return Microseconds(1);}
-        static Duration Milliseconds() {return Milliseconds(1);}
-        static Duration Seconds     () {return Seconds     (1);}
-        static Duration Minutes     () {return Minutes     (1);}
-        static Duration Hours       () {return Hours       (1);}
-        static Duration Days        () {return Days        (1);}
-        static Duration Weeks       () {return Weeks       (1);}
-    };
+    static Duration Nanoseconds () {return Nanoseconds (1);}
+    static Duration Microseconds() {return Microseconds(1);}
+    static Duration Milliseconds() {return Milliseconds(1);}
+    static Duration Seconds     () {return Seconds     (1);}
+    static Duration Minutes     () {return Minutes     (1);}
+    static Duration Hours       () {return Hours       (1);}
+    static Duration Days        () {return Days        (1);}
+    static Duration Weeks       () {return Weeks       (1);}
 
     class Clock {
     public:
         static TimePoint Now() {return (TimePoint)std::chrono::steady_clock::now();}
     public:
-        friend class Time;
         friend class TimePoint;
         friend class Duration;
     private:

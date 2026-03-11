@@ -17,6 +17,8 @@ namespace UniFox {
     static Ref<Renderer2DStorage> s_Data;
 
     void Renderer2D::Init() {
+        UF_PROFILE_FUNCTION();
+        
         s_Data = MakeRef<Renderer2DStorage>();
 
         s_Data->quadVertexArray = VertexArray::Create();
@@ -56,16 +58,20 @@ namespace UniFox {
     }
 
     void Renderer2D::Shutdown() {
+        UF_PROFILE_FUNCTION();
+        
         s_Data.reset();
     }
 
-    void Renderer2D::BeginScene(const OrthographicCamera& camera) {        
+    void Renderer2D::BeginScene(const OrthographicCamera& camera) {
+        UF_PROFILE_FUNCTION();
+        
         s_Data->shader->Bind();
         s_Data->shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
     }
 
     void Renderer2D::EndScene() {
-
+        UF_PROFILE_FUNCTION();
     }
 
     void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& scale, const float angle, const glm::vec4& color) {
@@ -73,6 +79,8 @@ namespace UniFox {
     }
 
     void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, const float angle, const glm::vec4& color) {
+        UF_PROFILE_FUNCTION();
+        
         s_Data->shader->SetFloat4("u_Color", color);
         s_Data->whiteTexture->Bind();
 
@@ -89,7 +97,9 @@ namespace UniFox {
         DrawQuad({position.x, position.y, 0.0f}, scale, angle, texture, tint);
     }
 
-    void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, const float angle, const Ref<Texture2D> texture, const glm::vec4& tint) {       
+    void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& scale, const float angle, const Ref<Texture2D> texture, const glm::vec4& tint) {    
+        UF_PROFILE_FUNCTION();
+           
         s_Data->shader->SetFloat4("u_Color", tint);
         texture->Bind();
 

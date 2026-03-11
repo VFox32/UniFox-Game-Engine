@@ -10,20 +10,20 @@ Sandbox2D::Sandbox2D()
 }
 
 void Sandbox2D::OnAttach() {
+    UF_PROFILE_FUNCTION();
+    
     m_Texture54 = UniFox::Texture2D::Create("assets/textures/54p_.png");
     m_TextureChecker = UniFox::Texture2D::Create("assets/textures/Checker.png");
 }
 
 void Sandbox2D::OnDetach() {
-    
+    UF_PROFILE_FUNCTION();
 }
 
 void Sandbox2D::OnUpdate(UniFox::Duration dt) {
     UF_PROFILE_FUNCTION();
-    {
-        UF_PROFILE_SCOPE("CameraController::OnUpdate");
-        m_CameraController.OnUpdate(dt);
-    }
+    
+    m_CameraController.OnUpdate(dt);
 
     {
         UF_PROFILE_SCOPE("Renderer Prep");

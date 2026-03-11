@@ -6,10 +6,12 @@
 class Sandbox : public UniFox::Application {
 public:
     Sandbox() {
+        UF_PROFILE_FUNCTION();
+
         PushLayer(UniFox::MakeRef<Sandbox2D>());
     }
     ~Sandbox() {
-
+        UF_PROFILE_FUNCTION();
     }
 };
 

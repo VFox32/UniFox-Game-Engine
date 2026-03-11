@@ -11,6 +11,8 @@ namespace UniFox {
     }
 
     void OrthographicCameraController::OnUpdate(Duration dt) {
+        UF_PROFILE_FUNCTION();
+        
         glm::vec3 CameraOffset = glm::vec3(0.0f);
         if(Input::IsKeyPressed(UF_KEY_W)) CameraOffset.y += m_CameraTranslationSpeed * dt;
         if(Input::IsKeyPressed(UF_KEY_S)) CameraOffset.y -= m_CameraTranslationSpeed * dt;
@@ -29,6 +31,8 @@ namespace UniFox {
     }
 
     void OrthographicCameraController::OnEvent(Event& e) {
+        UF_PROFILE_FUNCTION();
+        
         EventDispatcher dispatcher(e);
 
         dispatcher.Dispatch<MouseScrolledEvent>(UF_BIND_EVENT_FN(OnMouseScrolled));
@@ -36,6 +40,8 @@ namespace UniFox {
     }
 
     bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e) {
+        UF_PROFILE_FUNCTION();
+        
         m_ZoomLevel -= e.GetYOffset() * 0.25;
         m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
         m_Camera.SetProjection(-m_AspectRatio*m_ZoomLevel, m_AspectRatio*m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
@@ -43,6 +49,8 @@ namespace UniFox {
     }
 
     bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e) {
+        UF_PROFILE_FUNCTION();
+        
         m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
         m_Camera.SetProjection(-m_AspectRatio*m_ZoomLevel, m_AspectRatio*m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
         return false;

@@ -29,22 +29,32 @@ namespace UniFox {
     }
     
     OpenGLVertexArray::OpenGLVertexArray() {
+        UF_PROFILE_FUNCTION();
+        
         glCreateVertexArrays(1, &m_RendererID);
     }
 
     OpenGLVertexArray::~OpenGLVertexArray() {
+        UF_PROFILE_FUNCTION();
+        
         glDeleteVertexArrays(1, &m_RendererID);
     }
 
     void OpenGLVertexArray::Bind() const {
+        UF_PROFILE_FUNCTION();
+        
         glBindVertexArray(m_RendererID);
     }
 
     void OpenGLVertexArray::Unbind() const {
+        UF_PROFILE_FUNCTION();
+        
         glBindVertexArray(0);
     }
 
     void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) {
+        UF_PROFILE_FUNCTION();
+        
         UF_CORE_ASSERT(vertexBuffer->GetLayout().GetElements().size() != 0, "Vertex buffer has no layout!");
         glBindVertexArray(m_RendererID);
         vertexBuffer->Bind();
@@ -66,6 +76,8 @@ namespace UniFox {
     }
 
     void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer) {
+        UF_PROFILE_FUNCTION();
+        
         glBindVertexArray(m_RendererID);
         indexBuffer->Bind();
 
