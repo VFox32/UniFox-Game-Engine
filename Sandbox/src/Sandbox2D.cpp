@@ -48,6 +48,13 @@ void Sandbox2D::OnImGuiRender() {
     ImGui::Begin("Colors");
     ImGui::ColorEdit4("Color", glm::value_ptr(m_Color));
     ImGui::End();
+
+    ImGui::Begin("Time Test");
+    UniFox::TimePoint tp = UniFox::TimePoint(2007, 12, 22);
+    UniFox::Duration d = UniFox::Clock::Now() - tp;
+    ImGui::Text("%s", tp.ToString().c_str());
+    ImGui::Text("%.2f", d.d());
+    ImGui::End();
 }
 
 void Sandbox2D::OnEvent(UniFox::Event& e) {

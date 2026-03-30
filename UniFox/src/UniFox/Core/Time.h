@@ -133,6 +133,9 @@ namespace UniFox {
     public:
         TimePoint() : m_tp(std::chrono::steady_clock::now()) {}
         TimePoint(std::chrono::time_point<std::chrono::steady_clock> timepoint) : m_tp(timepoint) {}
+        TimePoint(std::chrono::time_point<std::chrono::system_clock> timepoint);
+
+        TimePoint(int year, unsigned month, unsigned day, int hour = 0, int minute = 0, int second = 0, int millisecond = 0, int microsecond = 0, int nanosecond = 0);
 
         std::string ToString(const std::string& format = "%d/%m/%Y %H:%M:%S") const;
 
@@ -219,6 +222,9 @@ namespace UniFox {
     private:
         static Steady::time_point ToSteady(TimePoint tp) {
             return (Steady::time_point)tp;
+        }
+        static Steady::time_point ToSteady(System::time_point tp) {
+            return GLOBAL_TIME_ANCHOR.m_steady + (ToTai(tp) - GLOBAL_TIME_ANCHOR.m_tai);
         }
 
         static Tai::time_point ToTai(TimePoint tp) {

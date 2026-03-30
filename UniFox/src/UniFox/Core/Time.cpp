@@ -2,9 +2,35 @@
 #include "UniFox/Core/Time.h"
 
 namespace UniFox {
+    TimePoint::TimePoint(std::chrono::time_point<std::chrono::system_clock> timepoint) : m_tp(Clock::ToSteady(timepoint)) {}
+    TimePoint::TimePoint(int year, unsigned month, unsigned day, int hour, int minute, int second, int millisecond, int microsecond, int nanosecond) {
+        /*auto sys = std::chrono::sys_days {std::chrono::year{year} / std::chrono::month{month} / std::chrono::day{day}}
+            + std::chrono::hours{hour}
+            + std::chrono::minutes{minute}
+            + std::chrono::seconds{second}
+            + std::chrono::milliseconds{millisecond}
+            + std::chrono::microseconds{microsecond}
+            + std::chrono::nanoseconds{nanosecond};
+
+        m_tp = Clock::ToSteady(sys);*/
+        auto local = std::chrono::local_days {std::chrono::year{year} / std::chrono::month{month} / std::chrono::day{day}}
+            + std::chrono::hours{hour}
+            + std::chrono::minutes{minute}
+            + std::chrono::seconds{second}
+            + std::chrono::milliseconds{millisecond}
+            + std::chrono::microseconds{microsecond}
+            + std::chrono::nanoseconds{nanosecond};
+
+        std::chrono::zoned_time zt{std::chrono::current_zone(), local};
+
+        m_tp = Clock::ToSteady(zt.get_sys_time());
+    }
+
     std::string TimePoint::ToString(const std::string& format) const {
-        std::chrono::zoned_time local_tp{std::chrono::current_zone(), Clock::ToSystem(m_tp)};
-        return std::vformat("{:" + format + "}", std::make_format_args(local_tp));
+        std::chrono::zoned_time zt{std::chrono::current_zone(), Clock::ToSystem(m_tp)};
+        //auto local = zt.get_local_time();
+        auto local = std::chrono::current_zone()->to_local(Clock::ToSystem(m_tp));
+        return std::vformat("{:" + format + "}", std::make_format_args(local));
     }
     
     std::chrono::year_month_day TimePoint::ymd() const {
