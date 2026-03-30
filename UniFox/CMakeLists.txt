@@ -19,6 +19,10 @@ add_library(UniFox STATIC
     src/UniFox/Core/Log.cpp
     src/UniFox/Core/Layer.cpp
     src/UniFox/Core/LayerStack.cpp
+    src/UniFox/Core/StreamWriter.cpp
+    src/UniFox/Core/StreamReader.cpp
+    src/UniFox/Core/FileStream.cpp
+    src/UniFox/Core/MemoryStream.cpp
 
     src/UniFox/ImGui/ImGuiLayer.cpp
 

@@ -12,6 +12,10 @@
 #include "UniFox/Core/KeyCodes.h"
 #include "UniFox/Core/MouseButtonCodes.h"
 
+#include "UniFox/Core/Buffer.h"
+#include "UniFox/Core/FileStream.h"
+#include "UniFox/Core/MemoryStream.h"
+
 #include "UniFox/ImGui/ImGuiLayer.h"
 
 // Renderer

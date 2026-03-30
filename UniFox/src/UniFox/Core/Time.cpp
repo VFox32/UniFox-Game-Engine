@@ -26,6 +26,15 @@ namespace UniFox {
         m_tp = Clock::ToSteady(zt.get_sys_time());
     }
 
+    void TimePoint::DeSerialize(StreamReader* deserializer, TimePoint& instance) {
+        uint64_t ns;
+        deserializer->ReadRaw(ns);
+        auto tai = std::chrono::tai_clock::time_point{
+            std::chrono::nanoseconds(ns)
+        };
+        instance.m_tp = Clock::ToSteady(tai);
+    }
+
     std::string TimePoint::ToString(const std::string& format) const {
         std::chrono::zoned_time zt{std::chrono::current_zone(), Clock::ToSystem(m_tp)};
         //auto local = zt.get_local_time();
