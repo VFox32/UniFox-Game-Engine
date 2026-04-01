@@ -2,13 +2,15 @@
 #include <UniFox/Core/EntryPoint.h>
 
 #include "Sandbox2D.h"
+#include "Sandbox3D.h"
 
 class Sandbox : public UniFox::Application {
 public:
     Sandbox() {
         UF_PROFILE_FUNCTION();
 
-        PushLayer(UniFox::MakeRef<Sandbox2D>());
+        //PushLayer(UniFox::MakeRef<Sandbox2D>());
+        PushLayer(UniFox::MakeRef<Sandbox3D>());
     }
     ~Sandbox() {
         UF_PROFILE_FUNCTION();

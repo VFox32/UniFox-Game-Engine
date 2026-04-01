@@ -212,6 +212,12 @@ namespace UniFox {
         
         UploadUniformMat4(name, matrix);
     }
+
+    void OpenGLShader::SetIntV(const std::string& name, const int* values, const int count) {
+        UF_PROFILE_FUNCTION();
+
+        UploadUniformIntV(name, values, count);
+    }
     
     void OpenGLShader::UploadUniformInt (const std::string& name, const int& value) {
         GLint location = glGetUniformLocation(m_RendererID, name.c_str());
@@ -244,4 +250,8 @@ namespace UniFox {
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
+    void OpenGLShader::UploadUniformIntV(const std::string& name, const int* values, const int count) {
+        GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+        glUniform1iv(location, count, values);
+    }
 }

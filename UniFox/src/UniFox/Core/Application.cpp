@@ -62,6 +62,8 @@ namespace UniFox {
     void Application::Run() {
         UF_PROFILE_FUNCTION();
         
+        m_LastTime = Clock::Now();
+
         while(m_Running) {
             UF_PROFILE_SCOPE("RunLoop");
         

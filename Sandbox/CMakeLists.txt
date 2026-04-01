@@ -7,6 +7,7 @@ add_executable(Sandbox)
 target_sources(Sandbox PRIVATE
     src/Sandbox.cpp
     src/Sandbox2D.cpp
+    src/Sandbox3D.cpp
 )
 
 target_compile_definitions(

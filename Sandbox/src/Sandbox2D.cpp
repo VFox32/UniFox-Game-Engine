@@ -7,29 +7,6 @@
 
 Sandbox2D::Sandbox2D()
     : Layer("Sandbox2D"), m_CameraController(16.0f/9.0f, true), m_Color(1.0f, 0.0f, 0.0f, 1.0f) {
-
-    UniFox::Buffer buffer(64);
-
-    {
-        UniFox::MemoryStreamWriter stream(buffer);
-        UniFox::TimePoint tp = UniFox::TimePoint(2007, 12, 22);
-        UniFox::Duration dt = UniFox::Hours(10);
-        tp += dt;
-        stream.WriteObject(tp);
-        stream.WriteObject(dt);
-        std::cout << tp.ToString() << "\n";
-        std::cout << dt.Hours() << "\n";
-    }
-
-    {
-        UniFox::MemoryStreamReader stream(buffer);
-        UniFox::TimePoint tp;
-        UniFox::Duration dt;
-        stream.ReadObject(tp);
-        stream.ReadObject(dt);
-        std::cout << tp.ToString() << "\n";
-        std::cout << dt.Hours() << "\n";
-    }
 }
 
 void Sandbox2D::OnAttach() {

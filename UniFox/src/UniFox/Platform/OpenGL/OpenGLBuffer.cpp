@@ -33,6 +33,11 @@ namespace UniFox {
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
+    
+    void OpenGLVertexBuffer::SetData(float* vertecies, uint32_t size) {
+        glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+        glBufferData(GL_ARRAY_BUFFER, size, vertecies, GL_STATIC_DRAW);
+    }
 
     ///////////////////////
     ///// IndexBuffer /////
@@ -63,5 +68,11 @@ namespace UniFox {
         UF_PROFILE_FUNCTION();
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    void OpenGLIndexBuffer::SetData(uint32_t* indices, uint32_t count) {
+        m_Count = count;
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
     }
 }

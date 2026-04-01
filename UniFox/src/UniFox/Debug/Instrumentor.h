@@ -130,7 +130,7 @@ namespace UniFox {
     };
 }
 
-#define UF_PROFILE 1
+#define UF_PROFILE 0
 #if UF_PROFILE
     #if defined(_MSC_VER)
         #define FUNC_SIG __FUNCSIG__

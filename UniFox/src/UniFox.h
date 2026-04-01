@@ -29,6 +29,7 @@
 #include "UniFox/Renderer/VertexArray.h"
 
 #include "UniFox/Renderer/OrthographicCameraController.h"
+#include "UniFox/Renderer/PerspectiveCameraController.h"
 
 // Util
 #include "UniFox/Util/Timing.h"
