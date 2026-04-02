@@ -1,13 +1,18 @@
 #type vertex
 #version 330 core
 
-layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec4 a_Color;
-layout(location = 2) in vec2 a_TexCoord;
-layout(location = 3) in float a_TexID;
+layout(location = 0) in vec2 a_QuadPos;
+layout(location = 1) in vec2 a_UV;
+
+layout(location = 2) in vec3 a_InstancePos;
+layout(location = 3) in vec4 a_Color;
+layout(location = 4) in float a_Size;
+layout(location = 5) in int a_TexIndex;
 
 uniform mat4 u_ViewProjection;
 uniform mat4 u_Transform;
+
+uniform mat4 u_View;
 
 out vec4 v_Color;
 out vec2 v_TexCoord;
@@ -15,10 +20,18 @@ flat out float v_TexID;
 
 void main() {
     v_Color = a_Color;
-    v_TexCoord = a_TexCoord;
-    v_TexID = a_TexID;
+    v_TexCoord = a_UV;
+    v_TexID = a_TexIndex;
 
-    gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+    vec3 right = vec3(u_View[0][0], u_View[1][0], u_View[2][0]);
+    vec3 up    = vec3(u_View[0][1], u_View[1][1], u_View[2][1]);
+
+    vec3 worldPos =
+        a_InstancePos +
+        right * a_QuadPos.x * a_Size +
+        up    * a_QuadPos.y * a_Size;
+
+    gl_Position = u_ViewProjection * u_Transform * vec4(worldPos, 1.0);
 }
 
 #type fragment

@@ -59,17 +59,19 @@ namespace UniFox {
         glBindVertexArray(m_RendererID);
         vertexBuffer->Bind();
 
-        uint32_t index = 0;
         for(const auto& element : vertexBuffer->GetLayout()) {
-            glEnableVertexAttribArray(index);
+            glEnableVertexAttribArray(m_VertexBufferIndex);
             glVertexAttribPointer(
-                index, element.GetComponentCount(),
+                m_VertexBufferIndex, element.GetComponentCount(),
                 ShaderDataTypeToOpenGLBaseType(element.Type),
                 element.Normalized ? GL_TRUE : GL_FALSE,
                 vertexBuffer->GetLayout().GetStride(),
                 (const void*)(uintptr_t)element.Offset
             );
-            index++;
+
+            glVertexAttribDivisor(m_VertexBufferIndex, element.Instanced);
+
+            m_VertexBufferIndex++;
         }
 
         m_VertexBuffers.push_back(vertexBuffer);

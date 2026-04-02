@@ -2,6 +2,9 @@ project(UniFox)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 option(GLFW_BUILD_SHARED_LIBS "Build GLFW shared" OFF)
 
 add_subdirectory(vendor/spdlog)

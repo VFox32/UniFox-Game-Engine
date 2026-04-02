@@ -24,6 +24,10 @@ namespace UniFox {
         inline static void DrawIndexed(const Ref<VertexArray>& vertexArray) {
             s_RendererAPI->DrawIndexed(vertexArray);
         }
+        
+        inline static void DrawInstanced(const Ref<VertexArray>& vertexArray, uint32_t count) {
+            s_RendererAPI->DrawInstanced(vertexArray, count);
+        }
     private:
         static Ref<RendererAPI> s_RendererAPI;
     };

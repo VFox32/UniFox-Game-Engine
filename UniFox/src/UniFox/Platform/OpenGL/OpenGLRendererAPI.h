@@ -12,5 +12,6 @@ namespace UniFox {
         virtual void Clear() override;
 
         virtual void DrawIndexed(const Ref<VertexArray>& vbertexArray) override;
+        virtual void DrawInstanced(const Ref<VertexArray>& vbertexArray, uint32_t count) override;
     };
 }

@@ -27,8 +27,9 @@ public:
         m_Sizes = new float[m_MaxParticles];
         m_TextureIDs = new float[m_MaxParticles];
 
-        m_Vertices = new float[m_MaxParticles * 4 * 10]; // 4 vertices per particle, 7 floats per vertex (vec3 pos, vec4 col, vec2 uv, float texID)
-        m_Indices = new uint32_t[m_MaxParticles * 6]; // 6 indices per particle
+        m_Instances = new float[m_MaxParticles * 9];
+
+        m_ParticleCount = 0;
 
         for (uint32_t i = 0; i < m_MaxParticles; i++) {
             m_Alive[i] = 0;
@@ -36,6 +37,20 @@ public:
         }
 
         m_ParticlesToSpawn = 0.0f;
+
+        static float vertices[] = {
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f
+        };
+        static uint32_t indices[] = {
+            0, 1, 2,
+            2, 1, 3
+        };
+
+        m_VAO->GetVertexBuffers()[0]->SetData(vertices, sizeof(vertices) * sizeof(float));
+        m_VAO->GetIndexBuffer()->SetData(indices, sizeof(indices) / sizeof(uint32_t));
     }
 
     ~Emitter() {
@@ -47,8 +62,11 @@ public:
         delete[] m_Sizes;
         delete[] m_TextureIDs;
 
-        delete[] m_Vertices;
-        delete[] m_Indices;
+        delete[] m_Instances;
+    }
+
+    uint32_t GetCount() const {
+        return m_ParticleCount;
     }
 
     void OnUpdate(UniFox::Duration dt, UniFox::PerspectiveCamera camera) {
@@ -59,6 +77,7 @@ public:
             m_LifeTimes[i] -= s;
             if(m_LifeTimes[i] <= 0.0) {
                 m_Alive[i] = false;
+                m_ParticleCount--;
             }
         }
 
@@ -80,6 +99,7 @@ public:
             m_Alive[i] = true;
 
             m_ParticlesToSpawn--;
+            m_ParticleCount++;
         }
 
         // update particles
@@ -95,7 +115,7 @@ public:
         }
 
         // generate vertices
-        uint32_t vertexOffset = 0;
+        uint32_t instanceOffset = 0;
         for(int i = 0; i < m_MaxParticles; i++) {
             if(!m_Alive[i]) continue;
             float halfSize = m_Sizes[i] * 0.5f;
@@ -114,46 +134,19 @@ public:
                 {1, 1}
             };
 
-            glm::vec3 particleToCamera = glm::normalize(camera.GetPosition() - m_Positions[i]);
-            glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
-            glm::vec3 right = glm::normalize(glm::cross(worldUp, particleToCamera));
-            glm::vec3 up = glm::cross(particleToCamera, right);
-            for (int j = 0; j < 4; ++j) {
-                glm::vec3 position = m_Positions[i] + corners[j].x * right + corners[j].y * up;
-                glm::vec4 color = m_Colors[i];
-                glm::vec2 uv = UVs[j];
-                m_Vertices[vertexOffset + 0] = position.x;
-                m_Vertices[vertexOffset + 1] = position.y;
-                m_Vertices[vertexOffset + 2] = position.z;
-                m_Vertices[vertexOffset + 3] = color.r;
-                m_Vertices[vertexOffset + 4] = color.g;
-                m_Vertices[vertexOffset + 5] = color.b;
-                m_Vertices[vertexOffset + 6] = color.a;
-                m_Vertices[vertexOffset + 7] = uv.x;
-                m_Vertices[vertexOffset + 8] = uv.y;
-                m_Vertices[vertexOffset + 9] = m_TextureIDs[i];
-                vertexOffset += 10;
-            }
+            m_Instances[instanceOffset + 0] = m_Positions[i].x;
+            m_Instances[instanceOffset + 1] = m_Positions[i].y;
+            m_Instances[instanceOffset + 2] = m_Positions[i].z;
+            m_Instances[instanceOffset + 3] = m_Colors[i].r;
+            m_Instances[instanceOffset + 4] = m_Colors[i].g;
+            m_Instances[instanceOffset + 5] = m_Colors[i].b;
+            m_Instances[instanceOffset + 6] = m_Colors[i].a;
+            m_Instances[instanceOffset + 7] = m_Sizes[i];
+            m_Instances[instanceOffset + 8] = m_TextureIDs[i];
+            instanceOffset += 9;
         }
 
-        // generate indices
-        uint32_t indexOffset = 0;
-        uint32_t particleOffset = 0;
-        for(int i = 0; i < m_MaxParticles; i++) {
-            if(!m_Alive[i]) continue;
-            m_Indices[indexOffset + 0] = particleOffset + 0;
-            m_Indices[indexOffset + 1] = particleOffset + 1;
-            m_Indices[indexOffset + 2] = particleOffset + 2;
-            m_Indices[indexOffset + 3] = particleOffset + 2;
-            m_Indices[indexOffset + 4] = particleOffset + 1;
-            m_Indices[indexOffset + 5] = particleOffset + 3;
-
-            indexOffset += 6;
-            particleOffset += 4;
-        }
-
-        m_VAO->GetVertexBuffers()[0]->SetData(m_Vertices, vertexOffset * sizeof(float));
-        m_VAO->GetIndexBuffer()->SetData(m_Indices, indexOffset);
+        m_VAO->GetVertexBuffers()[1]->SetData(m_Instances, instanceOffset * sizeof(float));
     }
 private:
     UniFox::Ref<UniFox::VertexArray> m_VAO;
@@ -166,8 +159,7 @@ private:
         return m_Dist(m_Gen);
     }
 
-    float* m_Vertices;
-    uint32_t* m_Indices;
+    float* m_Instances;
     
     float* m_LifeTimes;
     glm::vec3* m_Positions;
@@ -179,6 +171,7 @@ private:
 
     uint32_t m_MaxParticles;
     float m_ParticlesToSpawn;
+    uint32_t m_ParticleCount;
 
     float m_SpawnRate;
     float m_Lifetime;
