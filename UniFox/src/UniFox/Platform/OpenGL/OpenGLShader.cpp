@@ -12,6 +12,7 @@ namespace UniFox {
     static GLenum ShaderTypeFromString(const std::string& type) {
         if(type == "vertex") return GL_VERTEX_SHADER;
         if(type == "fragment" || type == "pixel") return GL_FRAGMENT_SHADER;
+        if(type == "compute") return GL_COMPUTE_SHADER;
         UF_CORE_ASSERT(false, "Unknown shader type!");
         return 0;
     }
@@ -62,6 +63,17 @@ namespace UniFox {
 
         shaderSources[GL_VERTEX_SHADER] = vertexSrc;
         shaderSources[GL_FRAGMENT_SHADER] = fragmentSrc;
+
+        Compile(shaderSources);
+    }
+
+    OpenGLShader::OpenGLShader(const std::string& name, const std::string& computeSrc) 
+        : m_Name(name) {
+        UF_PROFILE_FUNCTION();
+        
+        std::unordered_map<GLenum, std::string> shaderSources;
+
+        shaderSources[GL_COMPUTE_SHADER] = computeSrc;
 
         Compile(shaderSources);
     }

@@ -49,4 +49,12 @@ namespace UniFox {
         vertexArray->Bind();
         RenderCommand::DrawInstanced(vertexArray, count);
     }
+
+    void Renderer::Compute(const Ref<Shader>& shader, const Ref<StorageBuffer> storageBuffer, glm::vec3 groups) {
+        UF_PROFILE_FUNCTION();
+
+        shader->Bind();
+        storageBuffer->Bind();
+        RenderCommand::Compute(storageBuffer, groups);
+    }
 }

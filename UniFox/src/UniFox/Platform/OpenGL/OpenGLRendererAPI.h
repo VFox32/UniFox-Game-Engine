@@ -13,5 +13,7 @@ namespace UniFox {
 
         virtual void DrawIndexed(const Ref<VertexArray>& vbertexArray) override;
         virtual void DrawInstanced(const Ref<VertexArray>& vbertexArray, uint32_t count) override;
+
+        virtual void Compute(const Ref<StorageBuffer> storageBuffer, glm::vec3 groups) override;
     };
 }

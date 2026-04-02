@@ -28,6 +28,10 @@ namespace UniFox {
         inline static void DrawInstanced(const Ref<VertexArray>& vertexArray, uint32_t count) {
             s_RendererAPI->DrawInstanced(vertexArray, count);
         }
+
+        inline static void Compute(const Ref<StorageBuffer> storageBuffer, glm::vec3 groups) {
+            s_RendererAPI->Compute(storageBuffer, groups);
+        }
     private:
         static Ref<RendererAPI> s_RendererAPI;
     };

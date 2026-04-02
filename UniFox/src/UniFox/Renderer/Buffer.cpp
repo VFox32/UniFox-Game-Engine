@@ -23,4 +23,13 @@ namespace UniFox {
         UF_CORE_ASSERT(false, "Unknown RendererAPI!");
         return nullptr;
     }
+    
+    Ref<StorageBuffer> StorageBuffer::Create(float* data, uint32_t size) {
+        switch (Renderer::GetAPI()) {
+            case RendererAPI::API::None : UF_CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
+            case RendererAPI::API::OpenGL : return MakeRef<OpenGLStorageBuffer>(data, size);
+        }
+        UF_CORE_ASSERT(false, "Unknown RendererAPI!");
+        return nullptr;
+    }
 }

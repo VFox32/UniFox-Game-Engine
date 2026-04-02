@@ -20,6 +20,8 @@ namespace UniFox {
         virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) = 0;
         virtual void DrawInstanced(const Ref<VertexArray>& vertexArray, uint32_t count) = 0;
 
+        virtual void Compute(const Ref<StorageBuffer> storageBuffer, glm::vec3 groups) = 0;
+
         inline static API GetAPI() {return s_API;}
     private:
         static API s_API;

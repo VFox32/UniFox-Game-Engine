@@ -32,4 +32,9 @@ namespace UniFox {
     void OpenGLRendererAPI::DrawInstanced(const Ref<VertexArray>& vertexArray, uint32_t count) {
         glDrawElementsInstanced(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr, count);
     }
+
+    void OpenGLRendererAPI::Compute(const Ref<StorageBuffer> storageBuffer, glm::vec3 groups) {
+        glDispatchCompute(groups.x, groups.y, groups.z);
+        glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+    }
 }
