@@ -4,3 +4,4 @@ Sandbox/imgui.ini
 Sandbox/UniFoxProfile-Startup.json
 Sandbox/UniFoxProfile-Runtime.json
 Sandbox/UniFoxProfile-Shutdown.json
+UniFox/vendor/ImGui
