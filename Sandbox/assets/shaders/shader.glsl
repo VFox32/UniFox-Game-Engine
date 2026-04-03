@@ -2,6 +2,7 @@
 #version 430
 
 layout(location = 0) in vec2 a_QuadPos;
+layout(location = 1) in vec2 a_TexCoord;
 
 struct Particle {
     vec4 position;
@@ -18,12 +19,15 @@ uniform mat4 u_ViewProjection;
 uniform mat4 u_View;
 
 out vec4 v_Color;
+out vec2 v_TexCoord;
+flat out float v_TexIndex;
 
-void main()
-{
+void main() {
     Particle p = particles[gl_InstanceID];
 
     v_Color = p.color;
+    v_TexIndex = p.other.z;
+    v_TexCoord = a_TexCoord;
 
     vec3 right = normalize(vec3(u_View[0][0], u_View[1][0], u_View[2][0]));
     vec3 up    = normalize(vec3(u_View[0][1], u_View[1][1], u_View[2][1]));
@@ -41,8 +45,16 @@ void main()
 #version 430
 
 in vec4 v_Color;
+in vec2 v_TexCoord;
+flat in float v_TexIndex;
+
 out vec4 FragColor;
 
+uniform sampler2D u_Textures[2];
+
 void main() {
-    FragColor = v_Color;
+    if(v_TexIndex < 0.0)
+        FragColor = v_Color;
+    else
+        FragColor = texture(u_Textures[int(v_TexIndex)], v_TexCoord) * v_Color;
 }

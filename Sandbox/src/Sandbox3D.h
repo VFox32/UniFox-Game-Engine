@@ -18,12 +18,6 @@ public:
 private:
     UniFox::PerspectiveCameraController m_CameraController;
 
-    UniFox::Ref<UniFox::Shader> m_ComputeShader;
-    UniFox::Ref<UniFox::StorageBuffer> m_StorageBuffer;
-
-    UniFox::Ref<UniFox::Shader> m_ParticleShader;
-    UniFox::Ref<UniFox::VertexArray> m_ParticleVAO;
-
     UniFox::Ref<UniFox::Texture2D> m_Texture1;
     UniFox::Ref<UniFox::Texture2D> m_Texture2;
 

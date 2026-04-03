@@ -51,7 +51,7 @@ void main() {
 
         particles[i].other.x = u_Lifetime + u_LifetimeVariance * (hash11(float(i)) * 2.0 - 1.0);
         particles[i].other.y = u_Size + u_SizeVariance * (hash11(float(i)) * 2.0 - 1.0);
-        particles[i].other.z = -1.0;
+        particles[i].other.z = floor(hash11(float(i)) * 2.99999999999 - 1.0);
     }
 
     particles[i].velocity.xyz += vec3(0, -1, 0) * u_DeltaTime;
