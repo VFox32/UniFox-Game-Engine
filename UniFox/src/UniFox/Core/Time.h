@@ -1,7 +1,7 @@
 #pragma once
 
-#include "UniFox/Core/StreamReader.h"
-#include "UniFox/Core/StreamWriter.h"
+#include "UniFox/Util/StreamWriter.h"
+#include "UniFox/Util/StreamReader.h"
 
 #include <chrono>
 #include <format>
@@ -202,6 +202,8 @@ namespace UniFox {
     class Clock {
     public:
         static TimePoint Now() {return (TimePoint)std::chrono::steady_clock::now();}
+        static TimePoint StartTime() {return (TimePoint)GLOBAL_TIME_ANCHOR.m_steady;}
+        static Duration RunTime() {return (Duration)(Now()-StartTime());}
     private:
         friend class TimePoint;
         friend class Duration;

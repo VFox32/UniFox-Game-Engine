@@ -1,6 +1,6 @@
 #include "ufpch.h"
 
-#include "UniFox/Core/FileStream.h"
+#include "UniFox/Util/FileStream.h"
 
 namespace UniFox {
     FileStreamWriter::FileStreamWriter(const std::filesystem::path& path) 

@@ -1,6 +1,6 @@
 #include "ufpch.h"
 
-#include "UniFox/Core/MemoryStream.h"
+#include "UniFox/Util/MemoryStream.h"
 
 namespace UniFox {
     MemoryStreamWriter::MemoryStreamWriter(Buffer& buffer) 

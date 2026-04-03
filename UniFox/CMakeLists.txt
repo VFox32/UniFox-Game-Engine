@@ -22,10 +22,7 @@ add_library(UniFox STATIC
     src/UniFox/Core/Log.cpp
     src/UniFox/Core/Layer.cpp
     src/UniFox/Core/LayerStack.cpp
-    src/UniFox/Core/StreamWriter.cpp
-    src/UniFox/Core/StreamReader.cpp
-    src/UniFox/Core/FileStream.cpp
-    src/UniFox/Core/MemoryStream.cpp
+    src/UniFox/Core/Time.cpp
 
     src/UniFox/ImGui/ImGuiLayer.cpp
 
@@ -52,7 +49,10 @@ add_library(UniFox STATIC
     src/UniFox/Platform/OpenGL/OpenGLRendererAPI.cpp
     src/UniFox/Platform/OpenGL/OpenGLTexture.cpp
 
-    src/UniFox/Core/Time.cpp
+    src/UniFox/Util/StreamWriter.cpp
+    src/UniFox/Util/StreamReader.cpp
+    src/UniFox/Util/FileStream.cpp
+    src/UniFox/Util/MemoryStream.cpp
 )
 
 target_compile_features(UniFox PUBLIC cxx_std_23)

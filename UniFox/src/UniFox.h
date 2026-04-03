@@ -13,8 +13,8 @@
 #include "UniFox/Core/MouseButtonCodes.h"
 
 #include "UniFox/Core/Buffer.h"
-#include "UniFox/Core/FileStream.h"
-#include "UniFox/Core/MemoryStream.h"
+#include "UniFox/Util/FileStream.h"
+#include "UniFox/Util/MemoryStream.h"
 
 #include "UniFox/ImGui/ImGuiLayer.h"
 

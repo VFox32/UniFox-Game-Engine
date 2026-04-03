@@ -3,12 +3,25 @@
 #include <stdint.h>
 #include <cstring>
 
+#include "UniFox/Util/StreamWriter.h"
+#include "UniFox/Util/StreamReader.h"
+
 namespace UniFox {
 	struct Buffer {
 		uint8_t* Data = nullptr;
 		uint64_t Size = 0;
 
 		Buffer() = default;
+		
+        static void Serialize(StreamWriter* serializer, const Buffer& instance) {
+			serializer->WriteRaw(instance.Size);
+			serializer->WriteArray(instance.Data, instance.Size, false);
+        }
+        static void DeSerialize(StreamReader* deserializer, Buffer& instance) {
+			deserializer->ReadRaw(instance.Size);
+			instance.Allocate(instance.Size);
+			deserializer->ReadArray(instance.Data, instance.Size);
+        }
 
 		Buffer(uint64_t size) {
 			Allocate(size);

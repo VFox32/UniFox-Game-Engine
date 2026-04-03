@@ -1,5 +1,8 @@
 #pragma once
 
+#include "UniFox/Util/StreamWriter.h"
+#include "UniFox/Util/StreamReader.h"
+
 #include <sstream>
 
 #include "UniFox/Core/Core.h"
@@ -29,7 +32,7 @@ namespace UniFox {
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override {return category;}
 
-    class  Event {
+    class Event {
         friend class EventDispatcher;
     public:
         bool Handled = false;

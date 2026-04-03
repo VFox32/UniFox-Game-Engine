@@ -1,7 +1,9 @@
 #pragma once
 
-#include "UniFox/Core/StreamWriter.h"
-#include "UniFox/Core/StreamReader.h"
+#include "UniFox/Util/StreamWriter.h"
+#include "UniFox/Util/StreamReader.h"
+
+#include "UniFox/Core/Buffer.h"
 
 #include <filesystem>
 #include <fstream>

@@ -97,11 +97,13 @@ namespace UniFox {
                     UF_PROFILE_SCOPE("ImGui Stats");
             
                     ImGui::Begin("Stats");
-                        ImGui::Text("Resolution: %d:%d", m_Window->GetWidth(), m_Window->GetHeight());
-                        ImGui::Text("VSync: %d", m_Window->IsVSync());
                         ImGui::Text("Time: %s", Clock::Now().ToString().c_str());
+                        ImGui::Text("Start time: %s", Clock::StartTime().ToString().c_str());
+                        ImGui::Text("Run time: %.2f", Clock::RunTime().s());
                         ImGui::Text("FPS: %.2f", 1.0f/dt);
                         ImGui::Text("Delta Time: %.2fms", dt.ms());
+                        ImGui::Text("Resolution: %d:%d", m_Window->GetWidth(), m_Window->GetHeight());
+                        ImGui::Text("VSync: %d", m_Window->IsVSync());
                     ImGui::End();
                 }
             }
