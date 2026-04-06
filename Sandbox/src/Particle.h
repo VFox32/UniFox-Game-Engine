@@ -36,7 +36,9 @@ public:
         m_ComputeShader->SetFloat("u_Size", m_Size);
         m_ComputeShader->SetFloat("u_SizeVariance", m_SizeVariance);
         m_ComputeShader->SetFloat("u_FadeOut", m_FadeOut);
-        
+
+        float zero = 0.0f;
+        m_AtomicBuffer = UniFox::StorageBuffer::Create(&zero, sizeof(float));
 
         static float quadVertices[] = {
             -0.5f, -0.5f, 0.0f, 0.0f,
@@ -77,14 +79,22 @@ public:
         m_ParticleShader->SetMat4("u_View", camera.GetViewMatrix());
         m_ParticleShader->SetIntV("u_Textures", samplers, 2);
 
+        float zero = 0;
+        m_AtomicBuffer->Bind(1);
+        m_AtomicBuffer->SetData(&zero, sizeof(float));
+
         m_ComputeShader->Bind();
+        m_ParticlesToSpawn += m_SpawnRate * dt;
+        m_ComputeShader->SetFloat("u_Time", UniFox::Clock::RunTime().ms() / 1000.0);
         m_ComputeShader->SetFloat("u_DeltaTime", dt);
+        m_ComputeShader->SetInt("u_ParticlesToSpawn", std::floor(m_ParticlesToSpawn));
+        m_ParticlesToSpawn -= std::floor(m_ParticlesToSpawn);
 
         UniFox::Renderer::Compute(m_ComputeShader, m_StorageBuffer, {(m_MaxParticles + 255) / 256, 1, 1});
         UniFox::Renderer::SubmitInstanced(m_ParticleShader, m_VAO, transform, m_MaxParticles);
     }
 private:
-    UniFox::Ref<UniFox::StorageBuffer> m_StorageBuffer;
+    UniFox::Ref<UniFox::StorageBuffer> m_StorageBuffer, m_AtomicBuffer;
     UniFox::Ref<UniFox::Shader> m_ComputeShader;
     UniFox::Ref<UniFox::VertexArray> m_VAO;
     UniFox::Ref<UniFox::Shader> m_ParticleShader;
@@ -92,6 +102,7 @@ private:
     UniFox::Ref<UniFox::Texture2D> m_Texture1, m_Texture2;
 
     uint32_t m_MaxParticles;
+    float m_ParticlesToSpawn;
 
     float m_SpawnRate;
     float m_Lifetime;

@@ -132,7 +132,7 @@ namespace UniFox {
     public:
         virtual ~StorageBuffer() {}
 
-        virtual void Bind() const = 0;
+        virtual void Bind(unsigned int index = 0) const = 0;
         virtual void Unbind() const = 0;
 
         virtual const BufferLayout& GetLayout() const = 0;

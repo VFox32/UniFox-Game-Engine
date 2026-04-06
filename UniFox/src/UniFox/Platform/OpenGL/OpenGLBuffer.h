@@ -44,7 +44,7 @@ namespace UniFox {
         OpenGLStorageBuffer(float* data, uint32_t size);
         virtual ~OpenGLStorageBuffer();
 
-        virtual void Bind() const override;
+        virtual void Bind(unsigned int index) const override;
         virtual void Unbind() const override;
         virtual void SetData(float* data, uint32_t size) override;
 

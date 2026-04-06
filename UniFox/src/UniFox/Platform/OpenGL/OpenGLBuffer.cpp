@@ -96,11 +96,11 @@ namespace UniFox {
         glDeleteBuffers(1, &m_RendererID);
     }
 
-    void OpenGLStorageBuffer::Bind() const {
+    void OpenGLStorageBuffer::Bind(unsigned int index) const {
         UF_PROFILE_FUNCTION();
         
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, m_RendererID);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_RendererID);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, index, m_RendererID);
     }
 
     void OpenGLStorageBuffer::Unbind() const {
