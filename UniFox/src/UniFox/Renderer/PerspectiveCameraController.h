@@ -6,6 +6,8 @@
 #include "UniFox/Events/Event.h"
 #include "UniFox/Events/MouseEvent.h"
 #include "UniFox/Events/WindowEvent.h"
+#include "UniFox/Events/KeyEvent.h"
+#include "UniFox/Core/KeyCodes.h"
 
 namespace UniFox {
     class PerspectiveCameraController {
@@ -20,6 +22,7 @@ namespace UniFox {
     private:
         bool OnMouseScrolled(MouseScrolledEvent& e);
         bool OnWindowResized(WindowResizeEvent& e);
+        bool OnKeyPressed(KeyPressedEvent& e);
     private:
         float m_AspectRatio;
         float m_FOV = 90.0f;
@@ -33,5 +36,7 @@ namespace UniFox {
         float m_CameraRotationSpeed = 180.0f;
         float m_PrevMouseX = 0.0f;
         float m_PrevMouseY = 0.0f;
+
+        bool m_Active = 1;
     };
 }

@@ -15,6 +15,7 @@ namespace UniFox {
 
     void PerspectiveCameraController::OnUpdate(Duration dt) {
         UF_PROFILE_FUNCTION();
+        if(!m_Active) return;
         
         glm::vec3 CameraOffset = glm::vec3(0.0f);
         if(Input::IsKeyPressed(UF_KEY_W)) CameraOffset.z -= m_CameraTranslationSpeed * dt;
@@ -60,6 +61,7 @@ namespace UniFox {
         EventDispatcher dispatcher(e);
 
         dispatcher.Dispatch<WindowResizeEvent>(UF_BIND_EVENT_FN(OnWindowResized));
+        dispatcher.Dispatch<KeyPressedEvent>(UF_BIND_EVENT_FN(OnKeyPressed));
     }
 
     bool PerspectiveCameraController::OnWindowResized(WindowResizeEvent& e) {
@@ -68,5 +70,16 @@ namespace UniFox {
         m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
         m_Camera.SetProjection(m_FOV, m_AspectRatio);
         return false;
+    }
+
+    bool PerspectiveCameraController::OnKeyPressed(KeyPressedEvent& e) {
+        if(e.GetKeyCode() == UF_KEY_LEFT_ALT) {
+            if(e.GetRepeatCount() == 0) {
+                m_Active ^= 1;
+                m_PrevMouseX = Input::GetMouseX();
+                m_PrevMouseY = Input::GetMouseY();
+            }
+        }
+        return true;
     }
 }

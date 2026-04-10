@@ -20,18 +20,29 @@ layout(std430, binding = 1) buffer Counter {
 
 uniform float u_Time;
 uniform float u_DeltaTime;
-uniform int u_ParticlesToSpawn;
+uniform float u_ParticlesToSpawn;
 
 uniform float u_Lifetime;
 uniform float u_LifetimeVariance;
+
 uniform vec3 u_Position;
-uniform vec3 u_PositionVariance;
-uniform vec3 u_Velocity;
-uniform vec3 u_VelocityVariance;
+uniform int u_PositionShape;
+uniform vec3 u_PositionShapeDirection;
+uniform float u_PositionSize1;
+uniform float u_PositionSize2;
+
+uniform vec3 u_VelocityDirection;
+uniform int u_VelocityShape;
+uniform vec3 u_VelocityMagnitude;
+uniform float u_VelocitySize1;
+uniform float u_VelocitySize2;
+
 uniform vec4 u_StartColor;
 uniform vec4 u_EndColor;
+
 uniform float u_Size;
 uniform float u_SizeVariance;
+
 uniform float u_FadeOut;
 
 uint murmurHash11(uint src) {
@@ -85,7 +96,24 @@ vec3 randDir(float seed) {
     );
 }
 
-vec3 rndCone(vec3 dir, float angle, float seed) {
+vec3 randDisk() {
+    return vec3(0);
+}
+
+vec3 randSphere(float seed, float sizeIn, float sizeOut) {
+    float w = hash11(seed + 2.345);
+    float r = pow(
+        mix(pow(sizeIn, 3.0), pow(sizeOut, 3.0), w),
+        1.0 / 3.0
+    );
+    return randDir(seed) * r;
+}
+
+vec3 randBox(float seed) {
+    return hash31(seed) * 2.0 - 1.0;
+}
+
+vec3 randCone(vec3 dir, float angle, float seed) {
     vec2 r = hash21(seed);
 
     float cosAngle = cos(angle);
@@ -114,31 +142,42 @@ vec3 rndCone(vec3 dir, float angle, float seed) {
 void main() {
     uint i = gl_GlobalInvocationID.x;
     //float seed = float(i) * 12.9898 + u_Time * 78.233;
-    //seed = hash11(seed);
     float seed = float(i) + u_Time;
-
-    particles[i].other.x -= u_DeltaTime;
+    //seed = hash11(seed);
 
     if (particles[i].other.x <= 0.0) {
         int id = atomicAdd(spawnCount, 1);
-        if(id >= u_ParticlesToSpawn) return;
+        //if(float(id) < u_ParticlesToSpawn) {
+            if(u_PositionShape == 0) {
+                particles[i].position.xyz = u_Position;
+            } else if(u_PositionShape == 1) {
+                particles[i].position.xyz = u_Position + randSphere(seed+1.0, u_PositionSize1, u_PositionSize2);
+            } else if(u_PositionShape == 2) {
+                particles[i].position.xyz = u_Position + randBox(seed+1.0);
+            }
 
-        //particles[i].position.xyz = u_Position + u_PositionVariance * (hash31(I+0.0) * 2.0 - 1.0);
-        //particles[i].velocity.xyz = u_Velocity + u_VelocityVariance * (hash31(I+1.0) * 2.0 - 1.0);
-        particles[i].position.xyz = u_Position + randDir(seed) * 0.1;
-        //float t = pow(hash11(seed+4.0), 1.0/3.0);
-        particles[i].velocity.xyz = u_Velocity + randDir(seed+1.0) * 0.1;// * t;
+            if(u_VelocityShape == 0) {
+                particles[i].velocity.xyz = u_VelocityDirection * u_VelocityMagnitude;
+            } else if(u_VelocityShape == 1) {
+                particles[i].velocity.xyz = u_Position + randSphere(seed+1.0, u_VelocitySize1, u_VelocitySize2) * u_VelocityMagnitude;
+            } else if(u_VelocityShape == 2) {
+                particles[i].velocity.xyz = u_Position + randCone(u_VelocityDirection, u_VelocitySize1, seed) * u_VelocityMagnitude;
+            } 
 
-        particles[i].other.x = u_Lifetime + u_LifetimeVariance * ((hash11(seed+1.0) * 2.0 - 1.0));
-        particles[i].other.y = u_Size + u_SizeVariance * ((hash11(seed+2.0) * 2.0 - 1.0));
-        particles[i].other.z = floor(hash11(seed+3.0) * 2.99999999999 - 1.0);
+            particles[i].other.x = u_Lifetime + u_LifetimeVariance * ((hash11(seed+3.0) * 2.0 - 1.0));
+            particles[i].other.y = u_Size + u_SizeVariance * ((hash11(seed+4.0) * 2.0 - 1.0));
+            particles[i].other.z = floor(hash11(seed+5.0) * 2.99999999999 - 1.0);
+        //}
+    } else {
+        particles[i].other.x -= u_DeltaTime;
+
+        particles[i].velocity.xyz += vec3(0, -1, 0) * u_DeltaTime;
+        particles[i].position.xyz += particles[i].velocity.xyz * u_DeltaTime;
+
+        float t = particles[i].other.x / u_Lifetime;
+        t = clamp(t, 0.0, 1.0);
+        particles[i].color = vec4(1);
+        particles[i].color = u_StartColor * t + u_EndColor * (1.0 - t);
+        particles[i].color.w *= min(1.0f, particles[i].other.x / u_FadeOut);
     }
-
-    particles[i].velocity.xyz += vec3(0, -1, 0) * u_DeltaTime;
-    particles[i].position.xyz += particles[i].velocity.xyz * u_DeltaTime;
-
-    float t = particles[i].other.x / u_Lifetime;
-    t = clamp(t, 0.0, 1.0);
-    particles[i].color = u_StartColor * t + u_EndColor * (1.0 - t);
-    particles[i].color.w *= min(1.0f, particles[i].other.x / u_FadeOut);
 }

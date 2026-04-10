@@ -5,6 +5,10 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+//// TODO ////
+// - Fix spawn rate
+// - update properties at runtime
+
 class Emitter {
 private:
     struct Particle {
@@ -14,8 +18,16 @@ private:
         glm::vec4 other; // x = lifetime, y = size, z = textureID
     };
 public:
-    Emitter(glm::vec3 position, glm::vec3 positionVariance, glm::vec3 velocity, glm::vec3 velocityVariance, glm::vec4 startColor, glm::vec4 endColor, float size, float sizeVariance, float lifetime, float lifetimeVariance, float fadeOut, float spawnRate) 
-        : m_Position(position), m_PositionVariance(positionVariance), m_Velocity(velocity), m_VelocityVariance(velocityVariance), m_StartColor(startColor), m_EndColor(endColor), m_Size(size), m_SizeVariance(sizeVariance), m_Lifetime(lifetime), m_LifetimeVariance(lifetimeVariance), m_FadeOut(fadeOut), m_SpawnRate(spawnRate) {
+    Emitter(
+        glm::vec3 position, int positionShape, glm::vec3 positionDirection, float positionSize1, float positionSize2,
+        glm::vec3 velocityDirection, int velocityShape, glm::vec3 velocityMagnitude, float velocitySize1, float velocitySize2,
+        glm::vec4 startColor, glm::vec4 endColor,
+        float size, float sizeVariance,
+        float lifetime, float lifetimeVariance,
+        float fadeOut, float spawnRate) 
+        : m_Position(position), m_PositionShape(positionShape), m_PositionDirection(positionDirection), m_PositionSize1(positionSize1), m_PositionSize2(positionSize2),
+        m_VelocityDirection(velocityDirection), m_VelocityShape(velocityShape), m_VelocityMagnitude(velocityMagnitude), m_VelocitySize1(velocitySize1), m_VelocitySize2(velocitySize2),
+        m_StartColor(startColor), m_EndColor(endColor), m_Size(size), m_SizeVariance(sizeVariance), m_Lifetime(lifetime), m_LifetimeVariance(lifetimeVariance), m_FadeOut(fadeOut), m_SpawnRate(spawnRate) {
 
         m_MaxParticles = static_cast<uint32_t>((lifetime + lifetimeVariance) * spawnRate);
 
@@ -27,10 +39,19 @@ public:
         m_ComputeShader->Bind();
         m_ComputeShader->SetFloat("u_Lifetime", m_Lifetime);
         m_ComputeShader->SetFloat("u_LifetimeVariance", m_LifetimeVariance);
+
         m_ComputeShader->SetFloat3("u_Position", m_Position);
-        m_ComputeShader->SetFloat3("u_PositionVariance", m_PositionVariance);
-        m_ComputeShader->SetFloat3("u_Velocity", m_Velocity);
-        m_ComputeShader->SetFloat3("u_VelocityVariance", m_VelocityVariance);
+        m_ComputeShader->SetInt("u_PositionShape", m_PositionShape);
+        m_ComputeShader->SetFloat3("u_PositionShapeDirection", m_PositionDirection);
+        m_ComputeShader->SetFloat("u_PositionSize1", m_PositionSize1);
+        m_ComputeShader->SetFloat("u_PositionSize2", m_PositionSize2);
+
+        m_ComputeShader->SetFloat3("u_VelocityDirection", m_VelocityDirection);
+        m_ComputeShader->SetInt("u_VelocityShape", m_VelocityShape);
+        m_ComputeShader->SetFloat3("u_VelocityMagnitude", m_VelocityMagnitude);
+        m_ComputeShader->SetFloat("u_VelocitySize1", m_VelocitySize1);
+        m_ComputeShader->SetFloat("u_VelocitySize2", m_VelocitySize2);
+
         m_ComputeShader->SetFloat4("u_StartColor", m_StartColor);
         m_ComputeShader->SetFloat4("u_EndColor", m_EndColor);
         m_ComputeShader->SetFloat("u_Size", m_Size);
@@ -70,30 +91,29 @@ public:
     }
 
     void OnUpdate(UniFox::Duration dt, UniFox::PerspectiveCamera camera) {
+        m_ParticleShader->Bind();
         glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f));
         transform = glm::scale(transform, {1.0f, 1.0f, 1.0f});
         m_ParticleShader->SetMat4("u_Transform", transform);
         int samplers[2] = {0, 1};
-
-        m_ParticleShader->Bind();
         m_ParticleShader->SetMat4("u_View", camera.GetViewMatrix());
         m_ParticleShader->SetIntV("u_Textures", samplers, 2);
 
-        float zero = 0;
+        static float zero[] = {0};
         m_AtomicBuffer->Bind(1);
-        m_AtomicBuffer->SetData(&zero, sizeof(float));
+        m_AtomicBuffer->SetData(zero, sizeof(zero));
 
-        m_ComputeShader->Bind();
         m_ParticlesToSpawn += m_SpawnRate * dt;
+        m_ComputeShader->Bind();
         m_ComputeShader->SetFloat("u_Time", UniFox::Clock::RunTime().ms() / 1000.0);
         m_ComputeShader->SetFloat("u_DeltaTime", dt);
-        m_ComputeShader->SetInt("u_ParticlesToSpawn", std::floor(m_ParticlesToSpawn));
+        m_ComputeShader->SetFloat("u_ParticlesToSpawn", m_ParticlesToSpawn);
         m_ParticlesToSpawn -= std::floor(m_ParticlesToSpawn);
 
         UniFox::Renderer::Compute(m_ComputeShader, m_StorageBuffer, {(m_MaxParticles + 255) / 256, 1, 1});
         UniFox::Renderer::SubmitInstanced(m_ParticleShader, m_VAO, transform, m_MaxParticles);
     }
-private:
+public:
     UniFox::Ref<UniFox::StorageBuffer> m_StorageBuffer, m_AtomicBuffer;
     UniFox::Ref<UniFox::Shader> m_ComputeShader;
     UniFox::Ref<UniFox::VertexArray> m_VAO;
@@ -107,10 +127,19 @@ private:
     float m_SpawnRate;
     float m_Lifetime;
     float m_LifetimeVariance;
+
     glm::vec3 m_Position;
-    glm::vec3 m_PositionVariance;
-    glm::vec3 m_Velocity;
-    glm::vec3 m_VelocityVariance;
+    int m_PositionShape;
+    glm::vec3 m_PositionDirection;
+    float m_PositionSize1;
+    float m_PositionSize2;
+
+    glm::vec3 m_VelocityDirection;
+    int m_VelocityShape;
+    glm::vec3 m_VelocityMagnitude;
+    float m_VelocitySize1;
+    float m_VelocitySize2;
+
     glm::vec4 m_StartColor;
     glm::vec4 m_EndColor;
     float m_Size;
