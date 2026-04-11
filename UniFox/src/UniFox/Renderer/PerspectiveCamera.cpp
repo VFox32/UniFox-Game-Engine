@@ -5,7 +5,7 @@
 
 namespace UniFox {
     PerspectiveCamera::PerspectiveCamera(float fov, float aspect)
-        : m_ProjectionMatrix(glm::perspective(fov, aspect, 0.1f, 100.0f)), m_ViewMatrix(1.0f) {
+        : m_ProjectionMatrix(glm::perspective(fov, aspect, 0.1f, 1000.0f)), m_ViewMatrix(1.0f) {
         UF_PROFILE_FUNCTION();
         
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
