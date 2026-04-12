@@ -48,7 +48,7 @@ namespace UniFox {
         indexBuffer = IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
         s_Data->quadVertexArray->SetIndexBuffer(indexBuffer);
 
-        s_Data->whiteTexture = Texture2D::Create(1, 1);
+        s_Data->whiteTexture = Texture2D::Create(1, 1, 0x1908); // 0x1908 = GL_RGBA
         static uint32_t whiteTextureData = 0xffffffff;
         s_Data->whiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 

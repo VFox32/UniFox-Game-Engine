@@ -59,4 +59,26 @@ namespace UniFox {
         uint32_t m_RendererID;
         BufferLayout m_Layout;
     };
+
+    class OpenGLFrameBuffer : public FrameBuffer {
+    public:
+        OpenGLFrameBuffer(uint32_t width, uint32_t height);
+        virtual ~OpenGLFrameBuffer();
+
+        virtual void Bind() const override;
+        virtual void Unbind() const override;
+
+        virtual void Attach(const Ref<Texture2D> texture) override;
+        virtual void Draw() override;
+        virtual void Resize(uint32_t width, uint32_t height) override;
+
+        virtual Ref<Texture2D> GetColorAttachment(uint32_t index) const override {return m_ColorAttachments[index];}
+
+        virtual bool IsComplete() const override;
+    private:
+        uint32_t m_RendererID;
+
+        std::vector<Ref<Texture2D>> m_ColorAttachments;
+        unsigned int m_RenderBuffer;
+    };
 }

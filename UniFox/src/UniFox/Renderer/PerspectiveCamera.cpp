@@ -14,7 +14,7 @@ namespace UniFox {
     void PerspectiveCamera::SetProjection(float fov, float aspect) {
         UF_PROFILE_FUNCTION();
         
-        m_ProjectionMatrix = glm::perspective(fov, aspect, 0.1f, 10.0f);
+        m_ProjectionMatrix = glm::perspective(fov, aspect, 0.1f, 1000.0f);
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
     }
 

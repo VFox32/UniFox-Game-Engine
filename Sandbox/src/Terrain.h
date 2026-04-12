@@ -14,10 +14,20 @@ public:
     virtual void OnImGuiRender() override;
     virtual void OnEvent(UniFox::Event& e) override;
 private:
+    bool OnWindowResize(UniFox::WindowResizeEvent& e);
+private:
     UniFox::PerspectiveCameraController m_CameraController;
 
     UniFox::Ref<UniFox::Texture2D> m_Texture;
-    UniFox::Ref<UniFox::Shader> m_Shader;
+    UniFox::Ref<UniFox::Shader> m_WorldShader;
+    UniFox::Ref<UniFox::Shader> m_DisplayShader;
 
     std::vector<Chunk> m_Chunks;
+
+    UniFox::Ref<UniFox::VertexArray> m_QuadVAO;
+    UniFox::Ref<UniFox::FrameBuffer> m_FBO;
+
+    UniFox::Ref<UniFox::Texture2D> m_Position;
+    UniFox::Ref<UniFox::Texture2D> m_Normal;
+    UniFox::Ref<UniFox::Texture2D> m_Albedo;
 };

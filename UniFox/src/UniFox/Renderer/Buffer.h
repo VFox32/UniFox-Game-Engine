@@ -5,6 +5,8 @@
 #include <cstdint>
 #include <vector>
 
+#include "UniFox/Renderer/Texture.h"
+
 namespace UniFox {
     enum class ShaderDataType {
         None = 0,
@@ -140,5 +142,23 @@ namespace UniFox {
         virtual void SetData(float* data, uint32_t size) = 0;
 
         static Ref<StorageBuffer> Create(float* data, uint32_t size);
+    };
+    
+    class FrameBuffer {
+    public:
+        virtual ~FrameBuffer() {}
+
+        virtual void Bind() const = 0;
+        virtual void Unbind() const = 0;
+
+        virtual void Attach(const Ref<Texture2D> texture) = 0;
+        virtual void Draw() = 0;
+        virtual void Resize(uint32_t width, uint32_t height) = 0;
+
+        virtual Ref<Texture2D> GetColorAttachment(uint32_t index) const = 0;
+
+        virtual bool IsComplete() const = 0;
+
+        static Ref<FrameBuffer> Create(uint32_t width, uint32_t height);
     };
 }

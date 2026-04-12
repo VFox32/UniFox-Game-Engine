@@ -6,10 +6,10 @@
 #include "UniFox/Platform/OpenGL/OpenGLTexture.h"
 
 namespace UniFox {
-	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height) {
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, unsigned int format) {
         switch (Renderer::GetAPI()) {
             case RendererAPI::API::None : UF_CORE_ASSERT(false, "RendererAPI::None is not supported!"); return nullptr;
-            case RendererAPI::API::OpenGL : return MakeRef<OpenGLTexture2D>(width, height);
+            case RendererAPI::API::OpenGL : return MakeRef<OpenGLTexture2D>(width, height, format);
         }
         UF_CORE_ASSERT(false, "Unknown RendererAPI!");
         return nullptr;

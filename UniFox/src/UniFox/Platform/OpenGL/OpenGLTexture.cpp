@@ -4,15 +4,36 @@
 #include "stb_image.h"
 
 namespace UniFox {
-    OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height) 
+    OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, GLenum format) 
         : m_Width(width), m_Height(height) {
         UF_PROFILE_FUNCTION();
         
-        m_InternalFormat = GL_RGBA8;
-        m_DataFormat = GL_RGBA;
+        m_InternalFormat = format;
+        unsigned int type = 0;
+        switch (m_InternalFormat) {
+        case GL_RGBA:
+            m_DataFormat = GL_RGBA;
+            type = GL_UNSIGNED_BYTE;
+            break;
+        case GL_RGB:
+            m_DataFormat = GL_RGB;
+            type = GL_UNSIGNED_BYTE;
+            break;
+        case GL_RGBA16F:
+            m_DataFormat = GL_RGBA;
+            type = GL_FLOAT;
+            break;
+        case GL_RGB16F:
+            m_DataFormat = GL_RGB;
+            type = GL_FLOAT;
+            break;
+        }
 
-        glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-        glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
+        //glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+        //glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
+        glGenTextures(1, &m_RendererID);
+        glBindTexture(GL_TEXTURE_2D, m_RendererID);
+        glTexImage2D(GL_TEXTURE_2D, 0, m_InternalFormat, width, height, 0, m_DataFormat, type, nullptr);
 
         glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -71,7 +92,39 @@ namespace UniFox {
     void OpenGLTexture2D::Bind(uint32_t slot) const {
         UF_PROFILE_FUNCTION();
         
-        glBindTextureUnit(slot, m_RendererID);
+        //glBindTextureUnit(slot, m_RendererID);
+        glActiveTexture(GL_TEXTURE0 + slot);
+        glBindTexture(GL_TEXTURE_2D, m_RendererID);
+    }
+
+    void OpenGLTexture2D::Resize(uint32_t width, uint32_t height) {
+        UF_PROFILE_FUNCTION();
+        
+        unsigned int type = 0;
+        switch (m_InternalFormat) {
+        case GL_RGBA:
+            type = GL_UNSIGNED_BYTE;
+            break;
+        case GL_RGB:
+            type = GL_UNSIGNED_BYTE;
+            break;
+        case GL_RGBA16F:
+            type = GL_FLOAT;
+            break;
+        case GL_RGB16F:
+            type = GL_FLOAT;
+            break;
+        }
+
+        glDeleteTextures(1, &m_RendererID);
+        glGenTextures(1, &m_RendererID);
+        glBindTexture(GL_TEXTURE_2D, m_RendererID);
+        glTexImage2D(GL_TEXTURE_2D, 0, m_InternalFormat, width, height, 0, m_DataFormat, type, nullptr);
+
+        glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     }
 
     void OpenGLTexture2D::SetData(void* data, uint32_t size) {
