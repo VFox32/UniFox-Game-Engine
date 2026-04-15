@@ -3,21 +3,9 @@
 #include <memory>
 #include "UniFox/Core/Log.h"
 
-#ifdef UF_PLATFORM_WINDOWS
-    /*#ifdef UF_BUILD_DLL
-        #define  __declspec(dllexport)
-    #else
-        #define  __declspec(dllimport)
-    #endif*/
-#else
-    #error UniFox only supports Windows
+#ifdef UF_DEBUG
+    #define UF_ENABLE_ASSERTS
 #endif
-
-/*#ifdef UF_BUILD_DLL
-    #define  __declspec(dllexport)
-#else
-    #define  __declspec(dllimport)
-#endif*/
 
 #ifdef UF_ENABLE_ASSERTS
     #define UF_ASSERT(x, ...) if(!(x)) {UF_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}
@@ -28,6 +16,8 @@
 #endif
 
 #define BIT(x) (1 << x)
+#define EXPAND(x) x
+#define STRINGIFY(x) #x
 
 #define UF_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
 

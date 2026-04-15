@@ -59,8 +59,7 @@ target_compile_features(UniFox PUBLIC cxx_std_23)
 
 target_compile_definitions(UniFox PRIVATE
     GLFW_INCLUDE_NONE
-    UF_ENABLE_ASSERTS
-    UF_PLATFORM_WINDOWS
+    UF_DEBUG
 )
 
 target_include_directories(UniFox
