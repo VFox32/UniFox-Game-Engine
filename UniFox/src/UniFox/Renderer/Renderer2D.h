@@ -1,6 +1,6 @@
 #pragma once
 
-#include "UniFox/Renderer/OrthographicCamera.h"
+#include "UniFox/Renderer/Camera.h"
 #include "UniFox/Renderer/Texture.h"
 
 namespace UniFox {
@@ -9,7 +9,7 @@ namespace UniFox {
         static void Init();
         static void Shutdown();
 
-        static void BeginScene(const OrthographicCamera& camera);
+        static void BeginScene(const Camera& camera);
         static void EndScene();
 
         static void DrawQuad(const glm::vec2& position, const glm::vec2& scale, const float angle, const glm::vec4& color);

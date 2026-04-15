@@ -28,8 +28,8 @@
 #include "UniFox/Renderer/Texture.h"
 #include "UniFox/Renderer/VertexArray.h"
 
-#include "UniFox/Renderer/OrthographicCameraController.h"
-#include "UniFox/Renderer/PerspectiveCameraController.h"
+#include "UniFox/Renderer/Camera.h"
+#include "UniFox/Renderer/CameraController.h"
 
 // Util
 #include "UniFox/Util/Timing.h"

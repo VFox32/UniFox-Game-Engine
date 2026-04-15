@@ -34,10 +34,8 @@ add_library(UniFox STATIC
     src/UniFox/Renderer/RendererAPI.cpp
     src/UniFox/Renderer/RenderCommand.cpp
     src/UniFox/Renderer/Texture.cpp
-    src/UniFox/Renderer/OrthographicCamera.cpp
-    src/UniFox/Renderer/OrthographicCameraController.cpp
-    src/UniFox/Renderer/PerspectiveCamera.cpp
-    src/UniFox/Renderer/PerspectiveCameraController.cpp
+    src/UniFox/Renderer/Camera.cpp
+    src/UniFox/Renderer/CameraController.cpp
 
     src/UniFox/Platform/Windows/WindowsInput.cpp
     src/UniFox/Platform/Windows/WindowsWindow.cpp

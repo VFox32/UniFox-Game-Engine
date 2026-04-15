@@ -18,7 +18,7 @@ namespace UniFox {
         RenderCommand::SetViewport(0, 0, width, height);
     }
 
-    void Renderer::BeginScene(PerspectiveCamera& camera) {
+    void Renderer::BeginScene(Camera& camera) {
         UF_PROFILE_FUNCTION();
         
         m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();

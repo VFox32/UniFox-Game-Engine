@@ -63,7 +63,7 @@ namespace UniFox {
         s_Data.reset();
     }
 
-    void Renderer2D::BeginScene(const OrthographicCamera& camera) {
+    void Renderer2D::BeginScene(const Camera& camera) {
         UF_PROFILE_FUNCTION();
         
         s_Data->shader->Bind();
