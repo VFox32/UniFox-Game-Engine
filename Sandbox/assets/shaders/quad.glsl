@@ -25,6 +25,5 @@ uniform sampler2D g_Albedo;
 
 void main() {
     FragColor = vec4(texture(g_Albedo, v_TexCoord).xyz, 1.0);
-
     FragColor.rgb *= clamp(dot(texture(g_Normal, v_TexCoord).xyz, normalize(vec3(1, 2, 3))), 0.1, 1.0);
 }
