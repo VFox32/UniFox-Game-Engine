@@ -11,7 +11,7 @@ void Terrain::OnAttach() {
 
     for(int z = -4; z <= 3; z++)
     for(int x = -4; x <= 3; x++) {
-        Chunk chunk({x*16, 0, z*16});
+        Chunk chunk({x*32, 0, z*32});
         m_Chunks.push_back(chunk);
     }
 
