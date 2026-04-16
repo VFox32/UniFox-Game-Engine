@@ -82,8 +82,9 @@ public:
         PerlinNoise perlin(12345);
         for(int z = 0; z < 32; z++)
         for(int x = 0; x < 32; x++) {
-            //float height = glm::sin((m_Position.x+(float)x)/4.0) + sin((m_Position.z+(float)z)/4.0) + 8.0f;
-            float height = perlin.noise((x+m_Position.x)/32.0, (z+m_Position.z)/32.0) * 31.0;
+            float height = perlin.noise((x+m_Position.x)/128.0, (z+m_Position.z)/128.0);
+            height *= 16.0 * 32.0;
+            height -= 8.0 * 32.0;
             m_Occupied[x+z*32] = 0;
             for(int y = 0; y < 32; y++) {
                 uint8_t type = 0;

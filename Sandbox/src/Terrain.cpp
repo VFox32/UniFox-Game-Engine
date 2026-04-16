@@ -10,8 +10,9 @@ void Terrain::OnAttach() {
     m_Texture = UniFox::Texture2D::Create("assets/textures/dirt.png");
 
     for(int z = -8; z <= 7; z++)
+    for(int y = -8; y <= 7; y++)
     for(int x = -8; x <= 7; x++) {
-        Chunk chunk({x*32, 0, z*32});
+        Chunk chunk({x*32, y*32, z*32});
         m_Chunks.push_back(chunk);
     }
 

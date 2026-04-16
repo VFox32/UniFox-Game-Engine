@@ -164,6 +164,10 @@ namespace UniFox {
             m_DataFormat = GL_RGB;
             type = GL_FLOAT;
             break;
+        case GL_R8UI:
+            m_DataFormat = GL_RED_INTEGER;
+            type = GL_UNSIGNED_BYTE;
+            break;
         }
 
         //glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
@@ -176,6 +180,7 @@ namespace UniFox {
         glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
     }
 
     OpenGLTexture3D::OpenGLTexture3D(const std::string& path) 
@@ -215,6 +220,7 @@ namespace UniFox {
         glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 
         glTextureSubImage3D(m_RendererID, 0, 0, 0, 0, m_Width, m_Height, m_Depth, dataFormat, GL_UNSIGNED_BYTE, data);
 
@@ -252,6 +258,9 @@ namespace UniFox {
         case GL_RGB16F:
             type = GL_FLOAT;
             break;
+        case GL_R8UI:
+            type = GL_UNSIGNED_BYTE;
+            break;
         }
 
         glDeleteTextures(1, &m_RendererID);
@@ -263,13 +272,25 @@ namespace UniFox {
         glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
     }
 
     void OpenGLTexture3D::SetData(void* data, uint32_t size) {
         UF_PROFILE_FUNCTION();
         
-        uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
-        UF_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
+        uint32_t bpp = 0;
+        switch (m_DataFormat){
+        case GL_RGBA:
+            bpp = 4;
+            break;
+        case GL_RGB:
+            bpp = 3;
+            break;
+        case GL_RED_INTEGER:
+            bpp = 1;
+            break;
+        }
+        UF_CORE_ASSERT(size == m_Width * m_Height * m_Depth * bpp, "Data must be entire texture!");
         glTextureSubImage3D(m_RendererID, 0, 0, 0, 0, m_Width, m_Height, m_Depth, m_DataFormat, GL_UNSIGNED_BYTE, data);
     }
 }
