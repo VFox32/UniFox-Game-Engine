@@ -9,9 +9,9 @@ Terrain::Terrain() : Layer("Terrain"), m_CameraController(120, 16.0f/9.0f, true)
 void Terrain::OnAttach() {
     m_Texture = UniFox::Texture2D::Create("assets/textures/dirt.png");
 
-    for(int z = -8; z <= 7; z++)
-    for(int y = -8; y <= 7; y++)
-    for(int x = -8; x <= 7; x++) {
+    for(int z = -4; z <= 3; z++)
+    for(int y = -4; y <= 3; y++)
+    for(int x = -4; x <= 3; x++) {
         Chunk chunk({x*32, y*32, z*32});
         m_Chunks.push_back(chunk);
     }
@@ -72,7 +72,10 @@ void Terrain::OnUpdate(UniFox::Duration dt) {
     m_Texture->Bind(0);
     m_WorldShader->Bind();
     m_WorldShader->SetInt("u_Texture", 0);
+    m_WorldShader->SetFloat3("u_Position", m_CameraController.GetCamera().GetPosition());
     for(auto& chunk : m_Chunks) {
+        chunk.m_SBO->Bind(0);
+        m_WorldShader->SetFloat3("u_ChunkPos", chunk.m_Position);
         UniFox::Renderer::Submit(m_WorldShader, chunk.m_VAO, chunk.m_Transform);
     }
     UniFox::Renderer::EndScene();

@@ -70,6 +70,11 @@ private:
 
 class Chunk {
 public:
+    struct Node {       // leaf     | not leaf
+        uint32_t a = 0; // other    | [8:31] child index [0:7] child mask
+        uint32_t b = 0; // material | material (for LOD)
+    };
+
     Chunk(glm::vec3 position) 
         : m_Position(position) {
         m_Transform = glm::translate(glm::mat4(1.0f), position);
@@ -79,22 +84,16 @@ public:
     }
 
     void Generate() {
-        PerlinNoise perlin(12345);
-        for(int z = 0; z < 32; z++)
-        for(int x = 0; x < 32; x++) {
-            float height = perlin.noise((x+m_Position.x)/128.0, (z+m_Position.z)/128.0);
-            height *= 16.0 * 32.0;
-            height -= 8.0 * 32.0;
-            m_Occupied[x+z*32] = 0;
-            for(int y = 0; y < 32; y++) {
-                uint8_t type = 0;
-                if(m_Position.y+(float)y < height) {
-                    type = 1;
-                    m_Occupied[x+z*32] |= (1 << y);
-                }
-                m_Blocks[GetIndex({x, y, z})] = type;
-            }
+        PerlinNoise noise(12345);
+        for(float x = m_Position.x; x < 32.0 + m_Position.x; x++)
+        for(float y = m_Position.y; y < 32.0 + m_Position.y; y++)
+        for(float z = m_Position.z; z < 32.0 + m_Position.z; z++) {
+            float height = noise.noise(x / 32.0, z / 32.0) * 32.0;
+            uint32_t fill = height > y ? 1 : 0;
+            nodes.push_back(Node(0, fill));
         }
+
+        m_SBO = UniFox::StorageBuffer::Create((float*)(void*)nodes.data(), nodes.size() * sizeof(Node));
     }
 
     glm::ivec3 GetPos(const uint32_t index) const {
@@ -107,288 +106,39 @@ public:
     }
 
     void GenMesh() {
-        std::vector<float> vertices;
-        std::vector<uint32_t> indices;
-
-        uint32_t vertexOffset = 0;
-        for(float z = 0.0f; z < 32.0f; z++)
-        for(float y = 0.0f; y < 32.0f; y++)
-        for(float x = 0.0f; x < 32.0f; x++) {
-            //uint8_t type = m_Blocks[GetIndex({x, y, z})];
-            //if(type == 0) continue;
-            bool filled = m_Occupied[(int)x+(int)z*32] & (1 << (int)y);
-            if(!filled) continue;
-
-            if(m_Blocks[GetIndex({x, y, z + 1})] == 0 || z == 31.0) {
-                vertices.push_back(0.0f + x);
-                vertices.push_back(0.0f + y);
-                vertices.push_back(1.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f + x);
-                vertices.push_back(0.0f + y);
-                vertices.push_back(1.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f + x);
-                vertices.push_back(1.0f + y);
-                vertices.push_back(1.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f + x);
-                vertices.push_back(1.0f + y);
-                vertices.push_back(1.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f);
-
-                indices.push_back(vertexOffset + 0);
-                indices.push_back(vertexOffset + 1);
-                indices.push_back(vertexOffset + 2);
-                indices.push_back(vertexOffset + 2);
-                indices.push_back(vertexOffset + 1);
-                indices.push_back(vertexOffset + 3);
-                vertexOffset += 4;
-            }
-            if(m_Blocks[GetIndex({x, y, z - 1})] == 0 || z == 0.0) {
-                vertices.push_back(0.0f + x);
-                vertices.push_back(0.0f + y);
-                vertices.push_back(0.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(-1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f + x);
-                vertices.push_back(0.0f + y);
-                vertices.push_back(0.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(-1.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f + x);
-                vertices.push_back(1.0f + y);
-                vertices.push_back(0.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(-1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f + x);
-                vertices.push_back(1.0f + y);
-                vertices.push_back(0.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(-1.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f);
-
-                indices.push_back(vertexOffset + 0);
-                indices.push_back(vertexOffset + 1);
-                indices.push_back(vertexOffset + 2);
-                indices.push_back(vertexOffset + 2);
-                indices.push_back(vertexOffset + 1);
-                indices.push_back(vertexOffset + 3);
-                vertexOffset += 4;
-            }
-            if(m_Blocks[GetIndex({x, y + 1, z})] == 0 || y == 31.0) {
-                vertices.push_back(0.0f + x);
-                vertices.push_back(1.0f + y);
-                vertices.push_back(0.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f + x);
-                vertices.push_back(1.0f + y);
-                vertices.push_back(0.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f + x);
-                vertices.push_back(1.0f + y);
-                vertices.push_back(1.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f + x);
-                vertices.push_back(1.0f + y);
-                vertices.push_back(1.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f);
-
-                indices.push_back(vertexOffset + 0);
-                indices.push_back(vertexOffset + 1);
-                indices.push_back(vertexOffset + 2);
-                indices.push_back(vertexOffset + 2);
-                indices.push_back(vertexOffset + 1);
-                indices.push_back(vertexOffset + 3);
-                vertexOffset += 4;
-            }
-            if(m_Blocks[GetIndex({x, y - 1, z})] == 0 || y == 0.0) {
-                vertices.push_back(0.0f + x);
-                vertices.push_back(0.0f + y);
-                vertices.push_back(0.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(-1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f + x);
-                vertices.push_back(0.0f + y);
-                vertices.push_back(0.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(-1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f + x);
-                vertices.push_back(0.0f + y);
-                vertices.push_back(1.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(-1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f + x);
-                vertices.push_back(0.0f + y);
-                vertices.push_back(1.0f + z);
-                vertices.push_back(0.0f);
-                vertices.push_back(-1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f);
-
-                indices.push_back(vertexOffset + 0);
-                indices.push_back(vertexOffset + 1);
-                indices.push_back(vertexOffset + 2);
-                indices.push_back(vertexOffset + 2);
-                indices.push_back(vertexOffset + 1);
-                indices.push_back(vertexOffset + 3);
-                vertexOffset += 4;
-            }
-            if(m_Blocks[GetIndex({x + 1, y, z})] == 0 || x == 31.0) {
-                vertices.push_back(1.0f + x);
-                vertices.push_back(0.0f + y);
-                vertices.push_back(0.0f + z);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f + x);
-                vertices.push_back(1.0f + y);
-                vertices.push_back(0.0f + z);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f + x);
-                vertices.push_back(0.0f + y);
-                vertices.push_back(1.0f + z);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f + x);
-                vertices.push_back(1.0f + y);
-                vertices.push_back(1.0f + z);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f);
-
-                indices.push_back(vertexOffset + 0);
-                indices.push_back(vertexOffset + 1);
-                indices.push_back(vertexOffset + 2);
-                indices.push_back(vertexOffset + 2);
-                indices.push_back(vertexOffset + 1);
-                indices.push_back(vertexOffset + 3);
-                vertexOffset += 4;
-            }
-            if(m_Blocks[GetIndex({x - 1, y, z})] == 0 || x == 0.0) {
-                vertices.push_back(0.0f + x);
-                vertices.push_back(0.0f + y);
-                vertices.push_back(0.0f + z);
-                vertices.push_back(-1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f + x);
-                vertices.push_back(1.0f + y);
-                vertices.push_back(0.0f + z);
-                vertices.push_back(-1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f + x);
-                vertices.push_back(0.0f + y);
-                vertices.push_back(1.0f + z);
-                vertices.push_back(-1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f + x);
-                vertices.push_back(1.0f + y);
-                vertices.push_back(1.0f + z);
-                vertices.push_back(-1.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f);
-
-                indices.push_back(vertexOffset + 0);
-                indices.push_back(vertexOffset + 1);
-                indices.push_back(vertexOffset + 2);
-                indices.push_back(vertexOffset + 2);
-                indices.push_back(vertexOffset + 1);
-                indices.push_back(vertexOffset + 3);
-                vertexOffset += 4;
-            }
-        }
+        float vertices[] = {
+             0.0f,  0.0f,  0.0f,
+             0.0f,  0.0f, 32.0f,
+             0.0f, 32.0f,  0.0f,
+             0.0f, 32.0f, 32.0f,
+            32.0f,  0.0f,  0.0f,
+            32.0f,  0.0f, 32.0f,
+            32.0f, 32.0f,  0.0f,
+            32.0f, 32.0f, 32.0f
+        };
+        uint32_t indices[] = {
+            0, 2, 1, 1, 2, 3,
+            4, 5, 6, 6, 5, 7,
+            0, 1, 4, 4, 1, 5,
+            2, 6, 3, 3, 6, 7,
+            0, 4, 2, 2, 4, 6,
+            1, 3, 5, 5, 3, 7
+        };
         
         m_VAO = UniFox::VertexArray::Create();
-        UniFox::Ref<UniFox::VertexBuffer> vertexBuffer = UniFox::VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(float));
+        UniFox::Ref<UniFox::VertexBuffer> vertexBuffer = UniFox::VertexBuffer::Create(vertices, sizeof(vertices));
         static UniFox::BufferLayout layout = {
-            {UniFox::ShaderDataType::Float3, "a_Position"},
-            {UniFox::ShaderDataType::Float3, "a_Normal"},
-            {UniFox::ShaderDataType::Float2, "a_TexCoord"}
+            {UniFox::ShaderDataType::Float3, "a_Position"}
         };
         vertexBuffer->SetLayout(layout);
         m_VAO->AddVertexBuffer(vertexBuffer);
-        UniFox::Ref<UniFox::IndexBuffer> indexBuffer = UniFox::IndexBuffer::Create(indices.data(), indices.size());
+        UniFox::Ref<UniFox::IndexBuffer> indexBuffer = UniFox::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
         m_VAO->SetIndexBuffer(indexBuffer);
     }
 public:
-    uint8_t m_Blocks[32 * 32 * 32];
-    uint32_t m_Occupied[32*32];
+    std::vector<Node> nodes;
     UniFox::Ref<UniFox::VertexArray> m_VAO;
+    UniFox::Ref<UniFox::StorageBuffer> m_SBO;
     glm::mat4 m_Transform;
     glm::vec3 m_Position;
 };
