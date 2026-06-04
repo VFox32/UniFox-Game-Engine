@@ -11,6 +11,7 @@ target_sources(Sandbox PRIVATE
     src/Terrain.cpp
     src/Chess/Chess.cpp
     src/Chess/Piece.cpp
+    src/Chess/Board.cpp
 )
 
 target_compile_definitions(

@@ -23,11 +23,9 @@ public:
     }
 
     PieceType GetType() const {return m_Type;}
-
-    static int* GetMoves(const Piece* state, const int position);
-
     int GetTeam() const {return m_Team;}
-    void SetTeam(const int team) {m_Team = team;}
+
+    static uint64_t GetMoves(const Piece* state, const int position);
 protected:
     PieceType m_Type;
     int m_Team;
@@ -40,7 +38,7 @@ public:
         m_Team = team;
     }
 
-    static int* GetMoves(const Piece* state, const int position);
+    static uint64_t GetMoves(const Piece* state, const int position);
 };
 class Queen : public Piece {
 public:
@@ -49,7 +47,7 @@ public:
         m_Team = team;
     }
     
-    static int* GetMoves(const Piece* state, const int position);
+    static uint64_t GetMoves(const Piece* state, const int position);
 };
 class Bishop : public Piece {
 public:
@@ -58,7 +56,7 @@ public:
         m_Team = team;
     }
 
-    static int* GetMoves(const Piece* state, const int position);
+    static uint64_t GetMoves(const Piece* state, const int position);
 };
 class Knight : public Piece {
 public:
@@ -67,7 +65,7 @@ public:
         m_Team = team;
     }
     
-    static int* GetMoves(const Piece* state, const int position);
+    static uint64_t GetMoves(const Piece* state, const int position);
 };
 class Rook : public Piece {
 public:
@@ -76,7 +74,7 @@ public:
         m_Team = team;
     }
     
-    static int* GetMoves(const Piece* state, const int position);
+    static uint64_t GetMoves(const Piece* state, const int position);
 };
 class Pawn : public Piece {
 public:
@@ -85,5 +83,5 @@ public:
         m_Team = team;
     }
     
-    static int* GetMoves(const Piece* state, const int position);
+    static uint64_t GetMoves(const Piece* state, const int position);
 };

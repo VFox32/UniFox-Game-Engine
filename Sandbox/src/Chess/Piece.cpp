@@ -1,8 +1,8 @@
 #include "Piece.h"
 
-int* Piece::GetMoves(const Piece* state, const int position) {
+uint64_t Piece::GetMoves(const Piece* state, const int position) {
     if(position < 0 || state[position].GetType() == PieceType::None) {
-        return new int[64] {};
+        return 0;
     }
     switch (state[position].GetType()) {
     case PieceType::King:
@@ -20,10 +20,10 @@ int* Piece::GetMoves(const Piece* state, const int position) {
     }
 }
 
-int* King::GetMoves(const Piece* state, const int position) {
-    int* moves = new int[64] {};
+uint64_t King::GetMoves(const Piece* state, const int position) {
+    uint64_t moves = 0;
     const int team = state[position].GetTeam();
-    const int X = glm::mod((float)position, 8.0f); const int Y = position / 8;
+    const int X = position % 8; const int Y = position / 8;
     int pos = -1;
 
     for(int x = -1; x <= 1; x++)
@@ -34,196 +34,192 @@ int* King::GetMoves(const Piece* state, const int position) {
 
         pos = X+x + (Y+y)*8;
         if(state[pos].GetType() == PieceType::None) {
-            moves[pos] = 1;
-        } else {
-            if(state[pos].GetTeam() != team) {
-                moves[pos] = 1;
-            } else {
-                moves[pos] = 0;
-            }
+            moves |= (1ULL << pos);
+        } else if(state[pos].GetTeam() != team) {
+            moves |= (1ULL << pos);
         }
     }
 
     return moves;
 }
 
-int* Queen::GetMoves(const Piece* state, const int position) {
-    int* moves = new int[64] {};
+uint64_t Queen::GetMoves(const Piece* state, const int position) {
+    uint64_t moves = 0;
     const int team = state[position].GetTeam();
-    const int X = glm::mod((float)position, 8.0f); const int Y = position / 8;
+    const int X = position % 8; const int Y = position / 8;
     int pos = -1;
 
     for(int x = X+1; x < 8; x++) {
         pos = x + Y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
     for(int x = X-1; x >= 0; x--) {
         pos = x + Y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
     for(int y = Y+1; y < 8; y++) {
         pos = X + y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
     for(int y = Y-1; y >= 0; y--) {
         pos = X + y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
 
     for(int x = X+1, y = Y+1; x < 8 && y < 8; x++, y++) {
         pos = x + y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
     for(int x = X-1, y = Y+1; x >= 0 && y < 8; x--, y++) {
         pos = x + y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
     for(int x = X+1, y = Y-1; x < 8 && y >= 0; x++, y--) {
         pos = x + y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
     for(int x = X-1, y = Y-1; x >= 0 && y >= 0; x--, y--) {
         pos = x + y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
 
     return moves;
 }
 
-int* Bishop::GetMoves(const Piece* state, const int position) {
-    int* moves = new int[64] {};
+uint64_t Bishop::GetMoves(const Piece* state, const int position) {
+    uint64_t moves = 0;
     const int team = state[position].GetTeam();
-    const int X = glm::mod((float)position, 8.0f); const int Y = position / 8;
+    const int X = position % 8; const int Y = position / 8;
     int pos = -1;
 
     for(int x = X+1, y = Y+1; x < 8 && y < 8; x++, y++) {
         pos = x + y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
     for(int x = X-1, y = Y+1; x >= 0 && y < 8; x--, y++) {
         pos = x + y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
     for(int x = X+1, y = Y-1; x < 8 && y >= 0; x++, y--) {
         pos = x + y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
     for(int x = X-1, y = Y-1; x >= 0 && y >= 0; x--, y--) {
         pos = x + y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
 
     return moves;
 }
 
-int* Knight::GetMoves(const Piece* state, const int position) {
-    int* moves = new int[64] {};
+uint64_t Knight::GetMoves(const Piece* state, const int position) {
+    uint64_t moves = 0;
     const int team = state[position].GetTeam();
-    const int X = glm::mod((float)position, 8.0f); const int Y = position / 8;
+    const int X = position % 8; const int Y = position / 8;
     int pos = -1;
 
     // top right
     if(X <= 6 && Y <= 5) {
         pos = (X+1) + (Y+2)*8;
-        if(state[pos].GetTeam() != team) moves[pos] = 1;
+        if(state[pos].GetTeam() != team) moves |= (1ULL << pos);
     }
     if(X <= 5 && Y <= 6) {
         pos = (X+2) + (Y+1)*8;
-        if(state[pos].GetTeam() != team) moves[pos] = 1;
+        if(state[pos].GetTeam() != team) moves |= (1ULL << pos);
     }
     // bottom right
     if(X <= 5 && Y >= 1) {
         pos = (X+2) + (Y-1)*8;
-        if(state[pos].GetTeam() != team) moves[pos] = 1;
+        if(state[pos].GetTeam() != team) moves |= (1ULL << pos);
     }
     if(X <= 6 && Y >= 2) {
         pos = (X+1) + (Y-2)*8;
-        if(state[pos].GetTeam() != team) moves[pos] = 1;
+        if(state[pos].GetTeam() != team) moves |= (1ULL << pos);
     }
     // bottom left
     if(X >= 1 && Y >= 2) {
         pos = (X-1) + (Y-2)*8;
-        if(state[pos].GetTeam() != team) moves[pos] = 1;
+        if(state[pos].GetTeam() != team) moves |= (1ULL << pos);
     }
     if(X >= 2 && Y >= 1) {
         pos = (X-2) + (Y-1)*8;
-        if(state[pos].GetTeam() != team) moves[pos] = 1;
+        if(state[pos].GetTeam() != team) moves |= (1ULL << pos);
     }
     // top left
     if(X >= 2 && Y <= 6) {
         pos = (X-2) + (Y+1)*8;
-        if(state[pos].GetTeam() != team) moves[pos] = 1;
+        if(state[pos].GetTeam() != team) moves |= (1ULL << pos);
     }
     if(X >= 1 && Y <= 5) {
         pos = (X-1) + (Y+2)*8;
-        if(state[pos].GetTeam() != team) moves[pos] = 1;
+        if(state[pos].GetTeam() != team) moves |= (1ULL << pos);
     }
 
     return moves;
 }
 
-int* Rook::GetMoves(const Piece* state, const int position) {
-    int* moves = new int[64] {};
+uint64_t Rook::GetMoves(const Piece* state, const int position) {
+    uint64_t moves = 0;
     const int team = state[position].GetTeam();
-    const int X = glm::mod((float)position, 8.0f); const int Y = position / 8;
+    const int X = position % 8; const int Y = position / 8;
     int pos = -1;
 
     for(int x = X+1; x < 8; x++) {
         pos = x + Y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
     for(int x = X-1; x >= 0; x--) {
         pos = x + Y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
     for(int y = Y+1; y < 8; y++) {
         pos = X + y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
     for(int y = Y-1; y >= 0; y--) {
         pos = X + y*8;
         if(state[pos].GetTeam() == team) break;
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
         if(state[pos].GetType() != PieceType::None) break;
     }
 
     return moves;
 }
 
-int* Pawn::GetMoves(const Piece* state, const int position) {
-    int* moves = new int[64] {};
+uint64_t Pawn::GetMoves(const Piece* state, const int position) {
+    uint64_t moves = 0;
     const int team = state[position].GetTeam();
-    const int X = glm::mod((float)position, 8.0f); const int Y = position / 8;
+    const int X = position % 8; const int Y = position / 8;
     int pos = -1;
 
     int dir = 1, start = 1;
@@ -234,21 +230,21 @@ int* Pawn::GetMoves(const Piece* state, const int position) {
         
     pos = X + (Y+dir)*8;
     if(state[pos].GetType() == PieceType::None) {
-        moves[pos] = 1;
+        moves |= (1ULL << pos);
 
         if(Y == start) {
             pos += dir * 8;
-            if(state[pos].GetType() == PieceType::None) moves[pos] = 1;
+            if(state[pos].GetType() == PieceType::None) moves |= (1ULL << pos);;
         }
     }
 
     if(X < 7) {
         pos = X+1 + (Y+dir)*8;
-        if(state[pos].GetTeam() != team && state[pos].GetType() != PieceType::None) moves[pos] = 1;
+        if(state[pos].GetTeam() != team && state[pos].GetType() != PieceType::None) moves |= (1ULL << pos);;
     }
     if(X > 0) {
         pos = X-1 + (Y+dir)*8;
-        if(state[pos].GetTeam() != team && state[pos].GetType() != PieceType::None) moves[pos] = 1;
+        if(state[pos].GetTeam() != team && state[pos].GetType() != PieceType::None) moves |= (1ULL << pos);;
     }
 
     return moves;
