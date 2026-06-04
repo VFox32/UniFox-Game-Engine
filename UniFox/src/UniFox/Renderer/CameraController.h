@@ -22,7 +22,7 @@ namespace UniFox {
 
     class OrthographicCameraController : public CameraController {
     public:
-        OrthographicCameraController(float aspectRatio, bool rotation = false);
+        OrthographicCameraController(float aspectRatio, bool rotation = false, float zoom = 1.0f);
 
         virtual void OnUpdate(Duration dt) override;
         virtual void OnEvent(Event& e) override;
@@ -34,7 +34,7 @@ namespace UniFox {
         bool OnWindowResized(WindowResizeEvent& e);
     private:
         float m_AspectRatio;
-        float m_ZoomLevel = 1.0f;
+        float m_ZoomLevel;
         OrthographicCamera m_Camera;
 
         bool m_Rotation;

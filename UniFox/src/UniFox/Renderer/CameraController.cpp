@@ -89,8 +89,8 @@ namespace UniFox {
     /////////////////////////////
     //// Orthographic Camera ////
     /////////////////////////////
-    OrthographicCameraController::OrthographicCameraController(float aspectRatio, bool rotation) 
-        : m_AspectRatio(aspectRatio), m_Rotation(rotation), m_Camera(-m_AspectRatio*m_ZoomLevel, m_AspectRatio*m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel) {
+    OrthographicCameraController::OrthographicCameraController(float aspectRatio, bool rotation, float zoom) 
+        : m_AspectRatio(aspectRatio), m_Rotation(rotation), m_ZoomLevel(zoom), m_Camera(-m_AspectRatio*m_ZoomLevel, m_AspectRatio*m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel) {
 
     }
 

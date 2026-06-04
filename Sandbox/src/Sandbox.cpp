@@ -4,6 +4,7 @@
 #include "Sandbox2D.h"
 #include "Sandbox3D.h"
 #include "Terrain.h"
+#include "Chess/Chess.h"
 
 class Sandbox : public UniFox::Application {
 public:
@@ -12,7 +13,8 @@ public:
 
         //PushLayer(UniFox::MakeRef<Sandbox2D>());
         //PushLayer(UniFox::MakeRef<Sandbox3D>());
-        PushLayer(UniFox::MakeRef<Terrain>());
+        //PushLayer(UniFox::MakeRef<Terrain>());
+        PushLayer(UniFox::MakeRef<Chess>());
     }
     ~Sandbox() {
         UF_PROFILE_FUNCTION();
