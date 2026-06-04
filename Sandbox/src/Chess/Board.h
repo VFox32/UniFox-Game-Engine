@@ -1,7 +1,15 @@
 #pragma once
 #include "UniFox.h"
 
-#include "Piece.h"
+enum class PieceType {
+    None = 0,
+    King,
+    Queen,
+    Bishop,
+    Knight,
+    Rook,
+    Pawn
+};
 
 class Board {
 public:
@@ -9,7 +17,7 @@ public:
 
     void OnRender(glm::mat4 mat);
     void OnEvent(UniFox::Event& e);
-private:
+public:
     bool AddPiece(PieceType type, int pos, int team) {
         uint64_t mask = 1ULL << pos;
         if((m_MaskWhite | m_MaskBlack) & mask) return false;
@@ -18,9 +26,31 @@ private:
         } else {
             m_MaskBlack |= mask;
         }
-        m_Pieces[pos] = Piece(type, team);
+        m_Pieces[pos] = type;
         return true;
     }
+
+    uint64_t GetMoves(const int position);
+    uint64_t GetAllMoves(const int team);
+
+    uint64_t GetWhiteMask() const {return m_MaskWhite;}
+    uint64_t GetBlacMask() const {return m_MaskBlack;}
+    uint64_t GetPieceMask() const {return m_MaskWhite | m_MaskBlack;}
+    uint64_t GetTeam(const uint64_t pos) const {
+        if(m_MaskWhite & (1ULL << pos)) return 1;
+        else if(m_MaskBlack & (1ULL << pos)) return 2;
+        return 0;
+    }
+    PieceType GetType(const uint64_t pos) const {return m_Pieces[pos];}
+    PieceType* GetPieces() const {return m_Pieces;}
+
+private:
+    uint64_t GetKingMoves  (const int position);
+    uint64_t GetQueenMoves (const int position);
+    uint64_t GetBishopMoves(const int position);
+    uint64_t GetKnightMoves(const int position);
+    uint64_t GetRookMoves  (const int position);
+    uint64_t GetPawnMoves  (const int position);
 
     glm::vec2 GetWorldPos() {
         glm::vec3 pos = glm::vec3(UniFox::Input::GetMouseX() / 1280, 1.0 - UniFox::Input::GetMouseY() / 720, 0.0) * 2.0f - 1.0f;
@@ -37,9 +67,10 @@ private:
     uint64_t m_MaskBlack = 0;
     uint64_t m_Moves = 0;
 
-    Piece* m_Pieces = new Piece[64] {};
+    PieceType* m_Pieces = new PieceType[64] {};
 
     int m_Selected = -1;
+    uint64_t m_Turn = 0;
 
     bool OnMouseButtonPressed(UniFox::MouseButtonPressedEvent& e);
     bool OnMouseButtonReleased(UniFox::MouseButtonReleasedEvent& e);

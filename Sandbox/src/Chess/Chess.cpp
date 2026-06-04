@@ -13,7 +13,7 @@ void Chess::OnDetach() {
 void Chess::OnUpdate(UniFox::Duration dt) {
     m_CameraController.OnUpdate(dt);
 
-    UniFox::RenderCommand::SetClearColor({0.1, 0.1, 0.1, 1.0});
+    UniFox::RenderCommand::SetClearColor({0.05, 0.05, 0.05, 1.0});
     UniFox::RenderCommand::Clear();
 
     UniFox::Renderer2D::BeginScene(m_CameraController.GetCamera());

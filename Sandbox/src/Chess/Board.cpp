@@ -46,6 +46,8 @@ Board::Board() {
 void Board::OnRender(glm::mat4 matrix) {
     mat = glm::inverse(matrix);
 
+    UniFox::Renderer2D::DrawQuad({4.0, 4.0, -0.1}, {8.5, 8.5}, 0, glm::vec4(0.3, 0.15, 0.07, 1.0));
+
     glm::vec4 tint = glm::vec4(1);
     for(float x = 0; x < 8; x++)
     for(float y = 0; y < 8; y++) {
@@ -60,27 +62,19 @@ void Board::OnRender(glm::mat4 matrix) {
         }
     }
 
-    /*for(uint64_t i = 0; i < 64; i++) {
-        if(m_Pieces[i].GetType() == PieceType::None) continue;
-        if(m_Pieces[i].GetTeam() == 0) tint = glm::vec4(1.0, 1.0, 1.0, 1.0);
-        else tint = glm::vec4(0.2, 0.2, 0.2, 1.0);
-        if(i == m_Selected) {
-            UniFox::Renderer2D::DrawQuad({GetWorldPos().x, GetWorldPos().y, 0.2}, {1.1, 1.1}, 0, m_PieceTextures[m_Pieces[i].GetType()], tint);
-        } else {
-            glm::vec2 pos = glm::vec2(i % 8, i / 8);
-            UniFox::Renderer2D::DrawQuad({pos.x+0.5, pos.y+0.5, 0.1}, {1, 1}, 0, m_PieceTextures[m_Pieces[i].GetType()], tint);
-        }
-    }*/
     for(uint64_t i = 0; i < 64; i++) {
-        if(m_Pieces[i].GetType() == PieceType::None) continue;
-        if(m_MaskWhite & (1ULL << i)) tint = glm::vec4(1.0, 1.0, 1.0, 1.0);
+        if(m_Pieces[i] == PieceType::None) continue;
+        if(m_MaskWhite & (1ULL << i)) tint = glm::vec4(0.8, 0.8, 0.8, 1.0);
         else tint = glm::vec4(0.2, 0.2, 0.2, 1.0);
-        if(i == m_Selected) {
-            UniFox::Renderer2D::DrawQuad({GetWorldPos().x, GetWorldPos().y, 0.2}, {1.1, 1.1}, 0, m_PieceTextures[m_Pieces[i].GetType()], tint);
-        } else {
+        if(i != m_Selected) {
             glm::vec2 pos = glm::vec2(i % 8, i / 8);
-            UniFox::Renderer2D::DrawQuad({pos.x+0.5, pos.y+0.5, 0.1}, {1, 1}, 0, m_PieceTextures[m_Pieces[i].GetType()], tint);
+            UniFox::Renderer2D::DrawQuad({pos.x+0.5, pos.y+0.5, 0.1}, {1, 1}, 0, m_PieceTextures[m_Pieces[i]], tint);
         }
+    }
+    if(m_Selected >= 0) {
+        if(m_MaskWhite & (1ULL << m_Selected)) tint = glm::vec4(0.8, 0.8, 0.8, 1.0);
+        else tint = glm::vec4(0.2, 0.2, 0.2, 1.0);
+        UniFox::Renderer2D::DrawQuad({GetWorldPos().x, GetWorldPos().y, 0.2}, {1.1, 1.1}, 0, m_PieceTextures[m_Pieces[m_Selected]], tint);
     }
 }
 
@@ -95,9 +89,9 @@ bool Board::OnMouseButtonPressed(UniFox::MouseButtonPressedEvent& e) {
     if(m_Selected >= 0) return true;
 
     uint64_t pos = GetGridPos();
-    if(m_Pieces[pos].GetType() != PieceType::None) {
+    if(GetTeam(pos) == m_Turn+1) {
         m_Selected = pos;
-        m_Moves = Piece::GetMoves(m_Pieces, pos);
+        m_Moves = GetMoves(pos);
     }
     return true;
 }
@@ -116,7 +110,7 @@ bool Board::OnMouseButtonReleased(UniFox::MouseButtonReleasedEvent& e) {
 
     if(m_Moves & (1ULL << pos)) {
         m_Pieces[pos] = m_Pieces[m_Selected];
-        m_Pieces[m_Selected] = Piece();
+        m_Pieces[m_Selected] = PieceType::None;
         uint64_t maskOld = 1ULL << m_Selected;
         uint64_t maskNew = 1ULL << pos;
         if(m_MaskWhite & maskOld) {
@@ -128,6 +122,7 @@ bool Board::OnMouseButtonReleased(UniFox::MouseButtonReleasedEvent& e) {
             m_MaskBlack |= maskNew;
             m_MaskWhite &= ~maskNew;
         }
+        m_Turn = (m_Turn + 1) % 2;
     }
     m_Selected = -1;
     m_Moves = 0;

@@ -10,7 +10,7 @@ target_sources(Sandbox PRIVATE
     src/Sandbox3D.cpp
     src/Terrain.cpp
     src/Chess/Chess.cpp
-    src/Chess/Piece.cpp
+    src/Chess/Moves.cpp
     src/Chess/Board.cpp
 )
 
