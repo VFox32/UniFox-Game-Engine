@@ -2,9 +2,6 @@ project(UniFox)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 option(GLFW_BUILD_SHARED_LIBS "Build GLFW shared" OFF)
 
 add_subdirectory(vendor/spdlog)
@@ -14,9 +11,7 @@ add_subdirectory(vendor/imgui)
 add_subdirectory(vendor/glm)
 add_subdirectory(vendor/stb_image)
 
-add_library(UniFox STATIC
-    src/ufpch.cpp
-
+set(CORE_SOURCE
     src/UniFox/Core/Application.cpp
     src/UniFox/Core/Log.cpp
     src/UniFox/Core/Layer.cpp
@@ -24,7 +19,16 @@ add_library(UniFox STATIC
     src/UniFox/Core/Time.cpp
 
     src/UniFox/ImGui/ImGuiLayer.cpp
+)
 
+set(UTIL_SOURCE
+    src/UniFox/Util/StreamWriter.cpp
+    src/UniFox/Util/StreamReader.cpp
+    src/UniFox/Util/FileStream.cpp
+    src/UniFox/Util/MemoryStream.cpp
+)
+
+set(RENDERER_SOURCE
     src/UniFox/Renderer/Shader.cpp
     src/UniFox/Renderer/Buffer.cpp
     src/UniFox/Renderer/Renderer.cpp
@@ -35,7 +39,9 @@ add_library(UniFox STATIC
     src/UniFox/Renderer/Texture.cpp
     src/UniFox/Renderer/Camera.cpp
     src/UniFox/Renderer/CameraController.cpp
+)
 
+set(PLATFORM_SOURCE
     src/UniFox/Platform/Windows/WindowsInput.cpp
     src/UniFox/Platform/Windows/WindowsWindow.cpp
 
@@ -45,63 +51,53 @@ add_library(UniFox STATIC
     src/UniFox/Platform/OpenGL/OpenGLVertexArray.cpp
     src/UniFox/Platform/OpenGL/OpenGLRendererAPI.cpp
     src/UniFox/Platform/OpenGL/OpenGLTexture.cpp
+)
 
-    src/UniFox/Util/StreamWriter.cpp
-    src/UniFox/Util/StreamReader.cpp
-    src/UniFox/Util/FileStream.cpp
-    src/UniFox/Util/MemoryStream.cpp
+add_library(UniFox STATIC
+    src/ufpch.cpp
+    ${CORE_SOURCE}
+    ${UTIL_SOURCE}
+    ${RENDERER_SOURCE}
+    ${PLATFORM_SOURCE}
 )
 
 target_compile_features(UniFox PUBLIC cxx_std_23)
 
 target_compile_definitions(UniFox PRIVATE
     GLFW_INCLUDE_NONE
-    UF_DEBUG
+
+    UF_ENABLE_LOGGING
+    $<$<CONFIG:Debug>:UF_DEBUG>
+    $<$<CONFIG:Debug>:UF_ENABLE_ASSERTS>
+    $<$<CONFIG:Debug>:UF_ENABLE_PROFILING>
+
+    $<$<CONFIG:Release>:UF_RELEASE>
 )
+
+#target_compile_definitions(UniFox PRIVATE
+#    GLFW_INCLUDE_NONE
+#    UF_DEBUG
+#)
 
 target_include_directories(UniFox
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui
-        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
-        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image
 )
 
-add_dependencies(${PROJECT_NAME} spdlog)
-add_dependencies(${PROJECT_NAME} glfw)
-add_dependencies(${PROJECT_NAME} glad)
-add_dependencies(${PROJECT_NAME} imgui)
-add_dependencies(${PROJECT_NAME} glm)
-add_dependencies(${PROJECT_NAME} stb_image)
+find_package(OpenGL REQUIRED)
 
-if(WIN32)
-    target_link_libraries(UniFox
-        PUBLIC
-            imgui
-        PRIVATE
-            spdlog::spdlog_header_only
-            glfw
-            opengl32.lib
-            glad
-            glm
-            stb_image
-    )
-elseif(UNIX)
-    target_link_libraries(UniFox
-        PUBLIC
-            imgui
-        PRIVATE
-            spdlog::spdlog_header_only
-            glfw
-            libGL.so
-            glad
-            glm
-            stb_image
-    )
-endif()
+target_link_libraries(UniFox
+    PUBLIC
+        imgui
+    PRIVATE
+        glfw
+        glm
+        glad
+        spdlog_header_only
+        stb_image
+        OpenGL::GL
+)
 
 target_precompile_headers(UniFox
     PRIVATE

@@ -4,10 +4,6 @@
 #include "UniFox/Core/Log.h"
 #include "UniFox/Core/PlatformDetection.h"
 
-#ifdef UF_DEBUG
-    #define UF_ENABLE_ASSERTS
-#endif
-
 #ifdef UF_PLATFORM_WINDOWS
     #define UF_DEBUGBREAK __debugbreak()
 #else
