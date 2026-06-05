@@ -48,21 +48,21 @@ namespace UniFox {
         double Weeks       () const {return w ();}
 
         template<typename T>
-        void ns(const T ns) {m_ns = std::chrono::nanoseconds (ns);}
+        void ns(const T ns) {m_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::nanoseconds (ns));}
         template<typename T>
-        void us(const T us) {m_ns = std::chrono::microseconds(us);}
+        void us(const T us) {m_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::microseconds(us));}
         template<typename T>
-        void ms(const T ms) {m_ns = std::chrono::milliseconds(ms);}
+        void ms(const T ms) {m_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::milliseconds(ms));}
         template<typename T>
-        void s (const T s ) {m_ns = std::chrono::seconds     (s );}
+        void s (const T s ) {m_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::seconds     (s ));}
         template<typename T>
-        void m (const T m ) {m_ns = std::chrono::minutes     (m );}
+        void m (const T m ) {m_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::minutes     (m ));}
         template<typename T>
-        void h (const T h ) {m_ns = std::chrono::hours       (h );}
+        void h (const T h ) {m_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::hours       (h ));}
         template<typename T>
-        void d (const T d ) {m_ns = std::chrono::duration<double, std::ratio<86400>>(d);}
+        void d (const T d ) {m_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double, std::ratio<86400>>(d));}
         template<typename T>
-        void w (const T w ) {m_ns = std::chrono::duration<double, std::ratio<604800>>(w);}
+        void w (const T w ) {m_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double, std::ratio<604800>>(w));}
 
         template<typename T>
         void Nanoseconds (const T ns) {Duration::ns(ns);}
@@ -153,8 +153,8 @@ namespace UniFox {
         inline std::string format_as(const TimePoint& tp) {return tp.ToString();}
         friend std::ostream& operator<<(std::ostream& os, const TimePoint& tp) {return os << tp.ToString();}
 
-        TimePoint operator+(const Duration& duration) const {return TimePoint(m_tp + duration.m_ns);}
-        TimePoint operator-(const Duration& duration) const {return TimePoint(m_tp - duration.m_ns);}
+        TimePoint  operator+ (const Duration& duration) const {return TimePoint(m_tp + duration.m_ns);}
+        TimePoint  operator- (const Duration& duration) const {return TimePoint(m_tp - duration.m_ns);}
         TimePoint& operator+=(const Duration& duration) {m_tp += duration.m_ns; return *this;}
         TimePoint& operator-=(const Duration& duration) {m_tp -= duration.m_ns; return *this;}
 

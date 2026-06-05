@@ -58,6 +58,7 @@ target_compile_features(UniFox PUBLIC cxx_std_23)
 target_compile_definitions(UniFox PRIVATE
     GLFW_INCLUDE_NONE
     UF_DEBUG
+    STBI_NO_SIMD
 )
 
 target_include_directories(UniFox
@@ -76,16 +77,29 @@ add_dependencies(${PROJECT_NAME} glad)
 add_dependencies(${PROJECT_NAME} imgui)
 add_dependencies(${PROJECT_NAME} glm)
 
-target_link_libraries(UniFox
-    PUBLIC
-        imgui
-    PRIVATE
-        spdlog::spdlog_header_only
-        glfw
-        opengl32.lib
-        glad
-        glm
-)
+if(WIN32)
+    target_link_libraries(UniFox
+        PUBLIC
+            imgui
+        PRIVATE
+            spdlog::spdlog_header_only
+            glfw
+            opengl32.lib
+            glad
+            glm
+    )
+elseif(UNIX)
+    target_link_libraries(UniFox
+        PUBLIC
+            imgui
+        PRIVATE
+            spdlog::spdlog_header_only
+            glfw
+            libGL.so
+            glad
+            glm
+    )
+endif()
 
 target_precompile_headers(UniFox
     PRIVATE

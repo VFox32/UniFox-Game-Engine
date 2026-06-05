@@ -1,3 +1,5 @@
+#pragma once
+
 #ifdef _WIN32
 	#ifdef _WIN64
 		#define UF_PLATFORM_WINDOWS
@@ -22,7 +24,6 @@
 	#error "Android is not supported!"
 #elif defined(__linux__)
 	#define UF_PLATFORM_LINUX
-	#error "Linux is not supported!"
 #else
 	#error "Unknown platform!"
 #endif

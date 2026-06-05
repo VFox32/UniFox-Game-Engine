@@ -2,14 +2,21 @@
 
 #include <memory>
 #include "UniFox/Core/Log.h"
+#include "UniFox/Core/PlatformDetection.h"
 
 #ifdef UF_DEBUG
     #define UF_ENABLE_ASSERTS
 #endif
 
+#ifdef UF_PLATFORM_WINDOWS
+    #define UF_DEBUGBREAK __debugbreak()
+#else
+    #define UF_DEBUGBREAK __builtin_trap()
+#endif
+
 #ifdef UF_ENABLE_ASSERTS
-    #define UF_ASSERT(x, ...) if(!(x)) {UF_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}
-    #define UF_CORE_ASSERT(x, ...) if(!(x)) {UF_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak();}
+    #define UF_ASSERT(x, ...) if(!(x)) {UF_ERROR("Assertion Failed: {0}", __VA_ARGS__); UF_DEBUGBREAK;}
+    #define UF_CORE_ASSERT(x, ...) if(!(x)) {UF_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); UF_DEBUGBREAK;}
 #else
     #define UF_ASSERT(x, ...)
     #define UF_CORE_ASSERT(x, ...)
@@ -19,7 +26,10 @@
 #define EXPAND(x) x
 #define STRINGIFY(x) #x
 
-#define UF_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+#define UF_BIND_EVENT_FN(fn) \
+    [this](auto&&... args) -> decltype(auto) { \
+        return this->fn(std::forward<decltype(args)>(args)...); \
+    }
 
 namespace UniFox {
     template<typename T>
