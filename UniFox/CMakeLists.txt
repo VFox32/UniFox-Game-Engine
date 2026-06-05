@@ -84,7 +84,7 @@ target_include_directories(UniFox
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw/include
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm/glm
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog/include
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image
