@@ -12,11 +12,10 @@ add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/glad)
 add_subdirectory(vendor/imgui)
 add_subdirectory(vendor/glm)
+add_subdirectory(vendor/stb_image)
 
 add_library(UniFox STATIC
     src/ufpch.cpp
-
-    vendor/stb_image/stb_image.cpp
 
     src/UniFox/Core/Application.cpp
     src/UniFox/Core/Log.cpp
@@ -58,24 +57,25 @@ target_compile_features(UniFox PUBLIC cxx_std_23)
 target_compile_definitions(UniFox PRIVATE
     GLFW_INCLUDE_NONE
     UF_DEBUG
-    STBI_NO_SIMD
 )
 
 target_include_directories(UniFox
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/GLFW/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/Glad/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/ImGui
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glad/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
         ${CMAKE_CURRENT_SOURCE_DIR}/vendor/stb_image
 )
 
 add_dependencies(${PROJECT_NAME} spdlog)
+add_dependencies(${PROJECT_NAME} glfw)
 add_dependencies(${PROJECT_NAME} glad)
 add_dependencies(${PROJECT_NAME} imgui)
 add_dependencies(${PROJECT_NAME} glm)
+add_dependencies(${PROJECT_NAME} stb_image)
 
 if(WIN32)
     target_link_libraries(UniFox
@@ -87,6 +87,7 @@ if(WIN32)
             opengl32.lib
             glad
             glm
+            stb_image
     )
 elseif(UNIX)
     target_link_libraries(UniFox
@@ -98,6 +99,7 @@ elseif(UNIX)
             libGL.so
             glad
             glm
+            stb_image
     )
 endif()
 
