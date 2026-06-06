@@ -1,5 +1,6 @@
 project(UniFox)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 
 option(GLFW_BUILD_SHARED_LIBS "Build GLFW shared" OFF)
