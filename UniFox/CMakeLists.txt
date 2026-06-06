@@ -53,7 +53,7 @@ set(PLATFORM_SOURCE
     src/UniFox/Platform/OpenGL/OpenGLTexture.cpp
 )
 
-add_library(UniFox STATIC
+add_library(UniFox SHARED
     src/ufpch.cpp
     ${CORE_SOURCE}
     ${UTIL_SOURCE}
