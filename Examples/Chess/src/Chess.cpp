@@ -22,7 +22,7 @@ void Chess::OnUpdate(UniFox::Duration dt) {
 }
 
 void Chess::OnImGuiRender() {
-
+    m_Board.OnImguiRender();
 }
 
 void Chess::OnEvent(UniFox::Event& e) {

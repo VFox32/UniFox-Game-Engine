@@ -8,8 +8,9 @@ target_sources(Chess
     PRIVATE
         src/main.cpp
         src/Chess.cpp
-        src/Moves.cpp
         src/Board.cpp
+        src/Action.cpp
+        src/Piece.cpp
 )
 
 target_include_directories(Chess PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
