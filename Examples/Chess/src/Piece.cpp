@@ -47,8 +47,8 @@ std::vector<Move> King::GetMoves(const Board& board, const glm::ivec2 pos) const
         board.GetPiece({2, pos.y}) == nullptr &&
         board.GetPiece({3, pos.y}) == nullptr) {
             Move move = Move(pos, {2, pos.y});
-            move.actions.push_back(UniFox::MakeRef<MovePieceAction>(pos, glm::ivec2(2, pos.y)));
-            move.actions.push_back(UniFox::MakeRef<MovePieceAction>(dest, glm::ivec2(3, pos.y)));
+            move.actions.push_back(new MovePieceAction(pos, glm::ivec2(2, pos.y)));
+            move.actions.push_back(new MovePieceAction(dest, glm::ivec2(3, pos.y)));
             moves.push_back(move);
     }
     dest = {7, pos.y};
@@ -58,8 +58,8 @@ std::vector<Move> King::GetMoves(const Board& board, const glm::ivec2 pos) const
         board.GetPiece({6, pos.y}) == nullptr &&
         board.GetPiece({5, pos.y}) == nullptr) {
             Move move = Move(pos, {6, pos.y});
-            move.actions.push_back(UniFox::MakeRef<MovePieceAction>(pos, glm::ivec2(6, pos.y)));
-            move.actions.push_back(UniFox::MakeRef<MovePieceAction>(dest, glm::ivec2(5, pos.y)));
+            move.actions.push_back(new MovePieceAction(pos, glm::ivec2(6, pos.y)));
+            move.actions.push_back(new MovePieceAction(dest, glm::ivec2(5, pos.y)));
             moves.push_back(move);
     }
 
@@ -267,8 +267,8 @@ std::vector<Move> Pawn::GetMoves(const Board& board, const glm::ivec2 pos) const
             board.GetPiece(dest)->moves == 1 &&
             pos.y == twoFromStart) {
                 Move move = Move(pos, {pos.x-1, pos.y+dir});
-                move.actions.push_back(UniFox::MakeRef<MovePieceAction>(pos, glm::ivec2(pos.x-1, pos.y+dir)));
-                move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(dest));
+                move.actions.push_back(new MovePieceAction(pos, glm::ivec2(pos.x-1, pos.y+dir)));
+                move.actions.push_back(new RemovePieceAction(dest));
                 moves.push_back(move);
         }
     }
@@ -283,8 +283,8 @@ std::vector<Move> Pawn::GetMoves(const Board& board, const glm::ivec2 pos) const
             board.GetPiece(dest)->moves == 1 &&
             pos.y == twoFromStart) {
                 Move move = Move(pos, {pos.x+1, pos.y+dir});
-                move.actions.push_back(UniFox::MakeRef<MovePieceAction>(pos, glm::ivec2(pos.x+1, pos.y+dir)));
-                move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(dest));
+                move.actions.push_back(new MovePieceAction(pos, glm::ivec2(pos.x+1, pos.y+dir)));
+                move.actions.push_back(new RemovePieceAction(dest));
                 moves.push_back(move);
         }
     }

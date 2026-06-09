@@ -32,7 +32,7 @@ namespace UniFox {
 
         template<typename T>
         void ReadObject(T& obj) {
-            T::DeSerialize(this, obj);
+            T::Deserialize(this, obj);
         }
         
         template<typename T>
