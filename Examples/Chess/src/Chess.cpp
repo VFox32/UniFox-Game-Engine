@@ -12,12 +12,33 @@ Chess::Chess()
 }
 
 void Chess::OnAttach() {
-    m_PieceTextures[PieceType::King  ] = UniFox::Texture2D::Create("assets/textures/wk.png");
-    m_PieceTextures[PieceType::Queen ] = UniFox::Texture2D::Create("assets/textures/wq.png");
-    m_PieceTextures[PieceType::Bishop] = UniFox::Texture2D::Create("assets/textures/wb.png");
-    m_PieceTextures[PieceType::Knight] = UniFox::Texture2D::Create("assets/textures/wn.png");
-    m_PieceTextures[PieceType::Rook  ] = UniFox::Texture2D::Create("assets/textures/wr.png");
-    m_PieceTextures[PieceType::Pawn  ] = UniFox::Texture2D::Create("assets/textures/wp.png");
+    m_PieceTextures.resize(25);
+    m_PieceTextures[0] = UniFox::Texture2D::Create(0, 0, 0);
+    m_PieceTextures[m_Board.GetId("King")] = UniFox::Texture2D::Create("assets/textures/extended/wking.png");
+    m_PieceTextures[m_Board.GetId("Queen")] = UniFox::Texture2D::Create("assets/textures/extended/wqueen.png");
+    m_PieceTextures[m_Board.GetId("Bishop")] = UniFox::Texture2D::Create("assets/textures/extended/wbishop.png");
+    m_PieceTextures[m_Board.GetId("Knight")] = UniFox::Texture2D::Create("assets/textures/extended/wknight.png");
+    m_PieceTextures[m_Board.GetId("Rook")] = UniFox::Texture2D::Create("assets/textures/extended/wrook.png");
+    m_PieceTextures[m_Board.GetId("Pawn")] = UniFox::Texture2D::Create("assets/textures/extended/wpawn.png");
+    
+    m_PieceTextures[m_Board.GetId("Camel")] = UniFox::Texture2D::Create("assets/textures/extended/wcamel.png");
+    m_PieceTextures[m_Board.GetId("Chancellor")] = UniFox::Texture2D::Create("assets/textures/extended/wchancellor.png");
+    m_PieceTextures[m_Board.GetId("Cardinal")] = UniFox::Texture2D::Create("assets/textures/extended/wcardinal.png");
+    m_PieceTextures[m_Board.GetId("Amazon")] = UniFox::Texture2D::Create("assets/textures/extended/wamazon.png");
+    m_PieceTextures[m_Board.GetId("Grasshopper")] = UniFox::Texture2D::Create("assets/textures/extended/wgrasshopper.png");
+    m_PieceTextures[m_Board.GetId("KnightRider")] = UniFox::Texture2D::Create("assets/textures/extended/wnightrider.png");
+    m_PieceTextures[m_Board.GetId("CamelRider")] = UniFox::Texture2D::Create("assets/textures/extended/wcamelrider.png");
+    m_PieceTextures[m_Board.GetId("Wazir")] = UniFox::Texture2D::Create("assets/textures/extended/wwazir.png");
+    m_PieceTextures[m_Board.GetId("Ferz")] = UniFox::Texture2D::Create("assets/textures/extended/wferz.png");
+    m_PieceTextures[m_Board.GetId("Elephant")] = UniFox::Texture2D::Create("assets/textures/extended/welephant.png");
+    m_PieceTextures[m_Board.GetId("WarMachine")] = UniFox::Texture2D::Create("assets/textures/extended/wwarmachine.png");
+    m_PieceTextures[m_Board.GetId("Horse")] = UniFox::Texture2D::Create("assets/textures/extended/whorse.png");
+    m_PieceTextures[m_Board.GetId("General")] = UniFox::Texture2D::Create("assets/textures/extended/wgeneral.png");
+    m_PieceTextures[m_Board.GetId("Soldier")] = UniFox::Texture2D::Create("assets/textures/extended/wcannon.png"); //
+    m_PieceTextures[m_Board.GetId("StoneGeneral")] = UniFox::Texture2D::Create("assets/textures/extended/wcannon.png"); //
+    m_PieceTextures[m_Board.GetId("Sergeant")] = UniFox::Texture2D::Create("assets/textures/extended/wsergeant.png");
+    m_PieceTextures[m_Board.GetId("Wildebeest")] = UniFox::Texture2D::Create("assets/textures/extended/wwildebeest.png");
+    m_PieceTextures[m_Board.GetId("Berolina")] = UniFox::Texture2D::Create("assets/textures/extended/wberolinapawn.png");
 
     m_Teams.push_back(Team("None", {0.5, 0.5, 0.5}));
     m_Teams.push_back(Team("VFox", {0.8, 0.8, 0.8}));
@@ -25,6 +46,11 @@ void Chess::OnAttach() {
 }
 
 void Chess::OnDetach() {
+    m_Moves.clear();
+    m_Teams.clear();
+    m_History.clear();
+    m_UndoHistory.clear();
+    m_PieceTextures.clear();
 }
 
 void Chess::OnUpdate(UniFox::Duration dt) {
@@ -59,11 +85,11 @@ void Chess::OnUpdate(UniFox::Duration dt) {
         if(m_Board.GetPiece(i) == nullptr) continue;
         if(i != m_Selected) {
             glm::vec2 pos = glm::vec2(i % 8, i / 8);
-            UniFox::Renderer2D::DrawQuad({pos.x+0.5, pos.y+0.5, 0.1}, {1, 1}, 0, m_PieceTextures[m_Board.GetPiece(i)->type], {m_Teams[m_Board.GetPiece(i)->team].color, 1.0});
+            UniFox::Renderer2D::DrawQuad({pos.x+0.5, pos.y+0.5, 0.1}, {1, 1}, 0, m_PieceTextures[m_Board.GetPiece(i)->id], {m_Teams[m_Board.GetPiece(i)->team].color, 1.0});
         }
     }
     if(m_Selected >= 0) {
-        UniFox::Renderer2D::DrawQuad({GetWorldPos().x, GetWorldPos().y, 0.2}, {1.1, 1.1}, 0, m_PieceTextures[m_Board.GetPiece(m_Selected)->type], {m_Teams[m_Board.GetPiece(m_Selected)->team].color, 1.0});
+        UniFox::Renderer2D::DrawQuad({GetWorldPos().x, GetWorldPos().y, 0.2}, {1.1, 1.1}, 0, m_PieceTextures[m_Board.GetPiece(m_Selected)->id], {m_Teams[m_Board.GetPiece(m_Selected)->team].color, 1.0});
     }
 
     UniFox::Renderer2D::EndScene();
@@ -121,6 +147,7 @@ bool Chess::OnMouseButtonPressed(UniFox::MouseButtonPressedEvent& e) {
 
     if(m_Board.GetTeam(pos) == m_Turn + 1) {
         m_Selected = m_Board.GetIndex(pos);
+
         m_Moves = m_Board.GetValidMoves(pos);
     }
 
@@ -139,6 +166,7 @@ bool Chess::OnMouseButtonReleased(UniFox::MouseButtonReleasedEvent& e) {
     for(auto move : m_Moves) {
         if(move.dest == pos) {
             move.Do(m_Board);
+            m_History.push_back(move);
             m_Turn = (m_Turn + 1) % 2;
 
             m_Info = "";

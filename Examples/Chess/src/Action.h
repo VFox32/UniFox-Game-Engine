@@ -44,6 +44,7 @@ class RemovePieceAction : public Action {
 public:
     RemovePieceAction(glm::ivec2 Pos) 
         : Action(ActionType::Remove), pos(Pos) {}
+    ~RemovePieceAction() {piece = nullptr;}
 
     glm::ivec2 pos;
     Piece* piece;
@@ -58,6 +59,7 @@ class CreatePieceAction : public Action {
 public:
     CreatePieceAction(glm::ivec2 Pos, Piece* Piece) 
         : Action(ActionType::Create), pos(Pos), piece(Piece) {}
+    ~CreatePieceAction() {piece = nullptr;}
 
     glm::ivec2 pos;
     Piece* piece;
@@ -72,7 +74,7 @@ class Move {
 public:
     Move(glm::ivec2 Src = glm::ivec2(0), glm::ivec2 Dest = glm::ivec2(0))
         : src(Src), dest(Dest) {}
-    ~Move() = default;
+    ~Move();
 
     glm::ivec2 src;
     glm::ivec2 dest;
@@ -83,7 +85,7 @@ public:
 
     static Move move(glm::ivec2 src, glm::ivec2 dest);
     static Move capture(glm::ivec2 src, glm::ivec2 dest);
-    static Move moveOrCapture(Board board, glm::ivec2 src, glm::ivec2 dest);
+    static Move moveOrCapture(const Board& board, glm::ivec2 src, glm::ivec2 dest);
 
     static void Serialize(UniFox::StreamWriter* serializer, const Move& instance);
     static void Deserialize(UniFox::StreamReader* deserializer, Move& instance);

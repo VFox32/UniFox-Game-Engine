@@ -11,6 +11,7 @@ target_sources(Chess
         src/Board.cpp
         src/Action.cpp
         src/Piece.cpp
+        src/PieceRegistry.cpp
 )
 
 target_include_directories(Chess PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)

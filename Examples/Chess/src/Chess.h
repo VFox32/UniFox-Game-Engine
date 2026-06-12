@@ -32,5 +32,5 @@ private:
     uint64_t m_Turn = 0;
     std::string m_Info = "";
     
-    std::map<PieceType, UniFox::Ref<UniFox::Texture2D>> m_PieceTextures;
+    std::vector<UniFox::Ref<UniFox::Texture2D>> m_PieceTextures;
 };

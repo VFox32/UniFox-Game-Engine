@@ -3,29 +3,33 @@
 
 #include "Action.h"
 #include "Team.h"
+#include "PieceRegistry.h"
 class Piece;
-enum class PieceType;
 
 class Board {
 public:
     Board();
+    ~Board();
 public:
-    void AddPiece(PieceType type, glm::ivec2 pos, int team);
+    void AddPiece(uint32_t id, glm::ivec2 pos, int team);
 
-    uint64_t GetTeam(const glm::ivec2 pos) const;
-    PieceType GetType(const glm::ivec2 pos) const;
+    uint32_t GetTeam(const glm::ivec2 pos) const;
+    uint32_t GetId(const glm::ivec2 pos) const;
+    uint32_t GetId(const std::string name) const;
     Piece* GetPiece(const glm::ivec2 pos) const;
     Piece* GetPiece(const uint32_t pos) const;
     Piece** GetPieces() const {return m_Pieces;}
 
     void SetPiece(const glm::ivec2 pos, Piece* piece);
+    void Reset(uint32_t* position = nullptr, uint32_t* teams = nullptr);
 
     static uint32_t GetIndex(const glm::ivec2 pos) {return pos.x + pos.y*8;}
     static glm::ivec2 GetCoord(const uint32_t pos) {return {pos % 8, pos / 8};}
     static glm::ivec2 GetGridPos(const glm::vec2 pos);
+    static bool InBounds(const glm::ivec2 pos);
 
     bool IsSquareSafe(const glm::ivec2 pos, const uint32_t team) const;
-    std::vector<glm::ivec2> FindPiece(PieceType type, uint32_t team) const;
+    std::vector<glm::ivec2> FindPiece(uint32_t type, uint32_t team) const;
     std::vector<Move> GetMoves(glm::ivec2 pos) const;
     std::vector<Move> GetValidMoves(glm::ivec2 pos);
 
@@ -37,6 +41,8 @@ public:
     void NextTurn();
     void PreviousTurn();
 private:
-    Piece** m_Pieces = new Piece*[64] {};
+    Piece** m_Pieces;
     uint32_t m_Turn;
+
+    PieceRegistry m_Registry;
 };

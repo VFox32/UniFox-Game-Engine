@@ -40,6 +40,11 @@ void Move::Undo(Board& board) {
     }
 }
 
+Move::~Move() {
+    //for(uint32_t i = 0; i < actions.size(); i++) {
+    //    delete actions[i];
+    //}
+}
 Move Move::move(glm::ivec2 src, glm::ivec2 dest) {
     Move move = Move(src, dest);
     move.actions.push_back(new MovePieceAction(src, dest));
@@ -51,8 +56,8 @@ Move Move::capture(glm::ivec2 src, glm::ivec2 dest) {
     move.actions.push_back(new MovePieceAction(src, dest));
     return move;
 }
-Move Move::moveOrCapture(Board board, glm::ivec2 src, glm::ivec2 dest) {
-    if(board.GetType(dest) != PieceType::None) {
+Move Move::moveOrCapture(const Board& board, glm::ivec2 src, glm::ivec2 dest) {
+    if(board.GetId(dest) != 0) {
         return capture(src, dest);
     } else {
         return move(src, dest);
