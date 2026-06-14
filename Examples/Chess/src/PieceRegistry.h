@@ -6,7 +6,7 @@
 class PieceInfo {
 public:
     std::string name;
-    std::function<Piece*(uint32_t id, uint32_t team)> create;
+    std::function<UniFox::Ref<Piece>(uint32_t id, uint32_t team)> create;
 };
 
 class PieceRegistry {
@@ -19,13 +19,13 @@ public:
 
         m_Pieces.push_back(PieceInfo{
             name,
-            [](uint32_t id, uint32_t team){return new T(id, team); }
+            [](uint32_t id, uint32_t team){return UniFox::MakeRef<T>(id, team); }
         });
 
         return id;
     }
 
-    Piece* Create(const uint32_t id, const uint32_t team) const;
+    UniFox::Ref<Piece> Create(const uint32_t id, const uint32_t team) const;
 
     std::string GetName(const uint32_t id) const;
     uint32_t GetId(const std::string& name) const;

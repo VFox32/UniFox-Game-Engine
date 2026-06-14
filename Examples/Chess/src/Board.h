@@ -9,40 +9,45 @@ class Piece;
 class Board {
 public:
     Board();
-    ~Board();
 public:
-    void AddPiece(uint32_t id, glm::ivec2 pos, int team);
+    void Reset(const uint32_t* position = nullptr, const uint32_t* teams = nullptr);
+    void AddPiece(const uint32_t id, const glm::ivec2 pos, const uint32_t team);
+    void SetPiece(const glm::ivec2 pos, const UniFox::Ref<Piece> piece);
+    UniFox::Ref<Piece> CreatePiece(const std::string& name, const uint32_t team) const;
 
-    uint32_t GetTeam(const glm::ivec2 pos) const;
-    uint32_t GetId(const glm::ivec2 pos) const;
-    uint32_t GetId(const std::string name) const;
-    Piece* GetPiece(const glm::ivec2 pos) const;
-    Piece* GetPiece(const uint32_t pos) const;
-    Piece** GetPieces() const {return m_Pieces;}
-
-    void SetPiece(const glm::ivec2 pos, Piece* piece);
-    void Reset(uint32_t* position = nullptr, uint32_t* teams = nullptr);
-
-    static uint32_t GetIndex(const glm::ivec2 pos) {return pos.x + pos.y*8;}
-    static glm::ivec2 GetCoord(const uint32_t pos) {return {pos % 8, pos / 8};}
-    static glm::ivec2 GetGridPos(const glm::vec2 pos);
-    static bool InBounds(const glm::ivec2 pos);
-
+    bool InBounds(const glm::ivec2 pos) const;
     bool IsSquareSafe(const glm::ivec2 pos, const uint32_t team) const;
-    std::vector<glm::ivec2> FindPiece(uint32_t type, uint32_t team) const;
-    std::vector<Move> GetMoves(glm::ivec2 pos) const;
-    std::vector<Move> GetValidMoves(glm::ivec2 pos);
-
     bool IsCheck(const uint32_t team) const;
     bool IsMate(const uint32_t team);
 
-    uint32_t GetTurn() const;
-    void SetTurn(uint32_t turn);
+    std::vector<glm::ivec2> FindPiece(const uint32_t type, const uint32_t team) const;
+    std::vector<Move> GetMoves(const glm::ivec2 pos) const;
+    std::vector<Move> GetValidMoves(const glm::ivec2 pos);
+
+    void SetTurn(const uint32_t turn);
     void NextTurn();
     void PreviousTurn();
+
+    uint32_t GetId(const std::string name) const;
+
+    UniFox::Ref<Piece>* GetPieces() const;
+    UniFox::Ref<Piece> GetPiece(const glm::ivec2 pos) const;
+    uint32_t GetTeam(const glm::ivec2 pos) const;
+    uint32_t GetId(const glm::ivec2 pos) const;
+
+    glm::ivec2 GetSize() const;
+    uint32_t GetTurn() const;
+    Team GetTeam(const uint32_t i) const;
+
+    uint32_t GetIndex(const glm::ivec2 pos) const;
+    glm::ivec2 GetCoord(const uint32_t pos) const;
+    glm::ivec2 GetGridPos(const glm::vec2 pos) const;
 private:
-    Piece** m_Pieces;
+    UniFox::Ref<Piece>* m_Pieces;
     uint32_t m_Turn;
+    glm::ivec2 m_Size;
+
+    std::vector<Team> m_Teams;
 
     PieceRegistry m_Registry;
 };

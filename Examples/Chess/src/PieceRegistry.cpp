@@ -7,7 +7,7 @@ PieceRegistry::PieceRegistry() {
     });
 }
 
-Piece* PieceRegistry::Create(const uint32_t id, const uint32_t team) const {
+UniFox::Ref<Piece> PieceRegistry::Create(const uint32_t id, const uint32_t team) const {
     return m_Pieces[id].create(id, team);
 }
 

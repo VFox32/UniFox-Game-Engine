@@ -3,6 +3,7 @@
 #include "Action.h"
 #include "Board.h"
 
+#pragma region Helpers
 bool Piece::CanMove(const Board& board, const glm::ivec2 pos) {
     return board.GetTeam(pos) == 0;
 }
@@ -11,7 +12,7 @@ bool Piece::CanCapture(const Board& board, const glm::ivec2 pos, uint32_t team) 
 }
 
 void Piece::Jump(const Board& board, const glm::ivec2 pos, const glm::ivec2 dir, std::vector<Move>& moves) {
-    const uint32_t team = board.GetPiece(pos)->team;
+    const uint32_t team = board.GetTeam(pos);
     glm::ivec2 dest = pos + dir;
 
     if(board.InBounds(dest)) {
@@ -21,7 +22,7 @@ void Piece::Jump(const Board& board, const glm::ivec2 pos, const glm::ivec2 dir,
     }
 }
 void Piece::Jump(const Board& board, const glm::ivec2 pos, const std::vector<glm::ivec2> dirs, std::vector<Move>& moves) {
-    const uint32_t team = board.GetPiece(pos)->team;
+    const uint32_t team = board.GetTeam(pos);
     glm::ivec2 dest;
 
     for(auto dir : dirs) {
@@ -35,7 +36,7 @@ void Piece::Jump(const Board& board, const glm::ivec2 pos, const std::vector<glm
 }
 
 void Piece::Slide(const Board& board, const glm::ivec2 pos, const glm::ivec2 dir, std::vector<Move>& moves) {
-    const uint32_t team = board.GetPiece(pos)->team;
+    const uint32_t team = board.GetTeam(pos);
     glm::ivec2 dest = pos;
 
     while(true) {
@@ -50,7 +51,7 @@ void Piece::Slide(const Board& board, const glm::ivec2 pos, const glm::ivec2 dir
     }
 }
 void Piece::Slide(const Board& board, const glm::ivec2 pos, const std::vector<glm::ivec2> dirs, std::vector<Move>& moves) {
-    const uint32_t team = board.GetPiece(pos)->team;
+    const uint32_t team = board.GetTeam(pos);
     glm::ivec2 dest;
 
     for(auto dir : dirs) {
@@ -69,7 +70,7 @@ void Piece::Slide(const Board& board, const glm::ivec2 pos, const std::vector<gl
 }
 
 void Piece::Locust(const Board& board, const glm::ivec2 pos, const glm::ivec2 dir, std::vector<Move>& moves) {
-    const uint32_t team = board.GetPiece(pos)->team;
+    const uint32_t team = board.GetTeam(pos);
     glm::ivec2 dest = pos;
 
     while(true) {
@@ -80,13 +81,15 @@ void Piece::Locust(const Board& board, const glm::ivec2 pos, const glm::ivec2 di
             dest += dir;
             if(!board.InBounds(dest)) return;
 
-            moves.push_back(Move::moveOrCapture(board, pos, dest));
+            if(board.GetTeam(dest) != team) {
+                moves.push_back(Move::moveOrCapture(board, pos, dest));
+            }
             return;
         }
     }
 }
 void Piece::Locust(const Board& board, const glm::ivec2 pos, const std::vector<glm::ivec2> dirs, std::vector<Move>& moves) {
-    const uint32_t team = board.GetPiece(pos)->team;
+    const uint32_t team = board.GetTeam(pos);
     glm::ivec2 dest;
 
     for(auto dir : dirs) {
@@ -99,7 +102,9 @@ void Piece::Locust(const Board& board, const glm::ivec2 pos, const std::vector<g
                 dest += dir;
                 if(!board.InBounds(dest)) break;
                 
-                moves.push_back(Move::moveOrCapture(board, pos, dest));
+                if(board.GetTeam(dest) != team) {
+                    moves.push_back(Move::moveOrCapture(board, pos, dest));
+                }
                 break;
             }
         }
@@ -113,10 +118,11 @@ std::vector<Move> Piece::Combine(const std::vector<Move> A, const std::vector<Mo
     AB.insert(AB.end(), B.begin(), B.end());
     return AB;
 }
+#pragma endregion
 
 #pragma region Standard
 void King::GenerateMoves(const Board& board, const glm::ivec2 pos, std::vector<Move>& moves) {
-    const uint32_t team = board.GetPiece(pos)->team;
+    const uint32_t team = board.GetTeam(pos);
     glm::ivec2 dest;
 
     Piece::Jump(board, pos, {
@@ -142,8 +148,8 @@ void King::GenerateMoves(const Board& board, const glm::ivec2 pos, std::vector<M
         board.IsSquareSafe({2, pos.y}, team) &&
         board.IsSquareSafe({3, pos.y}, team)) {
             Move move = Move(pos, {2, pos.y});
-            move.actions.push_back(new MovePieceAction(pos, glm::ivec2(2, pos.y)));
-            move.actions.push_back(new MovePieceAction(dest, glm::ivec2(3, pos.y)));
+            move.actions.push_back(UniFox::MakeRef<MovePieceAction>(pos, glm::ivec2(2, pos.y)));
+            move.actions.push_back(UniFox::MakeRef<MovePieceAction>(dest, glm::ivec2(3, pos.y)));
             moves.push_back(move);
     }
     dest = {7, pos.y};
@@ -155,8 +161,8 @@ void King::GenerateMoves(const Board& board, const glm::ivec2 pos, std::vector<M
         board.IsSquareSafe({6, pos.y}, team) &&
         board.IsSquareSafe({5, pos.y}, team)) {
             Move move = Move(pos, {6, pos.y});
-            move.actions.push_back(new MovePieceAction(pos, glm::ivec2(6, pos.y)));
-            move.actions.push_back(new MovePieceAction(dest, glm::ivec2(5, pos.y)));
+            move.actions.push_back(UniFox::MakeRef<MovePieceAction>(pos, glm::ivec2(6, pos.y)));
+            move.actions.push_back(UniFox::MakeRef<MovePieceAction>(dest, glm::ivec2(5, pos.y)));
             moves.push_back(move);
     }
 }
@@ -198,55 +204,126 @@ void Rook::GenerateMoves(const Board& board, const glm::ivec2 pos, std::vector<M
 }
 
 void Pawn::GenerateMoves(const Board& board, const glm::ivec2 pos, std::vector<Move>& moves) {
-    const uint32_t team = board.GetPiece(pos)->team;
+    const uint32_t team = board.GetTeam(pos);
     glm::ivec2 dest;
 
-    int dir = 1, twoFromStart = 4;
-    if(team == 2) {
-        dir = -1;
-        twoFromStart = 3;
+    glm::ivec2 dir = board.GetTeam(team).dir;
+    glm::ivec2 right = {dir.y, -dir.x};
+
+    std::vector<std::string> promotion = {"Queen", "Bishop", "Knight", "Rook"};
+
+    // two move at start
+    if(board.GetPiece(pos)->moves == 0) {
+        dest = pos + dir + dir;
+        if(board.GetId(pos + dir) == 0 && board.GetId(dest) == 0) {
+            moves.push_back(Move::move(pos, dest));
+        }
     }
-        
-    dest = {pos.x, pos.y+dir};
+
+    // march forward
+    dest = pos + dir;
     if(board.GetId(dest) == 0) {
-        moves.push_back(Move::move(pos, dest));
-
-        if(board.GetPiece(pos)->moves == 0) {
-            dest.y += dir;
-            if(board.GetId(dest) == 0) moves.push_back(Move::move(pos, dest));
+        if(board.InBounds(dest + dir)) {
+            moves.push_back(Move::move(pos, dest));
+        } else {
+            // promote
+            for(auto name : promotion) {
+                Move move(pos, dest);
+                UniFox::Ref<Piece> piece = board.CreatePiece(name, team);
+                move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(pos));
+                move.actions.push_back(UniFox::MakeRef<CreatePieceAction>(dest, piece));
+                moves.push_back(move);
+            }
         }
     }
 
-    if(pos.x < 7) {
-        dest = {pos.x+1, pos.y+dir};
-        if(board.GetTeam(dest) != team && board.GetId(dest) != 0) moves.push_back(Move::capture(pos, dest));
-
-        dest = {pos.x-1, pos.y};
-        if(board.GetTeam(dest) != team &&
-            board.GetId(dest) == board.GetId("Pawn") &&
-            board.GetId(glm::ivec2(pos.x-1, pos.y+1)) == 0 &&
-            board.GetPiece(dest)->moves == 1 &&
-            pos.y == twoFromStart) {
-                Move move = Move(pos, {pos.x-1, pos.y+dir});
-                move.actions.push_back(new MovePieceAction(pos, glm::ivec2(pos.x-1, pos.y+dir)));
-                move.actions.push_back(new RemovePieceAction(dest));
-                moves.push_back(move);
+    // front right
+    dest = pos + dir + right;
+    if(board.InBounds(dest)) {
+        // normal
+        if(board.GetId(dest) != 0 && board.GetTeam(dest) != team) {
+            if(board.InBounds(dest + dir)) {
+                moves.push_back(Move::capture(pos, dest));
+            } else {
+                for(auto name : promotion) {
+                    Move move(pos, dest);
+                    UniFox::Ref<Piece> piece = board.CreatePiece(name, team);
+                    move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(pos));
+                    move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(dest));
+                    move.actions.push_back(UniFox::MakeRef<CreatePieceAction>(dest, piece));
+                    moves.push_back(move);
+                }
+            }
+        }
+        // en passant
+        glm::ivec2 pawn = dest - dir;
+        if(board.InBounds(pawn)) {
+            if(board.GetId(pawn) == board.GetId("Pawn") &&
+                board.GetTeam(pawn) != team &&
+                board.GetId(dest) == 0 &&
+                board.GetPiece(pawn)->moves == 1 &&
+                board.GetPiece(pawn)->dist == 2 * board.GetTeam(board.GetTeam(pawn)).dir) {
+                    if(board.InBounds(dest + dir)) {
+                        Move move(pos, dest);
+                        move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(pawn));
+                        move.actions.push_back(UniFox::MakeRef<MovePieceAction>(pos, dest));
+                        moves.push_back(move);
+                    } else {
+                        for(auto name : promotion) {
+                            Move move(pos, dest);
+                            UniFox::Ref<Piece> piece = board.CreatePiece(name, team);
+                            move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(pos));
+                            move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(pawn));
+                            move.actions.push_back(UniFox::MakeRef<CreatePieceAction>(dest, piece));
+                            moves.push_back(move);
+                        }
+                    }
+            }
         }
     }
-    if(pos.x > 0) {
-        dest = {pos.x-1, pos.y+dir};
-        if(board.GetTeam(dest) != team && board.GetId(dest) != 0) moves.push_back(Move::capture(pos, dest));
 
-        dest = {pos.x+1, pos.y};
-        if(board.GetTeam(dest) != team &&
-            board.GetId(dest) == board.GetId("Pawn") &&
-            board.GetId(glm::ivec2(pos.x+1, pos.y+1)) == 0 &&
-            board.GetPiece(dest)->moves == 1 &&
-            pos.y == twoFromStart) {
-                Move move = Move(pos, {pos.x+1, pos.y+dir});
-                move.actions.push_back(new MovePieceAction(pos, glm::ivec2(pos.x+1, pos.y+dir)));
-                move.actions.push_back(new RemovePieceAction(dest));
-                moves.push_back(move);
+    // front left
+    dest = pos + dir - right;
+    if(board.InBounds(dest)) {
+        // normal
+        if(board.GetId(dest) != 0 && board.GetTeam(dest) != team) {
+            if(board.InBounds(dest + dir)) {
+                moves.push_back(Move::capture(pos, dest));
+            } else {
+                for(auto name : promotion) {
+                    Move move(pos, dest);
+                    UniFox::Ref<Piece> piece = board.CreatePiece(name, team);
+                    move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(pos));
+                    move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(dest));
+                    move.actions.push_back(UniFox::MakeRef<CreatePieceAction>(dest, piece));
+                    moves.push_back(move);
+                }
+            }
+        }
+        // en passant
+        glm::ivec2 pawn = dest - dir;
+        if(board.InBounds(pawn)) {
+            if(board.GetId(pawn) == board.GetId("Pawn") &&
+                board.GetTeam(pawn) != team &&
+                board.GetId(dest) == 0 &&
+                board.GetPiece(pawn)->moves == 1 &&
+                board.GetPiece(pawn)->dist == 2 * board.GetTeam(board.GetTeam(pawn)).dir) {
+                    if(board.InBounds(dest + dir)) {
+                        Move move(pos, dest);
+                        move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(pawn));
+                        move.actions.push_back(UniFox::MakeRef<MovePieceAction>(pos, dest));
+                        moves.push_back(move);
+                    } else {
+                        for(auto name : promotion) {
+                            Move move(pos, dest);
+                            UniFox::Ref<Piece> piece = board.CreatePiece(name, team);
+                            move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(pos));
+                            move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(pawn));
+                            move.actions.push_back(UniFox::MakeRef<CreatePieceAction>(dest, piece));
+                            moves.push_back(move);
+                        }
+                    }
+            }
         }
     }
 }
@@ -289,7 +366,7 @@ void Ferz::GenerateMoves(const Board& board, const glm::ivec2 pos, std::vector<M
 }
 
 void WarMachine::GenerateMoves(const Board& board, const glm::ivec2 pos, std::vector<Move>& moves) {
-    Piece::Slide(board, pos, {
+    Piece::Jump(board, pos, {
         { 2,  0},
         {-2,  0},
         { 0,  2},
@@ -461,5 +538,10 @@ void General::GenerateMoves(const Board& board, const glm::ivec2 pos, std::vecto
 void Wildebeest::GenerateMoves(const Board& board, const glm::ivec2 pos, std::vector<Move>& moves) {
     Knight::GenerateMoves(board, pos, moves);
     Camel::GenerateMoves(board, pos, moves);
+}
+
+void Spider::GenerateMoves(const Board& board, const glm::ivec2 pos, std::vector<Move>& moves) {
+    Ferz::GenerateMoves(board, pos, moves);
+    WarMachine:GenerateMoves(board, pos, moves);
 }
 #pragma endregion

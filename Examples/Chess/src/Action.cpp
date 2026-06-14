@@ -5,11 +5,13 @@
 
 void MovePieceAction::Do(Board& board) {
     board.GetPiece(source)->moves += 1;
+    board.GetPiece(source)->dist += dest - source;
     board.SetPiece(dest, board.GetPiece(source));
     board.SetPiece(source, nullptr);
 }
 void MovePieceAction::Undo(Board& board) {
     board.GetPiece(dest)->moves -= 1;
+    board.GetPiece(dest)->dist -= dest - source;
     board.SetPiece(source, board.GetPiece(dest));
     board.SetPiece(dest, nullptr);
 }
@@ -40,20 +42,15 @@ void Move::Undo(Board& board) {
     }
 }
 
-Move::~Move() {
-    //for(uint32_t i = 0; i < actions.size(); i++) {
-    //    delete actions[i];
-    //}
-}
 Move Move::move(glm::ivec2 src, glm::ivec2 dest) {
     Move move = Move(src, dest);
-    move.actions.push_back(new MovePieceAction(src, dest));
+    move.actions.push_back(UniFox::MakeRef<MovePieceAction>(src, dest));
     return move;
 }
 Move Move::capture(glm::ivec2 src, glm::ivec2 dest) {
     Move move = Move(src, dest);
-    move.actions.push_back(new RemovePieceAction(dest));
-    move.actions.push_back(new MovePieceAction(src, dest));
+    move.actions.push_back(UniFox::MakeRef<RemovePieceAction>(dest));
+    move.actions.push_back(UniFox::MakeRef<MovePieceAction>(src, dest));
     return move;
 }
 Move Move::moveOrCapture(const Board& board, glm::ivec2 src, glm::ivec2 dest) {
@@ -66,71 +63,54 @@ Move Move::moveOrCapture(const Board& board, glm::ivec2 src, glm::ivec2 dest) {
 
 
 
-void Action::Serialize(UniFox::StreamWriter* serializer, const Action& instance) {
-    serializer->WriteRaw(instance.type);
+void Action::Serialize(UniFox::StreamWriter* serializer, const Action* instance) {
+    serializer->WriteRaw(instance->type);
 
-    switch (instance.type)
+    switch (instance->type)
     {
-    case ActionType::None:
-        break;
-    case ActionType::Move:
-        serializer->WriteObject((MovePieceAction&)instance);
-        break;
-    case ActionType::Remove:
-        serializer->WriteObject((RemovePieceAction&)instance);
-        break;
-    case ActionType::Create:
-        serializer->WriteObject((CreatePieceAction&)instance);
+    case 0:
         break;
     }
 }
-void Action::Deserialize(UniFox::StreamReader* deserializer, Action& instance) {
-    deserializer->ReadRaw(instance.type);
+void Action::Deserialize(UniFox::StreamReader* deserializer, UniFox::Ref<Action> instance) {
+    uint32_t type;
+    deserializer->ReadRaw(type);
 
-    switch (instance.type)
+    switch (type)
     {
-    case ActionType::None:
-        break;
-    case ActionType::Move:
-        deserializer->ReadObject((MovePieceAction&)instance);
-        break;
-    case ActionType::Remove:
-        deserializer->ReadObject((RemovePieceAction&)instance);
-        break;
-    case ActionType::Create:
-        deserializer->ReadObject((CreatePieceAction&)instance);
+    case 0:
         break;
     }
 }
 
-void MovePieceAction::Serialize(UniFox::StreamWriter* serializer, const MovePieceAction& instance) {
-    serializer->WriteRaw(instance.source);
-    serializer->WriteRaw(instance.dest);
+void MovePieceAction::Serialize(UniFox::StreamWriter* serializer, const MovePieceAction* instance) {
+
+    serializer->WriteRaw(instance->source);
+    serializer->WriteRaw(instance->dest);
 }
 void MovePieceAction::Deserialize(UniFox::StreamReader* deserializer, MovePieceAction& instance) {
-    instance.type = ActionType::Move;
     deserializer->ReadRaw(instance.source);
     deserializer->ReadRaw(instance.dest);
 }
 
 void RemovePieceAction::Serialize(UniFox::StreamWriter* serializer, const RemovePieceAction& instance) {
-    serializer->WriteRaw(instance.pos);
-    serializer->WriteRaw(instance.piece);
+    //serializer->WriteRaw(instance->pos);
+    //serializer->WriteRaw(instance->piece);
 }
 void RemovePieceAction::Deserialize(UniFox::StreamReader* deserializer, RemovePieceAction& instance) {
-    instance.type = ActionType::Move;
-    deserializer->ReadRaw(instance.pos);
-    deserializer->ReadRaw(instance.piece);
+    //instance->type = 2;
+    //deserializer->ReadRaw(instance->pos);
+    //deserializer->ReadRaw(instance->piece);
 }
 
 void CreatePieceAction::Serialize(UniFox::StreamWriter* serializer, const CreatePieceAction& instance) {
-    serializer->WriteRaw(instance.pos);
-    serializer->WriteRaw(instance.piece);
+    //serializer->WriteRaw(instance->pos);
+    //serializer->WriteRaw(instance->piece);
 }
 void CreatePieceAction::Deserialize(UniFox::StreamReader* deserializer, CreatePieceAction& instance) {
-    instance.type = ActionType::Move;
-    deserializer->ReadRaw(instance.pos);
-    deserializer->ReadRaw(instance.piece);
+    //instance->type = 3;
+    //deserializer->ReadRaw(instance->pos);
+    //deserializer->ReadRaw(instance->piece);
 }
 
 void Move::Serialize(UniFox::StreamWriter* serializer, const Move& instance) {
@@ -140,7 +120,7 @@ void Move::Serialize(UniFox::StreamWriter* serializer, const Move& instance) {
     uint32_t size = instance.actions.size();
     serializer->WriteRaw(size);
     for(uint32_t i = 0; i < size; i++) {
-        Action::Serialize(serializer, *instance.actions[i]);
+        Action::Serialize(serializer, instance.actions[i].get());
     }
 }
 void Move::Deserialize(UniFox::StreamReader* deserializer, Move& instance) {
@@ -151,6 +131,6 @@ void Move::Deserialize(UniFox::StreamReader* deserializer, Move& instance) {
     deserializer->ReadRaw(size);
     instance.actions.reserve(size);
     for(uint32_t i = 0; i < size; i++) {
-        Action::Deserialize(deserializer, *instance.actions[i]);
+        Action::Deserialize(deserializer, instance.actions[i]);
     }
 }

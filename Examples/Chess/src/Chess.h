@@ -18,19 +18,20 @@ private:
 
     bool OnMouseButtonPressed(UniFox::MouseButtonPressedEvent& e);
     bool OnMouseButtonReleased(UniFox::MouseButtonReleasedEvent& e);
+    bool OnWindowResize(UniFox::WindowResizeEvent& e);
 private:
     UniFox::OrthographicCameraController m_CameraController;
 
     Board m_Board;
-    int m_Selected = -1;
+    glm::ivec2 m_Selected = {-1, -1};
+    bool m_Choice = false;
     std::vector<Move> m_Moves;
-    std::vector<Team> m_Teams;
 
     std::vector<Move> m_History;
     std::vector<Move> m_UndoHistory;
     
-    uint64_t m_Turn = 0;
     std::string m_Info = "";
     
     std::vector<UniFox::Ref<UniFox::Texture2D>> m_PieceTextures;
+    glm::vec2 m_WindowSize = {1080, 720};
 };
