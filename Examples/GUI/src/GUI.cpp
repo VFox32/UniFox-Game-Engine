@@ -17,31 +17,43 @@ void GUI::OnAttach() {
     panel->SetPadding({0.1, 0.1, 0.1, 0.1});
     panel->SetMargin({0.1, 0.1, 0.1, 0.1});
 
-    LayoutProperty p = LayoutProperty(
-        Length(),
-        Length(),
-        Length(LengthMode::Pixels, 50 / 1280),
-        Length(LengthMode::Pixels, 50 / 720)
-    );
-
-    UniFox::Ref<Widget> button1 = UniFox::MakeRef<Button>(p);
+    UniFox::Ref<Widget> button1 = UniFox::MakeRef<Button>(LayoutProperty{
+        Length(LengthMode::Pixels, 2.5f),
+        Length(LengthMode::Pixels, 1.0f)
+    });
     button1->SetStyle(style1);
     m_Container->AddChild(button1);
-    UniFox::Ref<Widget> button2 = UniFox::MakeRef<Button>();
+    UniFox::Ref<Widget> button2 = UniFox::MakeRef<Button>(LayoutProperty{
+        Length(LengthMode::Pixels, 2.0f),
+        Length(LengthMode::Ratio, 0.2f)
+    });
     button2->SetStyle(style1);
-    m_Container->AddChild(button2);
+    //m_Container->AddChild(button2);
+    VerticalPanel* c = dynamic_cast<VerticalPanel*>(m_Container.get());
+    c->AddChild(button2, {
+        .alignment = Alignment::Right
+    });
 
-    UniFox::Ref<Container> container = UniFox::MakeRef<HorizontalPanel>();
+    UniFox::Ref<Container> container = UniFox::MakeRef<HorizontalPanel>(LayoutProperty{
+        Length(LengthMode::Fill),
+        Length(LengthMode::Pixels, 1.0f)
+    });
     container->SetStyle(style2);
     m_Container->AddChild(container);
     HorizontalPanel* panel2 = dynamic_cast<HorizontalPanel*>(container.get());
     panel2->SetPadding({0.1, 0.1, 0.1, 0.1});
     panel2->SetMargin({0.1, 0.1, 0.1, 0.1});
 
-    UniFox::Ref<Widget> button3 = UniFox::MakeRef<Button>();
+    UniFox::Ref<Widget> button3 = UniFox::MakeRef<Button>(LayoutProperty{
+        Length(LengthMode::Pixels, 1.0f),
+        Length(LengthMode::Pixels, 0.5f)
+    });
     button3->SetStyle(style2);
     container->AddChild(button3);
-    UniFox::Ref<Widget> button4 = UniFox::MakeRef<Button>();
+    UniFox::Ref<Widget> button4 = UniFox::MakeRef<Button>(LayoutProperty{
+        Length(LengthMode::Pixels, 2.0f),
+        Length(LengthMode::Pixels, 1.0f)
+    });
     button4->SetStyle(style2);
     container->AddChild(button4);
 }
@@ -73,7 +85,10 @@ void GUI::OnImGuiRender() {
     ImGui::Begin("GUI");
 
     if(ImGui::Button("add button")) {
-        UniFox::Ref<Widget> button = UniFox::MakeRef<Button>();
+        UniFox::Ref<Widget> button = UniFox::MakeRef<Button>(LayoutProperty{
+            Length(LengthMode::Pixels, 2.5f),
+            Length(LengthMode::Ratio, 0.25)
+        });
         UniFox::Ref<Style> style = UniFox::MakeRef<Style>(glm::vec4(0.2, 0.2, 0.2, 1.0), glm::vec4(0.2, 0.2, 0.8, 1.0));
         button->SetStyle(style);
         m_Container->AddChild(button);

@@ -29,6 +29,10 @@ void Widget::Arrange(const Rect& rect) {
 
     m_DirtyFlags &= ~DirtyFlag::Arrange;
 }
+bool Widget::Contains(const glm::vec2& pos) {
+    glm::vec2 p = pos - m_Arrangement.rect.position;
+    return p.x > 0.0 && p.x < m_Arrangement.rect.size.x && p.y > 0.0 && p.y < m_Arrangement.rect.size.y;
+}
 
 void Widget::InvalidteMeasure() {
     m_DirtyFlags |= DirtyFlag::Measure;
@@ -96,11 +100,11 @@ Button::Button(const LayoutProperty& property) {
 glm::vec2 Button::OnMeasure(const Constraint& c) {
     glm::vec2 size = {0, 0};
 
-    if(m_Property.h.mode == LengthMode::Pixels) {
-        size.x = m_Property.h.size;
-    } else if(m_Property.h.mode == LengthMode::Fill) {
+    if(m_Property.w.mode == LengthMode::Pixels) {
+        size.x = m_Property.w.size;
+    } else if(m_Property.w.mode == LengthMode::Fill) {
         size.x = c.maxSize.x;
-    } else if(m_Property.h.mode == LengthMode::Percent) {
+    } else if(m_Property.w.mode == LengthMode::Percent) {
         
     } else {
         size.x = c.minSize.x;

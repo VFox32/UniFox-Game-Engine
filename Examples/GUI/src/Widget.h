@@ -11,25 +11,20 @@ enum DirtyFlag {
     Paint = 4
 };
 
-class LayoutProperty {
-public:
-    LayoutProperty(const Length& x = {LengthMode::Pixels, 5}, const Length& y = {LengthMode::Pixels, 5}, const Length& w = {LengthMode::Percent, 0.5}, const Length& h = {LengthMode::Percent, 0.5})
-        : x(x), y(y), w(w), h(h) {}
-
-    Length x = {LengthMode::Auto, 0};
-    Length y = {LengthMode::Auto, 0};
+struct LayoutProperty {
+    //LayoutProperty(const Length& w = {LengthMode::Percent, 0.5}, const Length& h = {LengthMode::Percent, 0.5})
+    //    : w(w), h(h) {}
 
     Length w = {LengthMode::Auto, 0};
     Length h = {LengthMode::Auto, 0};
 };
-
-class Layout;
 
 class Widget : public std::enable_shared_from_this<Widget> {
 public:
     glm::vec2 Measure(const Constraint& c);
     void Arrange(const Rect& rect);
     virtual void Draw(const float z) const = 0;
+    bool Contains(const glm::vec2& pos);
 public:
     UniFox::Ref<Widget> GetParent() const;
     void SetParent(UniFox::Ref<Widget> parent);

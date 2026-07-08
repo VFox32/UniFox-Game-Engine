@@ -4,6 +4,14 @@
 #include "Widget.h"
 #include "Constraint.h"
 
+enum class Alignment {
+    None = 0,
+    Left = 1,
+    Right = 2,
+    Top = 4,
+    Bottom = 8
+};
+
 class Slot {
 public:
     UniFox::Ref<Widget> widget;
@@ -20,18 +28,19 @@ private:
     virtual void OnArrange(const Rect& rect) = 0;
 };
 
-class VerticalProperty : public LayoutProperty {
-public:
-    int index;
+struct VerticalProperty {
+    int row = -1;
+    Alignment alignment = Alignment::Left;
 };
 class VerticalSlot : public Slot {
 public:
-    VerticalSlot(UniFox::Ref<Widget> Widget, const VerticalProperty& desire) {widget = Widget;}
+    VerticalSlot(UniFox::Ref<Widget> Widget, const VerticalProperty& desire) : desire(desire) {widget = Widget;}
     VerticalProperty desire;
     VerticalProperty actual;
 };
 class VerticalPanel : public Container {
 public:
+    VerticalPanel(const LayoutProperty& propery = LayoutProperty());
     ~VerticalPanel() = default;
 
     virtual void Draw(const float z) const override;
@@ -51,9 +60,9 @@ private:
     std::vector<VerticalSlot> m_Slots;
 };
 
-class HorizontalProperty : public LayoutProperty {
-public:
-    int index;
+struct HorizontalProperty {
+    int column = -1;
+    Alignment alignment = Alignment::Top;
 };
 class HorizontalSlot : public Slot{
 public:
@@ -63,6 +72,7 @@ public:
 };
 class HorizontalPanel : public Container {
 public:
+    HorizontalPanel(const LayoutProperty& propery = LayoutProperty());
     ~HorizontalPanel() = default;
 
     virtual void Draw(const float z) const override;
@@ -82,9 +92,9 @@ private:
     std::vector<HorizontalSlot> m_Slots;
 };
 
-class GridProperty : public LayoutProperty {
-public:
+struct GridProperty {
     glm::ivec2 coord;
+    Alignment alignment = Alignment::None;
 };
 class GridSlot : public Slot {
 public:
