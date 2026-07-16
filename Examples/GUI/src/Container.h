@@ -19,10 +19,12 @@ public:
 class Container : public Widget {
 public:
     virtual void Draw(const float z) const = 0;
+    virtual bool IsContainer() const override {return true;}
 
     virtual void AddChild(UniFox::Ref<Widget> child) = 0;
     virtual UniFox::Ref<Widget> GetChild(const uint32_t index = 0) const = 0;
     virtual uint32_t GetChildCount() const = 0;
+    virtual bool OnEvent(UniFox::Event& e) = 0;
 private:
     virtual glm::vec2 OnMeasure(const Constraint& c) = 0;
     virtual void OnArrange(const Rect& rect) = 0;
@@ -48,6 +50,7 @@ public:
     void AddChild(UniFox::Ref<Widget> child, const VerticalProperty& property);
     virtual UniFox::Ref<Widget> GetChild(const uint32_t index = 0) const override;
     virtual uint32_t GetChildCount() const override;
+    virtual bool OnEvent(UniFox::Event& e) override {return false;}
 public:
     void SetPadding(const glm::vec4& padding);
     void SetMargin(const glm::vec4& margin);
@@ -80,6 +83,7 @@ public:
     void AddChild(UniFox::Ref<Widget> child, const HorizontalProperty& property);
     virtual UniFox::Ref<Widget> GetChild(const uint32_t index = 0) const override;
     virtual uint32_t GetChildCount() const override;
+    virtual bool OnEvent(UniFox::Event& e) override {return false;}
 public:
     void SetPadding(const glm::vec4& padding);
     void SetMargin(const glm::vec4& margin);
@@ -112,6 +116,7 @@ public:
     void AddChild(UniFox::Ref<Widget> child, const GridProperty& propery);
     virtual UniFox::Ref<Widget> GetChild(const uint32_t index = 0) const override;
     virtual uint32_t GetChildCount() const override;
+    virtual bool OnEvent(UniFox::Event& e) override {return false;}
 public:
     void SetPadding(const glm::vec4& padding);
     void SetMargin(const glm::vec4& margin);

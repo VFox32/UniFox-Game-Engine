@@ -10,6 +10,7 @@ target_sources(GUI
         src/GUI.cpp
         src/Widget.cpp
         src/Container.cpp
+        src/UIManager.cpp
 )
 
 target_include_directories(GUI PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)

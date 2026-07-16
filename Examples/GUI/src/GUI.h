@@ -1,8 +1,9 @@
 #pragma once
 #include "UniFox.h"
 
-#include "Widget.h"
-#include "Container.h"
+//#include "Widget.h"
+//#include "Container.h"
+#include "UIManager.h"
 
 class GUI : public UniFox::Layer {
 public:
@@ -16,8 +17,11 @@ public:
     virtual void OnEvent(UniFox::Event& e) override;
 
 private:
-    UniFox::OrthographicCameraController m_CameraController;
+    bool OnWindowResize(UniFox::WindowResizeEvent& e);
+private:
+    //UniFox::OrthographicCameraController m_CameraController;
+    UniFox::OrthographicCamera m_Camera;
 
-    UniFox::Ref<Container> m_Container;
-    glm::vec2 m_Size = {3, 3};
+    UniFox::Ref<UIManager> m_UIManager;
+    glm::vec2 m_Size = {300, 300};
 };
