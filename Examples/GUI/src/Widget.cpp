@@ -164,3 +164,74 @@ bool Button::OnEvent(UniFox::Event& e) {
     }
     return false;
 }
+
+Slider::Slider(const LayoutProperty& propery) {
+    m_Property = propery;
+}
+glm::vec2 Slider::OnMeasure(const Constraint& c) {
+    glm::vec2 size = {0, 0};
+
+    if(m_Property.w.mode == LengthMode::Pixels) {
+        size.x = m_Property.w.size;
+    } else if(m_Property.w.mode == LengthMode::Fill) {
+        size.x = c.maxSize.x;
+    } else if(m_Property.w.mode == LengthMode::Percent) {
+        
+    } else {
+        size.x = c.minSize.x;
+    }
+    if(m_Property.h.mode == LengthMode::Pixels) {
+        size.y = m_Property.h.size;
+    } else if(m_Property.h.mode == LengthMode::Fill) {
+        size.y = c.maxSize.y;
+    } else if(m_Property.h.mode == LengthMode::Percent) {
+        
+    } else {
+        size.y = c.minSize.y;
+    }
+    if(m_Property.w.mode == LengthMode::Ratio) {
+        size.x = size.y * m_Property.w.size;
+    } if(m_Property.h.mode == LengthMode::Ratio) {
+        size.y = size.x * m_Property.h.size;
+    }
+    
+    return glm::clamp(size, c.minSize, c.maxSize);
+}
+void Slider::OnArrange(const Rect& rect) {
+    m_Arrangement = {
+        rect
+    };
+}
+void Slider::Draw(const float z) const {
+    glm::vec2 size = m_Arrangement.rect.size;
+    glm::vec2 pos = m_Arrangement.rect.position + size/glm::vec2(2);
+    UniFox::Renderer2D::DrawQuad({pos.x, pos.y, z}, size, 0, m_Style->bgColor);
+    float s = glm::min(size.x, size.y);
+    glm::vec2 p = m_Arrangement.rect.position + glm::vec2(s/2.0f);
+    p.x += m_Ratio * (size.x - s);
+    UniFox::Renderer2D::DrawQuad({p.x, p.y, z+0.1}, glm::vec2(s), 0, m_Style->fgColor);
+}
+bool Slider::OnEvent(UniFox::Event& e) {
+    if(e.GetEventType() == UniFox::EventType::MouseButtonPressed) {
+        glm::vec2 size = m_Arrangement.rect.size;
+        float s = glm::min(size.x, size.y);
+        glm::vec2 p = glm::vec2(UniFox::Input::GetMouseX(), UniFox::Input::GetMouseY()) - (m_Arrangement.rect.position + glm::vec2(s/2.0f));
+        float r = p.x / (size.x - s);
+        SetRatio(glm::clamp(r, 0.0f, 1.0f));
+        m_Pressed = true;
+        return true;
+    } if(e.GetEventType() == UniFox::EventType::MouseButtonReleased || e.GetEventType() == UniFox::EventType::WindowLeft) {
+        m_Pressed = false;
+        return true;
+    }
+    if(e.GetEventType() == UniFox::EventType::MouseMoved && m_Pressed) {
+        UniFox::MouseMovedEvent* E = dynamic_cast<UniFox::MouseMovedEvent*>(&e);
+        glm::vec2 size = m_Arrangement.rect.size;
+        float s = glm::min(size.x, size.y);
+        glm::vec2 p = glm::vec2(E->GetX(), E->GetY()) - (m_Arrangement.rect.position + glm::vec2(s/2.0f));
+        float r = p.x / (size.x - s);
+        SetRatio(glm::clamp(r, 0.0f, 1.0f));
+        return true;
+    }
+    return false;
+}

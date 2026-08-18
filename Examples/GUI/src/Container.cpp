@@ -5,20 +5,19 @@ VerticalPanel::VerticalPanel(const LayoutProperty& propery) {
     m_Property = propery;
 }
 glm::vec2 VerticalPanel::OnMeasure(const Constraint& c) {
-    glm::vec2 total = {0.0, 0.0};
+    glm::vec2 total = {m_Padding.x+m_Padding.z, m_Padding.y+m_Padding.w};
 
     for(uint32_t i = 0; i < m_Slots.size(); i++) {
         glm::vec2 size = m_Slots[i].widget->Measure({{0, 0}, {c.maxSize.x, INFINITE}});
         total.x = glm::max(total.x, size.x);
-        total.y += size.y + m_Padding.y;
+        total.y += size.y;
     }
-
-    total += glm::vec2(m_Margin.x+m_Margin.z, m_Margin.y+m_Margin.w - m_Padding.y);
+    total.y += m_Margin.y * (m_Slots.size() - 1);
 
     if(m_Property.w.mode == LengthMode::Pixels) {
         total.x = m_Property.w.size;
     } else if(m_Property.w.mode == LengthMode::Fill) {
-        total.x = c.maxSize.x;
+        total.x = glm::max(total.x, c.maxSize.x);
     } else if(m_Property.w.mode == LengthMode::Percent) {
         
     } else {
@@ -27,11 +26,11 @@ glm::vec2 VerticalPanel::OnMeasure(const Constraint& c) {
     if(m_Property.h.mode == LengthMode::Pixels) {
         total.y = m_Property.h.size;
     } else if(m_Property.h.mode == LengthMode::Fill) {
-        total.y = c.maxSize.y;
+        total.y = glm::max(total.y, c.maxSize.y);
     } else if(m_Property.h.mode == LengthMode::Percent) {
         
     } else {
-        total.y = glm::min(total.y, c.minSize.y);
+        total.y = glm::max(total.y, c.minSize.y);
     }
     if(m_Property.w.mode == LengthMode::Ratio) {
         total.x = total.y * m_Property.w.size;
@@ -44,13 +43,20 @@ glm::vec2 VerticalPanel::OnMeasure(const Constraint& c) {
     return total;
 }
 void VerticalPanel::OnArrange(const Rect& rect) {
-    glm::vec2 pos = rect.position + glm::vec2(m_Margin.x, m_Margin.y);
-    glm::vec2 total = rect.size - glm::vec2(m_Margin.x+m_Margin.z, m_Margin.y+m_Margin.w) - glm::vec2(0, m_Padding.y*(m_Slots.size()-1));
-    glm::vec2 size = rect.size;
+    glm::vec2 pos = rect.position + glm::vec2(m_Padding.x, m_Padding.y);
+    glm::vec2 total = rect.size - glm::vec2(m_Padding.x+m_Padding.z, m_Padding.y+m_Padding.w) - glm::vec2(0, m_Margin.y*(m_Slots.size()-1));
+    glm::vec2 size = {0, 0};
+
+    glm::vec2 totalDesire = {0, 0};
+    for(uint32_t i = 0; i < m_Slots.size(); i++) {
+        glm::vec2 size = m_Slots[i].widget->GetMeasurement().size;
+        totalDesire.x = glm::max(totalDesire.x, size.x);
+        totalDesire.y += size.y + m_Margin.y;
+    }
 
     for(uint32_t i = 0; i < m_Slots.size(); i++) {
         size = m_Slots[i].widget->GetMeasurement().size;
-        size = glm::clamp(size, glm::vec2(0), glm::vec2(total.x, total.y / m_Slots.size()));
+        size = glm::clamp(size, glm::vec2(0), glm::vec2(total.x, (size.y/totalDesire.y)*total.y));
         Alignment a = m_Slots[i].desire.alignment;
         if(a == Alignment::Left)
             m_Slots[i].widget->Arrange({pos, size});
@@ -58,7 +64,7 @@ void VerticalPanel::OnArrange(const Rect& rect) {
             m_Slots[i].widget->Arrange({{pos.x + (total.x-size.x), pos.y}, size});
         else if(a == Alignment::None)
             m_Slots[i].widget->Arrange({{pos.x + 0.5*(total.x-size.x), pos.y}, size});
-        pos.y += size.y + m_Padding.y;
+        pos.y += size.y + m_Margin.y;
     }
 }
 void VerticalPanel::Draw(const float z) const {
@@ -82,7 +88,7 @@ void VerticalPanel::SetPadding(const glm::vec4& padding) {
     m_Padding = padding;
     InvalidteMeasure();
 }
-void VerticalPanel::SetMargin(const glm::vec4& margin) {
+void VerticalPanel::SetMargin(const glm::vec2& margin) {
     m_Margin = margin;
     InvalidteMeasure();
 }
@@ -97,20 +103,19 @@ HorizontalPanel::HorizontalPanel(const LayoutProperty& propery) {
     m_Property = propery;
 }
 glm::vec2 HorizontalPanel::OnMeasure(const Constraint& c) {
-    glm::vec2 total = {0.0, 0.0};
+    glm::vec2 total = {m_Padding.x+m_Padding.z, m_Padding.y+m_Padding.w};
 
     for(uint32_t i = 0; i < m_Slots.size(); i++) {
-        glm::vec2 size = m_Slots[i].widget->Measure({{0, 0}, {INFINITE, c.maxSize.y}});
+        glm::vec2 size = m_Slots[i].widget->Measure({{0, 0}, {c.maxSize.x, INFINITE}});
+        total.x += size.x;
         total.y = glm::max(total.y, size.y);
-        total.x += size.x + m_Padding.x;
     }
-
-    total += glm::vec2(m_Margin.x+m_Margin.z - m_Padding.x, m_Margin.y+m_Margin.w);
+    total.x += m_Margin.x * (m_Slots.size() - 1);
 
     if(m_Property.w.mode == LengthMode::Pixels) {
         total.x = m_Property.w.size;
     } else if(m_Property.w.mode == LengthMode::Fill) {
-        total.x = c.maxSize.x;
+        total.x = glm::max(total.x, c.maxSize.x);
     } else if(m_Property.w.mode == LengthMode::Percent) {
         
     } else {
@@ -119,11 +124,11 @@ glm::vec2 HorizontalPanel::OnMeasure(const Constraint& c) {
     if(m_Property.h.mode == LengthMode::Pixels) {
         total.y = m_Property.h.size;
     } else if(m_Property.h.mode == LengthMode::Fill) {
-        total.y = c.maxSize.y;
+        total.y = glm::max(total.y, c.maxSize.y);
     } else if(m_Property.h.mode == LengthMode::Percent) {
         
     } else {
-        total.y = glm::min(total.y, c.minSize.y);
+        total.y = glm::max(total.y, c.minSize.y);
     }
     if(m_Property.w.mode == LengthMode::Ratio) {
         total.x = total.y * m_Property.w.size;
@@ -131,16 +136,25 @@ glm::vec2 HorizontalPanel::OnMeasure(const Constraint& c) {
         total.y = total.x * m_Property.h.size;
     }
 
-    return glm::clamp(total, c.minSize, c.maxSize);
+    total = glm::clamp(total, c.minSize, c.maxSize);
+
+    return total;
 }
 void HorizontalPanel::OnArrange(const Rect& rect) {
-    glm::vec2 pos = rect.position + glm::vec2(m_Margin.x, m_Margin.y);
-    glm::vec2 total = rect.size - glm::vec2(m_Margin.x+m_Margin.z, m_Margin.y+m_Margin.w) - glm::vec2(m_Padding.x*(m_Slots.size()-1), 0);
+    glm::vec2 pos = rect.position + glm::vec2(m_Padding.x, m_Padding.y);
+    glm::vec2 total = rect.size - glm::vec2(m_Padding.x+m_Padding.z, m_Padding.y+m_Padding.w) - glm::vec2(m_Margin.x*(m_Slots.size()-1), 0);
     glm::vec2 size = {0, 0};
+
+    glm::vec2 totalDesire = {0, 0};
+    for(uint32_t i = 0; i < m_Slots.size(); i++) {
+        glm::vec2 size = m_Slots[i].widget->GetMeasurement().size;
+        totalDesire.x += size.x + m_Margin.x;
+        totalDesire.y = glm::max(totalDesire.y, size.y);
+    }
 
     for(uint32_t i = 0; i < m_Slots.size(); i++) {
         size = m_Slots[i].widget->GetMeasurement().size;
-        size = glm::clamp(size, glm::vec2(0), glm::vec2(total.x / m_Slots.size(), total.y));
+        size = glm::clamp(size, glm::vec2(0), glm::vec2((size.x/totalDesire.x)*total.x, total.y));
         Alignment a = m_Slots[i].desire.alignment;
         if(a == Alignment::Bottom)
             m_Slots[i].widget->Arrange({pos, size});
@@ -148,7 +162,7 @@ void HorizontalPanel::OnArrange(const Rect& rect) {
             m_Slots[i].widget->Arrange({{pos.x, pos.y + (total.y-size.y)}, size});
         else if(a == Alignment::None)
             m_Slots[i].widget->Arrange({{pos.x, pos.y + 0.5*(total.y-size.y)}, size});
-        pos.x += size.x + m_Padding.x;
+        pos.x += size.x + m_Margin.x;
     }
 }
 void HorizontalPanel::Draw(const float z) const {
@@ -172,7 +186,7 @@ void HorizontalPanel::SetPadding(const glm::vec4& padding) {
     m_Padding = padding;
     InvalidteMeasure();
 }
-void HorizontalPanel::SetMargin(const glm::vec4& margin) {
+void HorizontalPanel::SetMargin(const glm::vec2& margin) {
     m_Margin = margin;
     InvalidteMeasure();
 }

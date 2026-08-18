@@ -5,12 +5,12 @@
 #include "Constraint.h"
 
 enum WidgetFlag {
-    None = 0,
-    Hovered = 1,
-    Focused = 2,
-    DirtyMeasure = 4,
-    DirtyArrange = 8,
-    DirtyPaint = 16
+    None         = 0,
+    Hovered      = 1 << 0,
+    Focused      = 1 << 1,
+    DirtyMeasure = 1 << 2,
+    DirtyArrange = 1 << 3,
+    DirtyPaint   = 1 << 4
 };
 
 struct LayoutProperty {
@@ -58,7 +58,7 @@ protected:
     ArrangeCache m_Arrangement = {Rect()};
 
     //uint8_t m_DirtyFlags = 7;
-    uint8_t m_Flags = 28;
+    uint8_t m_Flags = WidgetFlag::DirtyMeasure | WidgetFlag::DirtyArrange | WidgetFlag::DirtyPaint;
     UniFox::Ref<EventDispatcher> m_EventDispatcher;
 protected:
     virtual bool OnEvent(UniFox::Event& e) = 0;
@@ -78,10 +78,26 @@ private:
     bool m_Pressed = false;
 };
 
-/*class Slider : public Widget {
+class Slider : public Widget {
+public:
     Slider(const LayoutProperty& propery = LayoutProperty());
     ~Slider() = default;
 
+    float GetValue() const {return m_Current;}
+    void SetValue(const float value) {
+        m_Current = value;
+        m_Ratio = (value - m_Min) / (m_Max - m_Min);
+    }
+    float GetRatio() const {return m_Ratio;}
+    void SetRatio(const float ratio) {
+        m_Ratio = ratio;
+        m_Current = m_Min + (m_Max - m_Min) * ratio;
+    }
+    float GetMin() const {return m_Min;}
+    void SetMin(const float min) {m_Min = min;}
+    float GetMax() const {return m_Max;}
+    void SetMax(const float max) {m_Max = max;}
+public:
     virtual glm::vec2 OnMeasure(const Constraint& c) override;
     virtual void OnArrange(const Rect& rect) override;
     virtual void Draw(const float z) const override;
@@ -89,7 +105,8 @@ private:
     virtual bool OnEvent(UniFox::Event& e) override;
 private:
     bool m_Pressed = false;
-    float m_Ratio;
-    float m_Min;
-    float m_Max;
-};*/
+    float m_Ratio = 0.0;
+    float m_Current = 0.0;
+    float m_Min = 0.0;
+    float m_Max = 1.0;
+};

@@ -25,11 +25,12 @@ void GUI::OnAttach() {
 
     VerticalPanel* panel = dynamic_cast<VerticalPanel*>(m_Container.get());
     panel->SetPadding({5, 5, 5, 5});
-    panel->SetMargin({5, 5, 5, 5});
+    panel->SetMargin({5, 5});
 
     UniFox::Ref<Widget> button1 = UniFox::MakeRef<Button>(LayoutProperty{
         Length(LengthMode::Pixels, 200),
-        Length(LengthMode::Pixels, 100)
+        //Length(LengthMode::Pixels, 100)
+        Length(LengthMode::Ratio, 0.5)
     });
     button1->SetStyle(style2);
     button1->Events()->Connect<UniFox::MouseButtonPressedEvent>([](UniFox::MouseButtonPressedEvent& e) {
@@ -37,7 +38,7 @@ void GUI::OnAttach() {
         return true;
     });
     m_Container->AddChild(button1);
-    UniFox::Ref<Widget> button2 = UniFox::MakeRef<Button>(LayoutProperty{
+    /*UniFox::Ref<Widget> button2 = UniFox::MakeRef<Button>(LayoutProperty{
         Length(LengthMode::Pixels, 200),
         Length(LengthMode::Ratio, 100)
     });
@@ -45,6 +46,16 @@ void GUI::OnAttach() {
     m_Container->AddChild(button2);
     VerticalPanel* c = dynamic_cast<VerticalPanel*>(m_Container.get());
     c->AddChild(button2, {
+        .alignment = Alignment::Right
+    });*/
+    UniFox::Ref<Widget> slider = UniFox::MakeRef<Slider>(LayoutProperty{
+        Length(LengthMode::Pixels, 200),
+        Length(LengthMode::Pixels, 50)
+    });
+    slider->SetStyle(style2);
+    //m_Container->AddChild(slider);
+    VerticalPanel* c = dynamic_cast<VerticalPanel*>(m_Container.get());
+    c->AddChild(slider, {
         .alignment = Alignment::Right
     });
 
@@ -56,7 +67,7 @@ void GUI::OnAttach() {
     m_Container->AddChild(container);
     HorizontalPanel* panel2 = dynamic_cast<HorizontalPanel*>(container.get());
     panel2->SetPadding({5, 5, 5, 5});
-    panel2->SetMargin({5, 5, 5, 5});
+    panel2->SetMargin({5, 5});
 
     UniFox::Ref<Widget> button3 = UniFox::MakeRef<Button>(LayoutProperty{
         Length(LengthMode::Pixels, 100),

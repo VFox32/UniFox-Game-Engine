@@ -53,13 +53,13 @@ public:
     virtual bool OnEvent(UniFox::Event& e) override {return false;}
 public:
     void SetPadding(const glm::vec4& padding);
-    void SetMargin(const glm::vec4& margin);
+    void SetMargin(const glm::vec2& margin);
 private:
     virtual glm::vec2 OnMeasure(const Constraint& c) override;
     virtual void OnArrange(const Rect& rect) override;
 
     glm::vec4 m_Padding = {0, 0, 0, 0};
-    glm::vec4 m_Margin = {0, 0, 0, 0};
+    glm::vec2 m_Margin = {0, 0};
     std::vector<VerticalSlot> m_Slots;
 };
 
@@ -86,13 +86,13 @@ public:
     virtual bool OnEvent(UniFox::Event& e) override {return false;}
 public:
     void SetPadding(const glm::vec4& padding);
-    void SetMargin(const glm::vec4& margin);
+    void SetMargin(const glm::vec2& margin);
 private:
     virtual glm::vec2 OnMeasure(const Constraint& c) override;
     virtual void OnArrange(const Rect& rect) override;
 
     glm::vec4 m_Padding = {0, 0, 0, 0};
-    glm::vec4 m_Margin = {0, 0, 0, 0};
+    glm::vec2 m_Margin = {0, 0};
     std::vector<HorizontalSlot> m_Slots;
 };
 

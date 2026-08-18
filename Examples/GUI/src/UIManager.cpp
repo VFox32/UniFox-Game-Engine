@@ -21,7 +21,7 @@ bool UIManager::OnEvent(UniFox::Event& e) {
     if(e.GetEventType() == UniFox::EventType::MouseButtonPressed) {
         if(widget != m_Focus) {
             if(m_Focus) {
-                m_Hover->GetFlags() &= ~WidgetFlag::Focused;
+                m_Focus->GetFlags() &= ~WidgetFlag::Focused;
                 m_Focus->Dispatch(*(new UniFox::WindowUnfocusEvent()));
             }
             if(widget) {

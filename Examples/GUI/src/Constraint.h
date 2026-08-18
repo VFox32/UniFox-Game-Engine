@@ -14,9 +14,6 @@ struct Length {
 };
 
 struct Rect {
-    //Rect(const glm::vec2 Position = glm::vec2(0, 0), const glm::vec2 Size = glm::vec2(0, 0))
-    //    : position(Position), size(Size) {}
-        
     glm::vec2 position = glm::vec2(0, 0);
     glm::vec2 size = glm::vec2(0, 0);
 
@@ -24,9 +21,6 @@ struct Rect {
 };
 
 struct Constraint {
-    //Constraint(const glm::vec2 MinSize = glm::vec2(0, 0), const glm::vec2 MaxSize = glm::vec2(1, 1))
-    //    : minSize(MinSize), maxSize(MaxSize) {}
-
     glm::vec2 minSize = {0, 0};
     glm::vec2 maxSize = {INFINITY, INFINITY};
 
